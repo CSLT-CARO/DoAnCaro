@@ -6,4 +6,6 @@ int main()
     std::cout << n << '\n';
     std::cout << "Hello World!\n";
     std::cout << "Nahh\n";
+    std::cout << "be Phu cua anh \n";
+	return 0;
 }
