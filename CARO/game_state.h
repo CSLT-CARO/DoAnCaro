@@ -13,6 +13,8 @@ struct GameState {
     PlayerMark whose_turn{};
     Mode mode{};
     Difficulty difficulty{};
+
+    int number_of_empty_cells = 9;
     std::array< std::array < PlayerMark, 3>, 3 > board{};
 };
 
@@ -23,10 +25,13 @@ bool markBoard(GameState& game_state, const int row, const int column) {
     }
 
     game_state.board.at(row).at(column) = game_state.whose_turn;
+    game_state.number_of_empty_cells--;
     return true;
 }
 
 void resetBoard(GameState& game_state) {
+    game_state.number_of_empty_cells = 9;
+
     for (auto& row : game_state.board) {
         for (auto& cell : row) {
             cell = PlayerMark::Empty;
@@ -50,6 +55,10 @@ void printBoard(const GameState& game_state) {
 
         std::cout << '\n';
     }
+}
+
+bool isNoAvailableCell(const GameState& game_state) {
+    return game_state.number_of_empty_cells == 0;
 }
 
 #endif

@@ -12,8 +12,14 @@ void initGame(GameState& game_state) {
 	}
 }
 
-void printCurrentGame(const GameState& game_state) {
+void printCurrentGame(GameState& game_state) {
 	printBoard(game_state);
+
+	if (isNoAvailableCell(game_state)) {
+		std::cout << "No available cells left!\n";
+		exit(0);
+	}
+
 	std::cout << "Enter cell: ";
 }
 
