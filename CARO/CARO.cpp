@@ -1,83 +1,66 @@
+#include <SDL.h>
 #include <iostream>
-#include <array>
 
-enum PlayerMark {
-    Empty, X, O
-};
+int main(int argc, char* argv[])
+{
+	SDL_Window* window = nullptr;
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		std::cout << "SDL could not be initialized: " <<
+			SDL_GetError();
+	}
+	else
+	{
+		std::cout << "SDL video system is ready to go\n";
+	}
+	window = SDL_CreateWindow(
+		"CHO KHOI",
+		500,
+		100,
+		640,
+		480,
+		SDL_WINDOW_SHOWN
+	);
+	if (window == NULL)
+	{
+		std::cout << "Can not creat window\n";
+		return 1;
+	}
+	// infinity loop
+	bool gameIsRunning = true;
+	while (gameIsRunning)
+	{
+		SDL_Event event;
+		// start event loop
+		while (SDL_PollEvent(&event))
+		{
+			//handle each specific event
+			if (event.type == SDL_QUIT)
+			{
+				gameIsRunning = false;
+			}
 
-enum Mode {
-    PVE, PVP
-};
+			if (event.type == SDL_MOUSEMOTION)
+			{
+				std::cout << "mouse has been moved\n ";
 
-enum Difficulty {
-    Easy, Normal, Hard, Null
-};
-
-struct GameState {
-    PlayerMark whose_turn {};
-    Mode mode {};
-    Difficulty difficulty {};
-    std::array< std::array < PlayerMark, 3>, 3 > board {};
-};
-
-void printStartScreen() {
-
-}
-
-void printChooseGameMode() {
-
-}
-
-void printChooseDifficulty() {
-
-}
-
-bool markBoard(GameState& game_state, int row, int column, PlayerMark mark) {
-    if (0 > row || row > 2 || 0 > column || column > 2) return false;
-    if (game_state.board.at(row).at(column) != Empty) {
-        return false;
-    }
-
-    game_state.board.at(row).at(column) = mark;
-    return true;
-}
-
-void printBoard(GameState& game_state) {
-    for (const auto& row : game_state.board) {
-        for (const auto& cell : row) {
-            if (PlayerMark::Empty == cell) {
-                std::cout << ". ";
-            } else if (PlayerMark::X == cell) {
-                std::cout << "X ";
-            } else {
-                std::cout << "O ";
-            }
-        }
-
-        std::cout << '\n';
-    }
-}
-
-void resetBoard(GameState& game_state) {
-    for (auto& row : game_state.board) {
-        for (auto& cell : row) {
-            cell = PlayerMark::Empty;
-        }
-    }
-}
-
-int main() {
-    GameState game_state;
-    resetBoard(game_state);
-
-    markBoard(game_state, 0, 0, X);
-    markBoard(game_state, 1, 1, X);
-    markBoard(game_state, 2, 2, X);
-
-    if (!markBoard(game_state, 0, 0, X)) {
-        std::cout << "failed to mark the board, ignoring request..." << '\n';
-    }
-    
-    printBoard(game_state);
-    return 0;
+			}
+			if (event.type == SDL_KEYDOWN)
+			{
+				std::cout << "key has been pressed\n ";
+				if (event.key.keysym.sym == SDLK_0)
+				{
+					std::cout << "0 was pressed\n";
+				}
+			}
+			const Uint8* stage = SDL_GetKeyboardState(NULL);
+			if (stage[SDL_SCANCODE_RIGHT])
+			{
+				std::cout << "right arrow key was presses\n";
+			}
+		}	
+	}
+	SDL_DestroyWindow(window); // close window
+	SDL_Quit(); // clear SDL
+	return 0;
 }
