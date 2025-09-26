@@ -74,7 +74,7 @@
     <IncludePath>$(IncludePath);./SDL2/</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Code\Project\DoAnCaro\CARO\include;$(IncludePath);./SDL2/</IncludePath>
+    <IncludePath>$(IncludePath);./SDL2/</IncludePath>
     <LibraryPath>D:\Code\Project\DoAnCaro\CARO\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
