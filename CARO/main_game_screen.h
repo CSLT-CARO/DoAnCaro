@@ -8,6 +8,7 @@ void initGame(GameState& game_state) {
 	if (!game_state.is_init) {
 		resetBoard(game_state);
 		game_state.whose_turn = pickRandomPlayer();
+		game_state.bot = pickRandomPlayer();
 		game_state.is_init = true;
 	}
 }
@@ -19,15 +20,20 @@ void printCurrentGame(GameState& game_state) {
 		std::cout << "No available cells left!\n";
 		exit(0);
 	}
-
-	std::cout << "Enter cell: ";
 }
 
 void inputCurrentGame(GameState& game_state) {
-	int row {}, column{};
-	std::cin >> row >> column;
+	if (game_state.bot == game_state.whose_turn) {
+		botPlay(game_state);
+		alternateTurn(game_state.whose_turn);
+		return;
+	}
 
-	if (!markBoard(game_state, row, column)) {
+	std::cout << "Enter cell: ";
+	Cell cell {};
+	std::cin >> cell.row >> cell.column;
+
+	if (!markBoard(game_state, cell)) {
 		std::cout << "Invalid place to mark!\n";
 		return;
 	}

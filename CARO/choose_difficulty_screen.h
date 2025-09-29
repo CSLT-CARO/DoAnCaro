@@ -27,7 +27,7 @@ void inputChooseDifficulty(GameState& game_state) {
 			break;
 	}
 
-	game_state.current_state = Exit;
+	game_state.current_state = MainGame;
 }
 
 void processChooseDifficulty(GameState& game_state) {
