@@ -61,4 +61,36 @@ bool isNoAvailableCell(const GameState& game_state) {
     return game_state.number_of_empty_cells == 0;
 }
 
+void EasyBot(GameState& game_state) {
+    while (true) {
+        int row = rand() % 3;
+        int column = rand() % 3;
+        if (markBoard(game_state, row, column)) {
+            break;
+        }
+	}
+}
+PlayerMark checkWin(const GameState & game_state) {
+	auto& board = game_state.board;
+    for (int j = 0; j < 3; j++) {
+        if (board[j][0] == board[j][1] and board[j][1] == board[j][2]) {
+            if (board[j][0] == PlayerMark::X) return X;
+            if (board[j][0] == PlayerMark::O) return O;
+        }
+
+        if (board[0][j] == board[1][j] and board[1][j] == board[2][j]) {
+            if (board[0][j] == PlayerMark::X) return X;
+            if (board[0][j] == PlayerMark::O) return O;
+        }
+    }
+    if (board[0][0] == board[1][1] and board[1][1] == board[2][2]) {
+        if (board[0][0] == PlayerMark::X) return X;
+        if (board[0][0] == PlayerMark::O) return O;
+    }
+    
+    if (board[2][0] == board[1][1] and board[1][1] == board[0][2]) {
+        if (board[0][2] == PlayerMark::X) return X;
+        if (board[0][2] == PlayerMark::O) return O;
+    }
+    return Empty;
 #endif
