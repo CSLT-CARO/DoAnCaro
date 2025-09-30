@@ -7,7 +7,7 @@
 int main() {
     GameState game_state {};
     game_state.current_state = StartScreen;
-
+    
     while (true) {
         switch (game_state.current_state) {
             case StartScreen:
