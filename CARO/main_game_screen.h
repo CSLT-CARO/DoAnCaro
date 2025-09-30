@@ -16,6 +16,18 @@ void initGame(GameState& game_state) {
 void printCurrentGame(GameState& game_state) {
 	printBoard(game_state.board);
 
+	PlayerMark winner = checkWinner(game_state.board);
+
+	if (winner == X) {
+		std::cout << "X Won!!!!\n";
+		exit(0);
+	}
+	
+	if (winner == O) {
+		std::cout << "O Won!!!!\n";
+		exit(0);
+	}
+
 	if (not isMoveLeft(game_state.board)) {
 		std::cout << "No available cells left!\n";
 		exit(0);
@@ -23,7 +35,7 @@ void printCurrentGame(GameState& game_state) {
 }
 
 void inputCurrentGame(GameState& game_state) {
-	if (game_state.bot_marker == game_state.whose_turn) {
+	if (game_state.mode == PVE and game_state.bot_marker == game_state.whose_turn) {
 		botPlay(game_state);
 		alternateTurn(game_state.whose_turn);
 		return;
