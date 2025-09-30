@@ -30,15 +30,17 @@ void printBoard(const Board& board);
 
 void botTurn(GameState& game_state);
 Cell getBotMoveEasy(const Board& board);
+Cell getBotMoveNormal(const GameState& game_state);
 Cell getBotMoveHard(const GameState& game_state);
 
-int minimax(Board& board, int depth, bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer);
+int minimax(Board& board, int depth, bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer, const int depth_threshold);
 int evaluateScore(const PlayerMark who_won, const PlayerMark maximizer, const PlayerMark minimizer);
 
 bool tryPlaceMark(Board& board, const Cell& cell, const PlayerMark mark);
 bool trySetEmpty(Board& board, const Cell& cell);
 
 bool isTerminated(const Board& board);
+bool shouldAbortByDepth(const int depth, const int depth_threshold);
 
 PlayerMark checkWinner(const Board& board);
 

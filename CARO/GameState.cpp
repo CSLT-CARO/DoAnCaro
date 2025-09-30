@@ -31,6 +31,8 @@ void botTurn(GameState& game_state) {
 
     if (game_state.difficulty == Easy) {
         bot_move = getBotMoveEasy(game_state.board);
+    } else if (game_state.difficulty == Normal) {
+        bot_move = getBotMoveNormal(game_state);
     } else if (game_state.difficulty == Hard) {
         bot_move = getBotMoveHard(game_state);
     }
@@ -49,6 +51,32 @@ Cell getBotMoveEasy(const Board& board) {
     return cell;
 }
 
+Cell getBotMoveNormal(const GameState& game_state) {
+    int best_value = -10000;
+
+    Cell best_move{};
+    Board copied_board = game_state.board;
+    PlayerMark maximizer = game_state.bot_marker;
+    PlayerMark minimizer = maximizer == X ? O : X;
+
+    for (int row = 0; row < 3; row++) {
+        for (int column = 0; column < 3; column++) {
+            Cell cell{ row, column };
+            if (not tryPlaceMark(copied_board, cell, maximizer)) continue;
+
+            int score = minimax(copied_board, 0, false, maximizer, minimizer, 1);
+            trySetEmpty(copied_board, cell);
+
+            if (score > best_value) {
+                best_value = score;
+                best_move = cell;
+            }
+        }
+    }
+
+    return best_move;
+}
+
 Cell getBotMoveHard(const GameState& game_state) {
     int best_value = -10000;
 
@@ -62,7 +90,7 @@ Cell getBotMoveHard(const GameState& game_state) {
             Cell cell{ row, column };
             if (not tryPlaceMark(copied_board, cell, maximizer)) continue;
 
-            int score = minimax(copied_board, 0, false, maximizer, minimizer);
+            int score = minimax(copied_board, 0, false, maximizer, minimizer, -1);
             trySetEmpty(copied_board, cell);
 
             if (score > best_value) {
@@ -75,8 +103,8 @@ Cell getBotMoveHard(const GameState& game_state) {
     return best_move;
 }
 
-int minimax(Board& board, int depth, bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer) {
-    if (isTerminated(board)) {
+int minimax(Board& board, int depth, bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer, const int depth_threshold) {
+    if (isTerminated(board) or shouldAbortByDepth(depth, depth_threshold)) {
         PlayerMark winner = checkWinner(board);
         return evaluateScore(winner, maximizer, minimizer);
     }
@@ -96,7 +124,7 @@ int minimax(Board& board, int depth, bool is_maximizer, const PlayerMark maximiz
             Cell cell{ row, column };
 
             if (not tryPlaceMark(board, cell, current_player)) continue;
-            int score = minimax(board, depth + 1, !is_maximizer, maximizer, minimizer);
+            int score = minimax(board, depth + 1, !is_maximizer, maximizer, minimizer, depth_threshold);
             trySetEmpty(board, cell);
 
             if (is_maximizer) {
@@ -141,6 +169,10 @@ bool trySetEmpty(Board& board, const Cell& cell) {
 bool isTerminated(const Board& board) {
     PlayerMark winner = checkWinner(board);
     return not isMovesLeft(board) or winner == X or winner == O;
+}
+
+bool shouldAbortByDepth(const int depth, const int depth_threshold) {
+    return 0 <= depth_threshold and depth >= depth_threshold;
 }
 
 PlayerMark checkWinner(const Board& board) {
