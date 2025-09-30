@@ -28,7 +28,7 @@ void printCurrentGame(GameState& game_state) {
 		exit(0);
 	}
 
-	if (not isMoveLeft(game_state.board)) {
+	if (not isMovesLeft(game_state.board)) {
 		std::cout << "No available cells left!\n";
 		exit(0);
 	}
@@ -36,7 +36,7 @@ void printCurrentGame(GameState& game_state) {
 
 void inputCurrentGame(GameState& game_state) {
 	if (game_state.mode == PVE and game_state.bot_marker == game_state.whose_turn) {
-		botPlay(game_state);
+		botTurn(game_state);
 		alternateTurn(game_state.whose_turn);
 		return;
 	}
