@@ -109,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +134,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CARO.cpp" />
+    <ClCompile Include="source_files\GameState.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\caro_enum.h" />
+    <ClInclude Include="include\choose_board_screen.h" />
+    <ClInclude Include="include\choose_difficulty_screen.h" />
+    <ClInclude Include="include\choose_mode_screen.h" />
+    <ClInclude Include="include\game_state.h" />
+    <ClInclude Include="include\main_game_screen.h" />
+    <ClInclude Include="include\play_again_screen.h" />
+    <ClInclude Include="include\start_screen.h" />
+    <ClInclude Include="include\utitlity.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
