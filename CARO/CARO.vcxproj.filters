@@ -26,6 +26,9 @@
     <ClInclude Include="include\caro_enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\choose_board_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\choose_difficulty_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -38,16 +41,13 @@
     <ClInclude Include="include\main_game_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\play_again_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\start_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utitlity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\choose_board_screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\play_again_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
