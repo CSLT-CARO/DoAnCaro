@@ -1,66 +1,42 @@
-#include <SDL.h>
 #include <iostream>
 
-int main(int argc, char* argv[])
-{
-	SDL_Window* window = nullptr;
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		std::cout << "SDL could not be initialized: " <<
-			SDL_GetError();
-	}
-	else
-	{
-		std::cout << "SDL video system is ready to go\n";
-	}
-	window = SDL_CreateWindow(
-		"CHO KHOI",
-		500,
-		100,
-		640,
-		480,
-		SDL_WINDOW_SHOWN
-	);
-	if (window == NULL)
-	{
-		std::cout << "Can not creat window\n";
-		return 1;
-	}
-	// infinity loop
-	bool gameIsRunning = true;
-	while (gameIsRunning)
-	{
-		SDL_Event event;
-		// start event loop
-		while (SDL_PollEvent(&event))
-		{
-			//handle each specific event
-			if (event.type == SDL_QUIT)
-			{
-				gameIsRunning = false;
+#include "video.h"
+#include "MainGameController.h"
+
+int main(int argc, char* argv[]) {
+	Window window{};
+	MainGameUIState main_game_ui_state {};
+
+	initVideo(window);
+	initMainGameUI(main_game_ui_state);
+
+	GameState game_state{};
+	game_state.board_type = Classic;
+	game_state.mode = PVP;
+
+	SDL_Event event;
+	bool running = true;
+	bool a = false;
+
+	while (running) {
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT) {
+				running = false;
 			}
 
-			if (event.type == SDL_MOUSEMOTION)
-			{
-				std::cout << "mouse has been moved\n ";
-
-			}
-			if (event.type == SDL_KEYDOWN)
-			{
-				std::cout << "key has been pressed\n ";
-				if (event.key.keysym.sym == SDLK_0)
-				{
-					std::cout << "0 was pressed\n";
+			if (event.type == SDL_KEYDOWN) {
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
+					running = false;
 				}
 			}
-			const Uint8* stage = SDL_GetKeyboardState(NULL);
-			if (stage[SDL_SCANCODE_RIGHT])
-			{
-				std::cout << "right arrow key was presses\n";
-			}
-		}	
+
+			handleMainGameInput(event, main_game_ui_state, window, game_state);
+		}
+
+		processMainGame(window, main_game_ui_state, game_state);
+		SDL_RenderPresent(window.renderer_ptr);
 	}
-	SDL_DestroyWindow(window); // close window
-	SDL_Quit(); // clear SDL
+
+	destroyVideo(window);
 	return 0;
 }
