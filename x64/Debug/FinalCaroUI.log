@@ -1,40 +1,53 @@
 ﻿  CaroUI.cpp
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(125,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(24,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(135,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(35,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(162,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(45,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(163,19): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(53,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(81,139): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(83,119): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(85,135): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(87,131): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(99,123): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(116,139): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\CaroUI.cpp(125,143): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  menu.cpp
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(125,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  (compiling source file 'menu.cpp')
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(54,19): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(135,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  (compiling source file 'menu.cpp')
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(127,19): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(162,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file 'menu.cpp')
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(140,17): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.h(163,19): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file 'menu.cpp')
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(149,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
   
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.cpp(11,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.cpp(32,19): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.cpp(45,17): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.cpp(53,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\c++\Project\FinalCaroUI\FinalCaroUI\menu.cpp(54,19): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
+C:\c++\Project\FinalCaroUI\FinalCaroUI\Print.h(150,19): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(70,119): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(72,111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(74,119): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(76,117): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(87,115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(103,123): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\InputManager.h(112,123): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
+C:\c++\Project\FinalCaroUI\FinalCaroUI\BuildGameResources.h(31,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'CaroUI.cpp')
+  
   FinalCaroUI.vcxproj -> C:\c++\Project\FinalCaroUI\x64\Debug\FinalCaroUI.exe

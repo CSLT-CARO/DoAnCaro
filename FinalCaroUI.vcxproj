@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -128,7 +128,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="BuildGameResources.h" />
+    <ClInclude Include="ChooseTypeGame.h" />
+    <ClInclude Include="ChooseTypePlayer.h" />
+    <ClInclude Include="Destroy.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="Print.h" />
+    <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="Settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CaroUI.cpp" />
