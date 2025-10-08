@@ -4,12 +4,13 @@
 #include "video.h"
 #include "game_state.h"
 
+#include <vector>
 #include <SDL_test_font.h>
 #include <string>
 
 struct Button {
 	SDL_Rect rect{};
-	std::string image_path{};
+	bool state;
 };
 
 struct Timer {
@@ -22,6 +23,13 @@ struct Timer {
 	bool isRunning{};
 };
 
+struct GameOverButton
+{
+	Button New_game;
+	Button Restart;
+	Button Exit;
+};
+
 const Cell NOT_SELECTED = { -1, -1 };
 
 struct MainGameUIState {
@@ -29,23 +37,62 @@ struct MainGameUIState {
 	Button player_o {};
 	Button winner {};
 	Timer timer_button {};
+	GameOverButton end_game_button;
 
 	Cell selected_cell = NOT_SELECTED;
 	bool is_set_up_game_over_screen = false;
 
 };
 
-void initMainGameUI(MainGameUIState& ui_state);
+struct Images
+{
+	std::vector<std::string> player_XO_button_on = { "player_X_on", "player_O_on" };
+	std::vector<std::string> player_XO_button_off = { "player_X_off", "player_O_off" };
+	std::vector<std::string> game_over_screen = { "player_X_win", "player_O_win", "game_draw" };
+	std::vector<std::string> game_over_button = { "Restart", "Newgame", "Exit" };
+	std::vector<std::string> game_over_button_on = { "Restart_on", "Newgame_on", "Exit_on" };
+	std::vector<SDL_Texture*> player_XO_texture_on;
+	std::vector<SDL_Texture*> player_XO_texture_off;
+	std::vector<SDL_Texture*> game_over_screen_texture;
+	std::vector<SDL_Texture*> game_over_button_texture;
+	std::vector<SDL_Texture*> game_over_button_texture_on;
+	std::vector<SDL_Texture*> timer_texture;
 
-void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+	enum eButton
+	{
+		RESTART,
+		NEWGAME,
+		EXIT
+	};
+	enum eGameOverScreen
+	{
+		PLAYER_X_WIN,
+		PLAYER_O_WIN,
+		GAMEDRAW
+	};
+	enum Player
+	{
+		IMG_X,
+		IMG_O
+	};
+
+};
+
+void loadImage(Window& context, std::vector <std::string> name_game_over_button, std::vector <SDL_Texture*>& texture);
+
+std::vector <std::string> getTimerPath();
+
+void initMainGameUI(const Window& window, MainGameUIState& ui_state, Images& picture);
+
+void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state);
 
 void drawTable(const Window& window, MainGameUIState& ui_state);
 void drawSymbol(const Window& window, const GameState& game_state);
-void drawImage(const Window& window, const SDL_Rect& button, const std::string& text);
-void drawGameOverScreen(MainGameUIState& ui_state, const Window& window);
-void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, const PlayerMark& who_won);
+void drawImage(const Window& window, const SDL_Rect& button, std::vector<SDL_Texture*> temp_texture, int idx);
+void drawGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won);
+void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
+void checkMouseHoverButton(MainGameUIState& ui_state);
 Cell handleMouseClick(MainGameUIState& context, const Window& window, const GameState& game_state, int mouseX, int mouseY);
-
 #endif

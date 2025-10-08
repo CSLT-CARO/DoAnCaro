@@ -6,9 +6,9 @@
 int main(int argc, char* argv[]) {
 	Window window{};
 	MainGameUIState main_game_ui_state {};
-
+	Images picture;
 	initVideo(window);
-	initMainGameUI(main_game_ui_state);
+	initMainGameUI(window, main_game_ui_state, picture);
 
 	GameState game_state{};
 	game_state.board_type = Classic;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 			handleMainGameInput(event, main_game_ui_state, window, game_state);
 		}
 
-		processMainGame(window, main_game_ui_state, game_state);
+		processMainGame(window, main_game_ui_state, picture, game_state);
 		SDL_RenderPresent(window.renderer_ptr);
 	}
 

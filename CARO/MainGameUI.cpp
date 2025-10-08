@@ -1,20 +1,80 @@
 #include "MainGameUI.h"
 
-void initMainGameUI(MainGameUIState& ui_state) {
-	ui_state.player_x.image_path = "player1_on.bmp";
-	ui_state.player_o.image_path = "player2_off.bmp";
-	ui_state.timer_button.image_path = "timer/timer_60.bmp"; // timer at 01:00
+
+void loadImage(const Window& window, std::vector <std::string> name_game_over_button, std::vector <SDL_Texture*>& texture)
+{
+	int size = (int)name_game_over_button.size();
+	for (int i = 0; i < size; i++)
+	{
+		std::string path = "./RESOURCE/" + name_game_over_button[i] + ".bmp";
+		SDL_Surface* temp_surface = SDL_LoadBMP(path.c_str());
+		if (temp_surface == nullptr)
+		{
+			std::cout << "Unable to load image " << path << " SDL Error: " << SDL_GetError() << std::endl;
+			return;
+		}
+
+		SDL_Texture* temp_texture = SDL_CreateTextureFromSurface(window.renderer_ptr, temp_surface);
+		if (temp_texture == nullptr)
+		{
+			std::cout << "Unable to create texture from " << path << " SDL Error: " << SDL_GetError() << std::endl;
+			return;
+		}
+		texture.push_back(temp_texture);
+		SDL_FreeSurface(temp_surface);
+	}
 }
 
-void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
+std::vector <std::string> getTimerPath()
+{
+	std::vector <std::string> temp_vector;
+	std::string text;
+	for (int i = 0; i <= 60; i++)
+	{
+
+		temp_vector.push_back("timer/timer_" + std::to_string(i));
+	}
+	return temp_vector;
+}
+
+void initMainGameUI(const Window& window, MainGameUIState& ui_state, Images& picture) {
+/*	ui_state.player_x.image_path = "player1_on.bmp";
+	ui_state.player_o.image_path = "player2_off.bmp";
+	ui_state.timer_button.image_path = "timer/timer_60.bmp";*/ // timer at 01:00
+	ui_state.timer_button.dis_time = 60;
+
+	loadImage(window, picture.player_XO_button_on, picture.player_XO_texture_on); // player status
+	loadImage(window, picture.player_XO_button_off, picture.player_XO_texture_off);
+
+	loadImage(window, getTimerPath(), picture.timer_texture); // timer image
+
+	loadImage(window, picture.game_over_screen, picture.game_over_screen_texture);
+
+
+	loadImage(window, picture.game_over_button_on, picture.game_over_button_texture_on); // load gameover button
+	loadImage(window, picture.game_over_button, picture.game_over_button_texture);
+}
+
+void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state) {
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 
 	drawTable(window, ui_state);
 	drawSymbol(window, game_state);
-	drawImage(window, ui_state.player_x.rect, ui_state.player_x.image_path);
-	drawImage(window, ui_state.player_o.rect, ui_state.player_o.image_path);
-	drawImage(window, ui_state.timer_button.rect, ui_state.timer_button.image_path);
+	if (game_state.mode == PVP)
+	{
+		if (game_state.whose_turn == X)
+		{
+			drawImage(window, ui_state.player_x.rect, picture.player_XO_texture_on, picture.IMG_X);
+			drawImage(window, ui_state.player_o.rect, picture.player_XO_texture_off, picture.IMG_O);
+		}
+		else
+		{
+			drawImage(window, ui_state.player_o.rect, picture.player_XO_texture_on, picture.IMG_O);
+			drawImage(window, ui_state.player_x.rect, picture.player_XO_texture_off, picture.IMG_X);
+		}
+	}
+	drawImage(window, ui_state.timer_button.rect, picture.timer_texture, ui_state.timer_button.dis_time);
 }
 
 void drawTable(const Window& window, MainGameUIState& ui_state) {
@@ -80,55 +140,60 @@ void drawSymbol(const Window& window, const GameState& game_state) {
 }
 
 // TODO: Rewrite the image loading functionality, make it load images only once
-void drawImage(const Window& window, const SDL_Rect& button, const std::string& text) {
-	const std::string path = "RESOURCE/" + text; // get path image
-	SDL_Surface* tempSurface = SDL_LoadBMP(path.c_str());
-
-	if (tempSurface == nullptr) {
-		std::cerr << "Unable to load image " << text << " SDL Error: " << SDL_GetError() << '\n';
+void drawImage(const Window& window, const SDL_Rect& button, std::vector<SDL_Texture*> temp_texture, int idx)
+{
+	if (idx < 0 || idx >= temp_texture.size()) return;
+	if (temp_texture[idx] == nullptr)
+	{
+		std::cout << "Attempted to draw a null texture at index: " << idx << '\n';
 		return;
 	}
 
-	SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(window.renderer_ptr, tempSurface);
-	SDL_FreeSurface(tempSurface);
+	SDL_RenderCopy(window.renderer_ptr, temp_texture[idx], NULL, &button); // draw image
 	
-	if (tempTexture == nullptr) {
-		std::cerr << "Unable to create texture from " << text << " SDL Error: " << SDL_GetError() << std::endl;
-		return;
-	}
-
-	SDL_RenderCopy(window.renderer_ptr, tempTexture, NULL, &button); // draw image
-	SDL_DestroyTexture(tempTexture);
 }
 
-void drawGameOverScreen(MainGameUIState& ui_state, const Window& window) {
-	drawImage(window, ui_state.winner.rect, ui_state.winner.image_path);
+void drawGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won) {
+	int idx;
+	if (who_won == X) idx = picture.PLAYER_X_WIN;
+	else if (who_won == O) idx = picture.PLAYER_O_WIN;
+	else idx = picture.GAMEDRAW;
+	drawImage(window, ui_state.winner.rect, picture.game_over_screen_texture, idx);
+	drawImage(window, ui_state.end_game_button.Restart.rect, picture.game_over_button_texture, picture.RESTART);
+
+	if (ui_state.end_game_button.Restart.state) drawImage(window, ui_state.end_game_button.Restart.rect, picture.game_over_button_texture_on, picture.RESTART);
+	else drawImage(window, ui_state.end_game_button.Restart.rect, picture.game_over_button_texture, picture.RESTART);
+
+	if (ui_state.end_game_button.New_game.state) drawImage(window, ui_state.end_game_button.New_game.rect, picture.game_over_button_texture_on, picture.NEWGAME);
+	else drawImage(window, ui_state.end_game_button.New_game.rect, picture.game_over_button_texture, picture.NEWGAME);
+
+	if (ui_state.end_game_button.Exit.state) drawImage(window, ui_state.end_game_button.Exit.rect, picture.game_over_button_texture_on, picture.EXIT);
+	else drawImage(window, ui_state.end_game_button.Exit.rect, picture.game_over_button_texture, picture.EXIT);
+	
 }
 
-void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, const PlayerMark& who_won) {
+void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won) {
 	if (ui_state.is_set_up_game_over_screen) return;
 
 	int x = window.width / 2; // x pos
 	int y = window.height / 2; // y pos
-
+	int idx;
 	if (who_won == X) {
-		ui_state.winner.image_path = "player1_win.bmp";
+		idx = Images::eGameOverScreen::PLAYER_X_WIN;
 	} else {
-		ui_state.winner.image_path = "player2_win.bmp";
+		idx = Images::eGameOverScreen::PLAYER_O_WIN;
 	}
-
-	std::string path = "RESOURCE/" + ui_state.winner.image_path; // get path image
-	SDL_Surface* tempSurface = SDL_LoadBMP(path.c_str()); // get size of image
-	
-	if (tempSurface == nullptr) {
-		std::cout << "Unable to load image " << path << " SDL Error: " << SDL_GetError() << std::endl;
+	int picW = 0;
+	int picH = 0;
+	if (SDL_QueryTexture(picture.game_over_screen_texture[idx], NULL, NULL, &picW, &picH) != 0)
+	{
+		std::cout << "Query Error Texture: " << SDL_GetError() << std::endl;
 		return;
 	}
 	
-	int imgW = (tempSurface->w) * window.height / (tempSurface->h);
+	int imgW = (picW) * window.height / (picH);
 	int imgH = window.height;
 
-	SDL_FreeSurface(tempSurface);
 	ui_state.winner.rect = {
 		x - imgW / 2,
 		y - imgH / 2,
@@ -136,12 +201,48 @@ void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, const 
 		imgH
 	};
 
+	int buttonW = imgW * 2 / 5;
+	int buttonH = buttonW / 4;
+	int pos_x_button = x - buttonW / 2 + 7;
+	int pos_y_button = y - buttonH / 2 + 20;
+
+	ui_state.end_game_button.Restart.rect =
+	{
+		pos_x_button,
+		pos_y_button + 30 * 2,
+		buttonW,
+		buttonH
+	};
+	ui_state.end_game_button.New_game.rect =
+	{
+		pos_x_button,
+		pos_y_button + 30 * 6,
+		buttonW,
+		buttonH
+	};
+	ui_state.end_game_button.Exit.rect =
+	{
+		pos_x_button,
+		pos_y_button + 30 * 10,
+		buttonW,
+		buttonH
+	};
 	ui_state.is_set_up_game_over_screen = true;
 }
 
 bool checkMouseInButton(const SDL_Rect& button, int mouse_x, int mouse_y) {
 	return (mouse_x >= button.x && mouse_x <= (button.x + button.w) &&
 		mouse_y >= button.y && mouse_y <= (button.y + button.h));
+}
+
+void checkMouseHoverButton(MainGameUIState& ui_state)
+{
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	ui_state.end_game_button.Restart.state = ui_state.end_game_button.New_game.state = ui_state.end_game_button.Exit.state = false;
+	if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.end_game_button.Restart.state = true;
+	if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.end_game_button.New_game.state = true;
+	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.Exit.state = true;
 }
 
 Cell handleMouseClick(MainGameUIState& ui_state, const Window& window, const GameState& game_state, int mouseX, int mouseY) {
@@ -154,13 +255,8 @@ Cell handleMouseClick(MainGameUIState& ui_state, const Window& window, const Gam
 
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
 	
-	if (game_state.whose_turn == X) {
-		ui_state.player_x.image_path = "player1_on.bmp";
-		ui_state.player_o.image_path = "player2_off.bmp";
-	} else {
-		ui_state.player_x.image_path = "player1_off.bmp";
-		ui_state.player_o.image_path = "player2_on.bmp";
-	}
+	
 
 	return cell;
 }
+
