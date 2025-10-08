@@ -12,19 +12,26 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 
 void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, GameState& game_state) {
 	initGame(game_state);
+
+	if (ui_state.is_game_over)
+	{
+		drawGameOverScreen(ui_state, window, picture, checkWinner(game_state.board3x3));
+		return;
+	}
+	
 	drawMainGame(window, ui_state, picture, game_state);
 
 	if (ui_state.selected_cell != NOT_SELECTED) {
 		tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
 
 		PlayerMark winner = checkWinner(game_state.board3x3);
-
 		if (winner != Empty) {
 			setupGameOverScreen(ui_state, window, picture, winner);
-			drawGameOverScreen(ui_state, window, picture, winner);
-			game_state.is_init = false;
-			return;
+			ui_state.is_game_over = true;
+			game_state.is_init = false; // reset board
+
 		}
+		
 		alternateTurn(game_state.whose_turn);
 		ui_state.selected_cell = NOT_SELECTED;
 	}

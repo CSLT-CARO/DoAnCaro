@@ -41,7 +41,7 @@ struct MainGameUIState {
 
 	Cell selected_cell = NOT_SELECTED;
 	bool is_set_up_game_over_screen = false;
-
+	bool is_game_over = false;
 };
 
 struct Images
