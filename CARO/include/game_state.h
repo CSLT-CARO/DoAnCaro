@@ -14,6 +14,9 @@ struct Cell {
     int row{}, column{};
 };
 
+bool operator==(const Cell& a, const Cell& b);
+bool operator!=(const Cell& a, const Cell& b);
+
 struct GameState {
     bool is_init = false;
     State current_state{};
@@ -56,5 +59,8 @@ bool isCellEmpty(const Board12x12& board, const Cell& cell);
 bool isCellOutOfBound3x3(const Cell& cell);
 bool isCellOutOfBound12x12(const Cell& cell);
 bool isMovesLeft(const Board3x3& board);
+
+PlayerMark getMark(const Board3x3&, const Cell& cell);
+PlayerMark getMark(const Board12x12&, const Cell& cell);
 
 #endif

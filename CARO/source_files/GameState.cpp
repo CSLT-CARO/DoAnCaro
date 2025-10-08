@@ -1,5 +1,13 @@
 #include "game_state.h"
 
+bool operator==(const Cell& a, const Cell& b) {
+    return a.row == b.row and a.column == b.column;
+}
+
+bool operator!=(const Cell& a, const Cell& b) {
+    return not (a == b);
+}
+
 void resetBoard(Board3x3& board) {
     for (auto& row : board) {
         for (auto& cell : row) {
@@ -266,4 +274,24 @@ bool isMovesLeft(const Board3x3& board) {
     }
 
     return false;
+}
+
+PlayerMark getMark(const Board3x3& board, const Cell& cell) {
+    try {
+        return board.at(cell.row).at(cell.column);
+    } catch (std::out_of_range& e) {
+        std::cerr << "ERROR, tried to access a cell outside of the board at " << cell.row << ' ' << cell.column << '\n';
+        std::cerr << e.what();
+        exit(1);
+    }
+}
+
+PlayerMark getMark(const Board12x12& board, const Cell& cell) {
+    try {
+        return board.at(cell.row).at(cell.column);
+    } catch (std::out_of_range& e) {
+        std::cerr << "ERROR, tried to access a cell outside of the board at " << cell.row << ' ' << cell.column << '\n';
+        std::cerr << e.what();
+        exit(1);
+    }
 }
