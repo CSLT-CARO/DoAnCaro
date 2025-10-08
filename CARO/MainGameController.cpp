@@ -1,5 +1,4 @@
 #include "MainGameController.h"
-#include "game_state.h"
 
 void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, const Window& window, const GameState& game_state) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
