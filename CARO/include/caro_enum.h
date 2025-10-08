@@ -24,7 +24,9 @@ enum State {
     ChooseBoardType,
     MainGame,
     PlayAgain,
-    Exit
+    Exit,
+
 };
+
 
 #endif
