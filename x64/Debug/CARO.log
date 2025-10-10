@@ -1,0 +1,15 @@
+﻿  MainGameUI.cpp
+C:\c++\Project\DoAnCaro\CARO\MainGameUI.cpp(63,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  MenuController.cpp
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(63,115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(65,107): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(67,115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(69,113): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(80,111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(99,119): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(116,119): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(129,108): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\c++\Project\DoAnCaro\CARO\MenuController.cpp(134,4): warning C4390: ';': empty controlled statement found; is this the intent?
+  Video.cpp
+  Generating Code...
+  CARO.vcxproj -> C:\c++\Project\DoAnCaro\x64\Debug\CARO.exe
