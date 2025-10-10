@@ -10,6 +10,8 @@ void loadImage(const Window& window, std::vector <std::string> name_game_over_bu
 		SDL_Surface* temp_surface = SDL_LoadBMP(path.c_str());
 		if (temp_surface == nullptr)
 		{
+			
+			
 			std::cout << "Unable to load image " << path << " SDL Error: " << SDL_GetError() << std::endl;
 			return;
 		}
@@ -53,6 +55,48 @@ void initMainGameUI(const Window& window, MainGameUIState& ui_state, Images& pic
 
 	loadImage(window, picture.game_over_button_on, picture.game_over_button_texture_on); // load gameover button
 	loadImage(window, picture.game_over_button, picture.game_over_button_texture);
+}
+
+void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vector <SDL_Texture*>& texture)
+{
+
+	int arraySize = arrName.size();
+	for (int idx = 0; idx < arraySize; idx++)
+	{
+		std::string images_name = "./Images/" + arrName[idx] + ".bmp";
+
+		SDL_Surface* new_game_obj = SDL_LoadBMP(images_name.c_str());
+
+		SDL_Texture* new_texture = SDL_CreateTextureFromSurface(window.renderer_ptr, new_game_obj);
+
+		texture.push_back(new_texture);
+		SDL_FreeSurface(new_game_obj);
+
+	}
+}
+
+
+
+void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
+{
+	//Load MainMenu 
+	loadMenuImages(window, images_manager.arrMainMenu, images_manager.mainMenuTexture);
+	loadMenuImages(window, images_manager.arrMainMenuTransform, images_manager.mainMenuTextureTransform);
+
+	//Load type Layer
+	loadMenuImages(window, images_manager.arrChooseTypePlayer, images_manager.chooseTypePlayerTexture);
+	loadMenuImages(window, images_manager.arrChooseTypePlayerTransform, images_manager.chooseTypePlayerTextureTransform);
+
+	//Load type game
+	loadMenuImages(window, images_manager.arrChooseTypeGame, images_manager.chooseTypeGameTexture);
+	loadMenuImages(window, images_manager.arrChooseTypeGameTransform, images_manager.chooseTypeGameTextureTransform);
+
+	//Load settings
+	loadMenuImages(window, images_manager.arrSettings, images_manager.settingsTexture);
+	loadMenuImages(window, images_manager.arrSettingsTransform, images_manager.settingsTextureTransform);
+	// Build Background Pictrue
+	
+	loadMenuImages(window, images_manager.arrBackground, images_manager.backgroundTexture);
 }
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state) {
@@ -203,27 +247,27 @@ void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images
 
 	int buttonW = imgW * 2 / 5;
 	int buttonH = buttonW / 4;
-	int pos_x_button = x - buttonW / 2 + 7;
-	int pos_y_button = y - buttonH / 2 + 20;
+	int pos_x_button = x - buttonW / 2 - 1;
+	int pos_y_button = y - buttonH / 2 + y / 7;
 
 	ui_state.end_game_button.Restart.rect =
 	{
 		pos_x_button,
-		pos_y_button + 30 * 2,
+		pos_y_button ,
 		buttonW,
 		buttonH
 	};
 	ui_state.end_game_button.New_game.rect =
 	{
 		pos_x_button,
-		pos_y_button + 30 * 6,
+		pos_y_button + y / 4 ,
 		buttonW,
 		buttonH
 	};
 	ui_state.end_game_button.Exit.rect =
 	{
 		pos_x_button,
-		pos_y_button + 30 * 10,
+		pos_y_button + y / 2,
 		buttonW,
 		buttonH
 	};
