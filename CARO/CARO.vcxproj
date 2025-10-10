@@ -150,11 +150,15 @@
     <ClCompile Include="MainGameController.cpp" />
     <ClCompile Include="MainGameLogic.cpp" />
     <ClCompile Include="MainGameUI.cpp" />
+    <ClCompile Include="MenuController.cpp" />
+    <ClCompile Include="PrintMenuScreen.cpp" />
     <ClCompile Include="source_files\GameState.cpp" />
     <ClCompile Include="Video.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\caro_enum.h" />
+    <ClInclude Include="include\ChooseTypeGame.h" />
+    <ClInclude Include="include\ChooseTypePlayer.h" />
     <ClInclude Include="include\choose_board_screen.h" />
     <ClInclude Include="include\choose_difficulty_screen.h" />
     <ClInclude Include="include\choose_mode_screen.h" />
@@ -162,9 +166,15 @@
     <ClInclude Include="include\MainGameController.h" />
     <ClInclude Include="include\MainGameLogic.h" />
     <ClInclude Include="include\MainGameUI.h" />
+    <ClInclude Include="include\MenuScreen.h" />
     <ClInclude Include="include\main_game_screen.h" />
+    <ClInclude Include="include\MenuController.h" />
+    <ClInclude Include="include\MenuUI.h" />
     <ClInclude Include="include\play_again_screen.h" />
+    <ClInclude Include="include\PrintMenuScreen.h" />
+    <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\start_screen.h" />
+    <ClInclude Include="include\TyLe.h" />
     <ClInclude Include="include\utitlity.h" />
     <ClInclude Include="include\video.h" />
   </ItemGroup>
