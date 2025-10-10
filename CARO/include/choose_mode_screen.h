@@ -4,7 +4,8 @@
 #include "game_state.h"
 
 void printChooseMode() {
-	std::cout << "=== Choose mode ===\n";
+	
+	<< "=== Choose mode ===\n";
 	std::cout << "1. PVP\n";
 	std::cout << "2. PVE\n";
 	std::cout << "> ";

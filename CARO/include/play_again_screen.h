@@ -4,7 +4,8 @@
 #include "game_state.h"
 
 void printPlayAgainScreen() {
-	std::cout << "=== Play Again? ===\n";
+	
+	<< "=== Play Again? ===\n";
 	std::cout << "1. Yes\n";
 	std::cout << "2. No\n";
 	std::cout << "> ";
