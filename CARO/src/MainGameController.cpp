@@ -33,12 +33,12 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 }
 
 void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, GameState& game_state) {
-	initGame(game_state);
-
 	if (ui_state.is_game_over) {
 		drawGameOverScreen(ui_state, window, picture, checkWinner(game_state.board3x3));
 		return;
 	}
+
+	initGame(game_state);
 
 	drawMainGame(window, ui_state, picture, game_state);
 
