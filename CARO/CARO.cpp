@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "video.h"
+#include "Video.h"
 #include "MainGameController.h"
 #include "MenuController.h"
 #include "MenuUI.h"
@@ -18,12 +18,10 @@ int main(int argc, char* argv[]) {
 	initMenuImages(window, menu_state, picture);
 
 	GameState game_state{};
-	game_state.board_type = Classic;
-	game_state.mode = PVE;
+	game_state.difficulty = Normal;
 
 	SDL_Event event;
 	bool running = true;
-	bool a = false;
 
 	while (running) {
 		while (SDL_PollEvent(&event)) {

@@ -2,7 +2,7 @@
 #define UTITLITY_H
 
 #include <random>
-#include "caro_enum.h"
+#include "CaroEnum.h"
 
 inline PlayerMark pickRandomPlayer() {
 	static thread_local std::mt19937 gen(std::random_device{}());

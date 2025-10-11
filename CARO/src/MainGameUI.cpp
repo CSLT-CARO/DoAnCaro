@@ -6,7 +6,7 @@ void loadImage(const Window& window, std::vector <std::string> name_game_over_bu
 	int size = (int)name_game_over_button.size();
 	for (int i = 0; i < size; i++)
 	{
-		std::string path = "./RESOURCE/" + name_game_over_button[i] + ".bmp";
+		std::string path = "./assets/RESOURCE/" + name_game_over_button[i] + ".bmp";
 		SDL_Surface* temp_surface = SDL_LoadBMP(path.c_str());
 		if (temp_surface == nullptr)
 		{
@@ -63,7 +63,7 @@ void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vecto
 	int arraySize = arrName.size();
 	for (int idx = 0; idx < arraySize; idx++)
 	{
-		std::string images_name = "./Images/" + arrName[idx] + ".bmp";
+		std::string images_name = "./assets/Images/" + arrName[idx] + ".bmp";
 
 		SDL_Surface* new_game_obj = SDL_LoadBMP(images_name.c_str());
 

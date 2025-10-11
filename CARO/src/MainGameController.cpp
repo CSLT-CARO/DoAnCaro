@@ -35,27 +35,29 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, GameState& game_state) {
 	initGame(game_state);
 
-	if (ui_state.is_game_over)
-	{
+	if (ui_state.is_game_over) {
 		drawGameOverScreen(ui_state, window, picture, checkWinner(game_state.board3x3));
 		return;
 	}
-	
+
 	drawMainGame(window, ui_state, picture, game_state);
 
-	if (ui_state.selected_cell != NOT_SELECTED) {
-		tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
-
-		PlayerMark winner = checkWinner(game_state.board3x3);
-		if (winner != Empty) {
-			setupGameOverScreen(ui_state, window, picture, winner);
-			ui_state.is_game_over = true;
-			game_state.is_init = false; // reset board
-
-		}
-		
+	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
+		botTurn(game_state);
 		alternateTurn(game_state.whose_turn);
-		ui_state.selected_cell = NOT_SELECTED;
+	}
+	else {
+		if (ui_state.selected_cell == NOT_SELECTED) return;
+		tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
+		alternateTurn(game_state.whose_turn);
 	}
 
+	PlayerMark winner = checkWinner(game_state.board3x3);
+	if (winner != Empty or not isMovesLeft(game_state.board3x3)) {
+		setupGameOverScreen(ui_state, window, picture, winner);
+		ui_state.is_game_over = true;
+		game_state.is_init = false;
+	}
+
+	ui_state.selected_cell = NOT_SELECTED;
 }

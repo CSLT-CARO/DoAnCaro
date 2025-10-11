@@ -8,7 +8,7 @@
 #include <math.h>
 #include <vector>
 
-#include "video.h"
+#include "Video.h"
 #include "MainGameUI.h"
 #include "MenuUI.h"
 #include "Settings.h"

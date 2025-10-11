@@ -2,7 +2,7 @@
 #define MENU_CONTROLLER_H
 
 #include <SDL.h>
-#include "video.h"
+#include "Video.h"
 #include "MenuUI.h"
 #include "PrintMenuScreen.h"
 #include "game_state.h"

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <array>
 
-#include "caro_enum.h"
+#include "CaroEnum.h"
 #include "utitlity.h"
 
 using Board3x3 = std::array<std::array<PlayerMark, 3>, 3>;

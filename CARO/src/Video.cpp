@@ -1,4 +1,4 @@
-#include "video.h"
+#include "Video.h"
 
 void initVideo(Window& window) {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -23,7 +23,7 @@ void initVideo(Window& window) {
 		SDL_WINDOWPOS_CENTERED,
 		window.width,
 		window.height,
-		SDL_WINDOW_FULLSCREEN
+		SDL_WINDOW_BORDERLESS
 	);
 
 	if (NULL == window.window_ptr) {
