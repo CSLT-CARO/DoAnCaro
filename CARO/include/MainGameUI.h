@@ -2,7 +2,7 @@
 #define MAIN_GAME_UI_H
 
 #include "video.h"
-#include "game_state.h"
+#include "GameState.h"
 #include "MenuUI.h"
 
 #include <vector>

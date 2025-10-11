@@ -5,7 +5,7 @@
 #include "Video.h"
 #include "MenuUI.h"
 #include "PrintMenuScreen.h"
-#include "game_state.h"
+#include "GameState.h"
 #include "TyLe.h"
 
 

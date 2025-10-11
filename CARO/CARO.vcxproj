@@ -23,7 +23,7 @@
     <ClInclude Include="include\ChooseTypeGame.h" />
     <ClInclude Include="include\ChooseTypePlayer.h" />
     <ClInclude Include="include\choose_mode_screen.h" />
-    <ClInclude Include="include\game_state.h" />
+    <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\ImageProcessing.h" />
     <ClInclude Include="include\MainGameController.h" />
     <ClInclude Include="include\MainGameLogic.h" />
