@@ -4,6 +4,7 @@
 #include "video.h"
 #include "GameState.h"
 #include "MenuUI.h"
+#include "Texture.h"
 
 #include <vector>
 #include <SDL_test_font.h>

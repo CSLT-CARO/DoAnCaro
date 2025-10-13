@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Video.h"
+#include "Texture.h"
 #include "MainGameController.h"
 #include "MenuController.h"
 #include "MenuUI.h"
@@ -14,6 +15,8 @@ int main(int argc, char* argv[]) {
 	print_settings print_settings;
 
 	initVideo(window);
+	loadMenuTextures(window.renderer_ptr);
+	loadMainGameTextures(window.renderer_ptr);
 	initMainGameUI(window, main_game_ui_state, picture);
 	initMenuImages(window, menu_state, picture);
 

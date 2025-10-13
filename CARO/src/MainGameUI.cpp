@@ -75,8 +75,6 @@ void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vecto
 	}
 }
 
-
-
 void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
 {
 	//Load MainMenu 
@@ -100,6 +98,7 @@ void initMenuImages(Window& window, MenuState& menu_state, Images& images_manage
 }
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state) {
+	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 
@@ -109,7 +108,9 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& pictu
 	{
 		if (game_state.whose_turn == X)
 		{
-			drawImage(window, ui_state.player_x.rect, picture.player_XO_texture_on, picture.IMG_X);
+			// EXAMPLE 1
+			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_ON), ui_state.player_x.rect);
+			//drawImage(window, ui_state.player_x.rect, picture.player_XO_texture_on, picture.IMG_X);
 			drawImage(window, ui_state.player_o.rect, picture.player_XO_texture_off, picture.IMG_O);
 		}
 		else

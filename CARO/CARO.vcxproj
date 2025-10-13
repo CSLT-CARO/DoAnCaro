@@ -24,7 +24,7 @@
     <ClInclude Include="include\ChooseTypePlayer.h" />
     <ClInclude Include="include\choose_mode_screen.h" />
     <ClInclude Include="include\GameState.h" />
-    <ClInclude Include="include\ImageProcessing.h" />
+    <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\MainGameController.h" />
     <ClInclude Include="include\MainGameLogic.h" />
     <ClInclude Include="include\MainGameUI.h" />
@@ -40,7 +40,7 @@
   <ItemGroup>
     <ClCompile Include="CARO.cpp" />
     <ClCompile Include="src\GameState.cpp" />
-    <ClCompile Include="src\ImageProcessing.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\MainGameController.cpp" />
     <ClCompile Include="src\MainGameLogic.cpp" />
     <ClCompile Include="src\MainGameUI.cpp" />

@@ -37,7 +37,7 @@ void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, 
 		drawGameOverScreen(ui_state, window, picture, checkWinner(game_state.board3x3));
 		return;
 	}
-
+	
 	initGame(game_state);
 
 	drawMainGame(window, ui_state, picture, game_state);
