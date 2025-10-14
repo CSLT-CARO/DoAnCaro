@@ -6,173 +6,250 @@
 #include <vector>
 
 #include "PrintMenuScreen.h"
-
-
-SDL_Rect print_settings:: buildCarroPosition(Window& window, int idx) // Build Carro Text Position
-	{
-		int percent_screen_high = window.height / 10;  // change into percent
-
-		int width_button = 600, heigh_button = 600;
-
-		int buttonPosX = window.width / 2 - width_button / 2;
-		int buttonPosY = (int)percent_screen_high * 0.1 - 75;
-		SDL_Rect button = { buttonPosX, buttonPosY, width_button, heigh_button };
-		return button;
-
-	}
-SDL_Rect print_settings::buildLeftSettingsButtonPosition(Window& window, int idx, const double TYLEHIGH[])
-	{
-		int percentScreenH = window.height / 10;  // change into percent
-
-		int wButton = 300, hButton = 80;
-		int buttonPosX = window.width / 2 - wButton + 70;
-		int buttonPosY = (int)percentScreenH * TYLEHIGH[idx];
-		SDL_Rect button = { buttonPosX, buttonPosY, wButton, hButton };
-		return button;
-	}
-SDL_Rect print_settings::buildRightSettingsButtonPosition(Window& window, int idx, const double TYLEHIGH[])
-	{
-		int percentScreenH = window.height / 10;  // change into percent
-
-		int wButton = 120, hButton = 80;
-		int	buttonPosX = window.width / 2 - wButton + 70 + 150;
-		int buttonPosY = (int)percentScreenH * TYLEHIGH[idx];
-		SDL_Rect button = { buttonPosX, buttonPosY, wButton, hButton };
-		return button;
-	}
-
-void print_settings::buildLayerDoubleButton(Window& window, std::vector< SDL_Texture*> texture_transform, std::vector< SDL_Texture*> texture, const double TYLEHIGH[], int state)
-	{
-
-		int textureTransformSize = texture_transform.size();
-		int textureSize = texture.size();
-		SDL_Rect FirstLayer;
-
-		int Sz = std::max(textureTransformSize, textureSize);
-
-		for (int idx = 0; idx < Sz; idx++)
-		{
-			if (idx == Sz - 1)
-			{
-				FirstLayer = buildCarroPosition(window, textureSize - 1);
-				SDL_RenderCopy(window.renderer_ptr, texture[textureSize - 1], NULL, &FirstLayer);
-			}
-			else if (idx < 2) // Build Music and sfx button
-			{
-				FirstLayer = buildLeftSettingsButtonPosition(window, idx, TYLEHIGH);
-				SDL_RenderCopy(window.renderer_ptr, texture[idx], NULL, &FirstLayer);
-			}
-			else if (idx < 4)
-			{
-				FirstLayer = buildRightSettingsButtonPosition(window, idx, TYLEHIGH);
-				SDL_RenderCopy(window.renderer_ptr, texture[idx], NULL, &FirstLayer);
-			}
-		}
-	}
-void print_settings::TurnOnOff(Window& window, bool turn_music, bool turn_sfx, int transform_idx, Images texture_manager, MenuState& menu_state)
-	{
-		SDL_Rect FirstLayer;
-		if (turn_music == true)
-		{
-			FirstLayer = buildRightSettingsButtonPosition(window, menu_state.settings._OnMusic, TyLeChieuCaoSettings);
-			if (menu_state.settings._OnMusic == transform_idx)
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTextureTransform[menu_state.settings._OnMusic], NULL, &FirstLayer);
-			else
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTexture[menu_state.settings._OnMusic], NULL, &FirstLayer);
-		}
-		else
-		{
-			FirstLayer = buildRightSettingsButtonPosition(window, menu_state.settings._OffMusic, TyLeChieuCaoSettings);
-			if (menu_state.settings._OffMusic == transform_idx)
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTextureTransform[menu_state.settings._OffMusic], NULL, &FirstLayer);
-			else
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTexture[menu_state.settings._OffMusic], NULL, &FirstLayer);
-		}
-		if (turn_sfx == true)
-		{
-			FirstLayer = buildRightSettingsButtonPosition(window, menu_state.settings._OnSFX, TyLeChieuCaoSettings);
-			if (menu_state.settings._OnSFX == transform_idx)
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTextureTransform[menu_state.settings._OnSFX], NULL, &FirstLayer);
-			else
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTexture[menu_state.settings._OnSFX], NULL, &FirstLayer);
-		}
-		else
-		{
-			FirstLayer = buildRightSettingsButtonPosition(window, menu_state.settings._OffSFX, TyLeChieuCaoSettings);
-			if (menu_state.settings._OffSFX == transform_idx)
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTextureTransform[menu_state.settings._OffSFX], NULL, &FirstLayer);
-			else
-				SDL_RenderCopy(window.renderer_ptr, texture_manager.settingsTexture[menu_state.settings._OffSFX], NULL, &FirstLayer);
-		}
-	}
-
-//void buildBackgroundLayer(Window& window, int idx, Images texture_manager)
-//{
-//	SDL_RenderCopy(window.renderer_ptr, texture_manager.backgroundTexture[idx], NULL, NULL);
-//}
-
-SDL_Rect buildButtonPosition(Window& window, int idx, const double TYLEHIGH[])
+std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
+void InitCaroButton(Window& window, CaroTextPosition& caro_text_position)
 {
-	int percent_screen_high = window.height / 10;  // change into percent
-
-	int width_button = 350, hButton = 80;
-	int button_pos_x = window.width / 2 - width_button / 2;
-	int button_pos_y = (int)percent_screen_high * TYLEHIGH[idx];
-	SDL_Rect button = { button_pos_x, button_pos_y, width_button, hButton };
-	return button;
-
+	int window_width = window.width;
+	int window_height = window.height;
+	caro_text_position.caro_button = {
+		window_width / 2 - 300,
+		(int)(window_height / 10 * 0.1) - 75,
+		600,
+		600
+	};
 }
 
-SDL_Rect buildCarroPosition(Window& window, int idx) // Build Carro Text Position
+void InitMenuButton(Window& window, MenuButton& menu_button)
 {
-	int percent_screen_high = window.height / 10;  // change into percent
+	int window_width = window.width;
+	int window_height = window.height;
+	menu_button.play_button = {
+		window_width / 2 - 175,
+		window_height / 10 * 4,
+		350,
+		80
+	};
+	menu_button.load_button = {
+		window_width / 2 - 175,
+		(int)(window_height / 10 * 5.25),
+		350,
+		80
+	};
+	menu_button.settings_button.settings_button = {
+		window_width / 2 - 175,
+		(int)(window_height / 10 * 6.5),
+		350,
+		80
+	};
+	menu_button.exit_button = {
+		window_width / 2 - 175,
+		(int)(window_height / 10 * 7.75),
+		350,
+		80
+	};
+	MenuButtonPosition[_MainMenu][TEXTURE_PLAY_BUTTON] = menu_button.play_button.rect;
+	MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON] = menu_button.load_button.rect;
+	MenuButtonPosition[_MainMenu][TEXTURE_SETTINGS_BUTTON] = menu_button.settings_button.settings_button;
+	MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON] = menu_button.exit_button.rect;
+}
 
-	int width_button = 600, heigh_button = 600;
+void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player)
+{
+	int window_width = window.width;
+	int window_height = window.height;
+	choose_type_player.pvp_button = {
+		window_width / 2 - 175,
+		window_height / 10 * 4,
+		350,
+		80
+	};
+	choose_type_player.pve_button = {
+		window_width / 2 - 175,
+		(int)(window_height / 10 * 5.25),
+		350,
+		80
+	};
+	MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVP_BUTTON] = choose_type_player.pvp_button.rect;
+	MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON] = choose_type_player.pve_button.rect;
+}
 
-	int buttonPosX = window.width / 2 - width_button / 2;
-	int buttonPosY = (int)percent_screen_high * 0.1 - 75;
-	SDL_Rect button = { buttonPosX, buttonPosY, width_button, heigh_button };
-	return button;
+void InitChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game)
+{
+	int window_width = window.width;
+	int window_height = window.height;
+	choose_type_game._3x3_button = {
+		window_width / 2 - 175,
+		window_height / 10 * 4,
+		350,
+		80
+	};
+	choose_type_game._12x12_button = {
+		window_width / 2 - 175,
+		(int)(window_height / 10 * 5.25),
+		350,
+		80
+	};
+	MenuButtonPosition[_ChooseTypeGame][TEXTURE_CLASSIC_BOARD_BUTTON] = choose_type_game._3x3_button.rect;
+	MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON] = choose_type_game._12x12_button.rect;
+}
 
+void InitSettings(Window& window, SettingsButton& settings_button)
+{
+
+	int window_width = window.width;
+	int window_height = window.height;
+	settings_button.music_button = {
+		window_width / 2 - 230,
+		window_height / 10 * 4,
+		300,
+		80
+	};
+	settings_button.sfx_button = {
+		window_width / 2 - 230,
+		(int)(window_height / 10 * 5.25),
+		300,
+		80
+	};
+
+	settings_button.on_music_button = {
+		window_width / 2 + 100,
+		window_height / 10 * 4,
+		120,
+		80
+	};
+	settings_button.on_sfx_button = {
+		window_width / 2 + 100,
+		(int)(window_height / 10 * 5.25),
+		120,
+		80
+	};
+
+
+	MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_BUTTON] = settings_button.music_button.rect;
+	MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_BUTTON] = settings_button.sfx_button.rect;
+	MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON] = settings_button.on_music_button.rect;
+	MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_ON_BUTTON] = settings_button.on_sfx_button.rect;
+	MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_OFF_BUTTON] = settings_button.on_music_button.rect;
+	MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_OFF_BUTTON] = settings_button.on_sfx_button.rect;
 }
 
 
-void buildLayer(Window& window, int transform_idx, std::vector< SDL_Texture*> texture_transform, std::vector< SDL_Texture*> texture, const double TYLEHIGH[])
+void DrawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state)
 {
-	int texture_transform_size = texture_transform.size();
-	int texture_size = texture.size();
-	int Sz = std::max(texture_transform_size, texture_size);
-	//
-	// 
-	// << Sz << ' ' <<   transform_idx << '\n';
-	//std::cout << texture_transform.size() << ' ' << texture.size() << '\n';
-	for (int idx = 0; idx < Sz; idx++)
+	int sz = menu_button.MenuButtonEnums.size();
+	for (int i = 0; i < sz; i++)
 	{
-		SDL_Rect FirstLayer = buildButtonPosition(window, idx, TYLEHIGH);
-		if (idx == Sz - 1) FirstLayer = buildCarroPosition(window, idx);
-		if (idx == transform_idx)
-			SDL_RenderCopy(window.renderer_ptr, texture_transform[idx], NULL, &FirstLayer);
+		MenuTexturesEnum menu_enums_button_hovered = menu_button.MenuButtonHoveredEnums[i];
+		MenuTexturesEnum menu_enums_button = menu_button.MenuButtonEnums[i];
+		if (menu_enums_button == menu_state.transform_idx)
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button_hovered), MenuButtonPosition[_MainMenu][menu_enums_button]);
 		else
-			SDL_RenderCopy(window.renderer_ptr, texture[idx], NULL, &FirstLayer);
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button), MenuButtonPosition[_MainMenu][menu_enums_button]);
 	}
-
 }
-void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager, print_settings print_settings)
-{
-	//std::cout << texture_manager.backgroundTexture.size() << '\n';
-	SDL_RenderCopy(window.renderer_ptr, texture_manager.backgroundTexture[0], NULL, NULL);
-	if (menu_state.trans_display == _ChangeSettings)
-	{
-		//std::cout << transform_idx << '\n';
-		print_settings.buildLayerDoubleButton(window, texture_manager.settingsTextureTransform, texture_manager.settingsTexture, TyLeChieuCaoSettings, 0);
-		print_settings.TurnOnOff(window, menu_state.turn_music, menu_state.turn_sfx, menu_state.transform_idx, texture_manager, menu_state);
-	}
 
-	if (menu_state.trans_display == _ChooseTypeGame)
-		buildLayer(window, menu_state.transform_idx, texture_manager.chooseTypeGameTextureTransform, texture_manager.chooseTypeGameTexture, TyLeChieuCaoTypeGame);
-	if (menu_state.trans_display == _ChooseTypePlayer)
-		buildLayer(window, menu_state.transform_idx, texture_manager.chooseTypePlayerTextureTransform, texture_manager.chooseTypePlayerTexture, TyLeChieuCaoTypePlayer);
-	//std::cout << transform_idx << ' ' << trans_display << '\n';
+void DrawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state)
+{
+	int sz = choose_type_player_change.ChoosePlayerButtonEnums.size();
+	for (int i = 0; i < sz; i++)
+	{
+		MenuTexturesEnum enums_button_hovered = choose_type_player_change.ChoosePlayerButtonHoveredEnums[i];
+		MenuTexturesEnum enums_button = choose_type_player_change.ChoosePlayerButtonEnums[i];
+		if (enums_button == menu_state.transform_idx)
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button_hovered), MenuButtonPosition[_ChooseTypePlayer][enums_button]);
+		else
+		{
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypePlayer][enums_button]);
+		}
+	}
+}
+
+
+void DrawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state)
+{
+	int sz = choose_type_game_change.ChooseGameButtonEnums.size();
+	for (int i = 0; i < sz; i++)
+	{
+		MenuTexturesEnum enums_button_hovered = choose_type_game_change.ChooseGameButtonHoveredEnums[i];
+		MenuTexturesEnum enums_button = choose_type_game_change.ChooseGameButtonEnums[i];
+		if (enums_button == menu_state.transform_idx)
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button_hovered), MenuButtonPosition[_ChooseTypeGame][enums_button]);
+		else
+		{
+			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypeGame][enums_button]);
+		}
+	}
+}
+
+void DrawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state)
+{
+
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_SFX_BUTTON), MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_BUTTON]);
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_MUSIC_BUTTON), MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_BUTTON]);
+	if (menu_state.turn_music == true)
+	{
+		MenuTexturesEnum transform_button = TEXTURE_MUSIC_ON_BUTTON;
+		if (menu_state.transform_idx == TEXTURE_MUSIC_ON_BUTTON)
+			transform_button = TEXTURE_MUSIC_ON_BUTTON_HOVERED;
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(transform_button), MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON]);
+	}
+	else
+	{
+		MenuTexturesEnum transform_button = TEXTURE_MUSIC_OFF_BUTTON;
+		if (menu_state.transform_idx == TEXTURE_MUSIC_OFF_BUTTON)
+			transform_button = TEXTURE_MUSIC_OFF_BUTTON_HOVERED;
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(transform_button), MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON]);
+	}
+	if (menu_state.turn_sfx == true)
+	{
+		MenuTexturesEnum transform_button = TEXTURE_SFX_ON_BUTTON;
+		if (menu_state.transform_idx == TEXTURE_SFX_ON_BUTTON)
+			transform_button = TEXTURE_SFX_ON_BUTTON_HOVERED;
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(transform_button), MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_ON_BUTTON]);
+	}
+	else
+	{
+		MenuTexturesEnum transform_button = TEXTURE_SFX_OFF_BUTTON;
+		if (menu_state.transform_idx == TEXTURE_SFX_OFF_BUTTON)
+			transform_button = TEXTURE_SFX_OFF_BUTTON_HOVERED;
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(transform_button), MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_ON_BUTTON]);
+	}
+}
+
+void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager)
+{
+	/*if (MENU_TEXTURES.find(TEXTURE_CARO_TEXT) != MENU_TEXTURES.end()) {
+		std::cout << "Texture exitst!\n";
+	}
+	else {
+		std::cout << "Texture no exitst\n";
+	}*/
+	MenuButton menu_button;
+	CaroTextPosition caro_text_position;
+	ChooseTypePlayer_Change choose_type_player_change;
+	ChooseTypeGame_Change choose_type_game_change;
+	SettingsButton settings;
+	InitMenuButton(window, menu_button);
+	InitCaroButton(window, caro_text_position);
+	InitChooseTypePlayer(window, choose_type_player_change);
+	InitChooseTypeGame(window, choose_type_game_change);
+	InitSettings(window, settings);
+
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), caro_text_position.caro_button.rect);
 	if (menu_state.trans_display == _MainMenu)
-		buildLayer(window, menu_state.transform_idx, texture_manager.mainMenuTextureTransform, texture_manager.mainMenuTexture, TyLeChieuCaoMainMenu);
+	{
+		DrawMenuGame(window, menu_button, menu_state);
+	}
+	if (menu_state.trans_display == _ChooseTypePlayer)
+	{
+		DrawChooseTypePlayer(window, choose_type_player_change, menu_state);
+	}
+	if (menu_state.trans_display == _ChooseTypeGame)
+	{
+		DrawChooseTypeGame(window, choose_type_game_change, menu_state);
+	}
+	if (menu_state.trans_display == _ChangeSettings)
+		DrawChangeSettings(window, settings, menu_state);
+
 }

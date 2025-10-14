@@ -47,15 +47,6 @@
     <ClInclude Include="include\CaroEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ChooseTypeGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ChooseTypePlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\choose_mode_screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\MainGameController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,12 +66,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\PrintMenuScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TyLe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utitlity.h">

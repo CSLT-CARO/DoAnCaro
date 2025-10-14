@@ -8,10 +8,6 @@
 #include <math.h>
 #include <vector>
 
-#include "MenuScreen.h"
-#include "ChooseTypeGame.h"
-#include "ChooseTypePlayer.h"
-#include "Settings.h"
 
 
 enum gameLayer
@@ -26,12 +22,9 @@ enum gameLayer
 
 struct MenuState
 {
-	MenuScreen menu_screen;
-	ChooseTypePlayer choose_type_player;
-	ChooseTypeGame choose_type_game;
-	Settings settings;
-	//Background background;
-	bool game_is_run = true;
+
+
+	bool menu_is_run = true;
 	bool turn_sfx = true;
 	bool turn_music = true;
 	bool background_display = true;

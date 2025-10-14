@@ -1,18 +1,18 @@
 #include "Texture.h"
 
-const std::vector<std::pair<std::string, MenuTexturesEnum>> MENU_IMAGE_LOAD_ENTRIES {
+const std::vector<std::pair<std::string, MenuTexturesEnum>> MENU_IMAGE_LOAD_ENTRIES{
 	{ "Background", TEXTURE_BACKGROUND },
 	{ "Caro_Text_White", TEXTURE_CARO_TEXT },
-	
+
 	{ "PlayButton", TEXTURE_PLAY_BUTTON },
 	{ "PlayButtonTransform", TEXTURE_PLAY_BUTTON_HOVERED },
-	
+
 	{ "LoadButton", TEXTURE_LOAD_BUTTON },
 	{ "LoadButtonTransform", TEXTURE_LOAD_BUTTON_HOVERED },
-	
+
 	{ "SettingsButton", TEXTURE_SETTINGS_BUTTON },
 	{ "SettingsButtonTransform", TEXTURE_SETTINGS_BUTTON_HOVERED },
-	
+
 	{ "ExitButton", TEXTURE_EXIT_BUTTON } ,
 	{ "ExitButtonTransform", TEXTURE_EXIT_BUTTON_HOVERED },
 
@@ -61,7 +61,7 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 	{ "Restart", TEXTURE_RESTART },
 	{ "Newgame", TEXTURE_NEW_GAME },
 	{ "Exit", TEXTURE_EXIT },
-	
+
 	{ "Restart_on", TEXTURE_RESTART_ON },
 	{ "Newgame_on", TEXTURE_NEW_GAME_ON },
 	{ "Exit_on", TEXTURE_EXIT_ON }

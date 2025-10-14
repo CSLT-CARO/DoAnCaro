@@ -10,8 +10,8 @@ void loadImage(const Window& window, std::vector <std::string> name_game_over_bu
 		SDL_Surface* temp_surface = SDL_LoadBMP(path.c_str());
 		if (temp_surface == nullptr)
 		{
-			
-			
+
+
 			std::cout << "Unable to load image " << path << " SDL Error: " << SDL_GetError() << std::endl;
 			return;
 		}
@@ -40,9 +40,9 @@ std::vector <std::string> getTimerPath()
 }
 
 void initMainGameUI(const Window& window, MainGameUIState& ui_state, Images& picture) {
-/*	ui_state.player_x.image_path = "player1_on.bmp";
-	ui_state.player_o.image_path = "player2_off.bmp";
-	ui_state.timer_button.image_path = "timer/timer_60.bmp";*/ // timer at 01:00
+	/*	ui_state.player_x.image_path = "player1_on.bmp";
+		ui_state.player_o.image_path = "player2_off.bmp";
+		ui_state.timer_button.image_path = "timer/timer_60.bmp";*/ // timer at 01:00
 	ui_state.timer_button.dis_time = 60;
 
 	loadImage(window, picture.player_XO_button_on, picture.player_XO_texture_on); // player status
@@ -75,27 +75,27 @@ void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vecto
 	}
 }
 
-void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
-{
-	//Load MainMenu 
-	loadMenuImages(window, images_manager.arrMainMenu, images_manager.mainMenuTexture);
-	loadMenuImages(window, images_manager.arrMainMenuTransform, images_manager.mainMenuTextureTransform);
-
-	//Load type Layer
-	loadMenuImages(window, images_manager.arrChooseTypePlayer, images_manager.chooseTypePlayerTexture);
-	loadMenuImages(window, images_manager.arrChooseTypePlayerTransform, images_manager.chooseTypePlayerTextureTransform);
-
-	//Load type game
-	loadMenuImages(window, images_manager.arrChooseTypeGame, images_manager.chooseTypeGameTexture);
-	loadMenuImages(window, images_manager.arrChooseTypeGameTransform, images_manager.chooseTypeGameTextureTransform);
-
-	//Load settings
-	loadMenuImages(window, images_manager.arrSettings, images_manager.settingsTexture);
-	loadMenuImages(window, images_manager.arrSettingsTransform, images_manager.settingsTextureTransform);
-	// Build Background Pictrue
-	
-	loadMenuImages(window, images_manager.arrBackground, images_manager.backgroundTexture);
-}
+//void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
+//{
+//	//Load MainMenu 
+//	loadMenuImages(window, images_manager.arrMainMenu, images_manager.mainMenuTexture);
+//	loadMenuImages(window, images_manager.arrMainMenuTransform, images_manager.mainMenuTextureTransform);
+//
+//	//Load type Layer
+//	loadMenuImages(window, images_manager.arrChooseTypePlayer, images_manager.chooseTypePlayerTexture);
+//	loadMenuImages(window, images_manager.arrChooseTypePlayerTransform, images_manager.chooseTypePlayerTextureTransform);
+//
+//	//Load type game
+//	loadMenuImages(window, images_manager.arrChooseTypeGame, images_manager.chooseTypeGameTexture);
+//	loadMenuImages(window, images_manager.arrChooseTypeGameTransform, images_manager.chooseTypeGameTextureTransform);
+//
+//	//Load settings
+//	loadMenuImages(window, images_manager.arrSettings, images_manager.settingsTexture);
+//	loadMenuImages(window, images_manager.arrSettingsTransform, images_manager.settingsTextureTransform);
+//	// Build Background Pictrue
+//	
+//	loadMenuImages(window, images_manager.arrBackground, images_manager.backgroundTexture);
+//}
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
@@ -123,36 +123,36 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& pictu
 }
 
 void drawTable(const Window& window, MainGameUIState& ui_state) {
-	 int cell_width = window.width / 16;
-	 int cell_height = cell_width;
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
 
-	 SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
-	 for (int i = 5; i <= 11; i += 2)
-		 SDL_RenderDrawLine(window.renderer_ptr, i* cell_width, cell_height, i* cell_width, 7 * cell_height);// column 
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	for (int i = 5; i <= 11; i += 2)
+		SDL_RenderDrawLine(window.renderer_ptr, i * cell_width, cell_height, i * cell_width, 7 * cell_height);// column 
 
-	 for (int i = 1; i <= 7; i += 2)
-		 SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i* cell_height, 11 * cell_height, i* cell_height); // row
+	for (int i = 1; i <= 7; i += 2)
+		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
 
-	 ui_state.player_x.rect = {
-		 cell_width  ,
-		 cell_height * 5 / 2,
-		 cell_width * 3,
-		 cell_height
-	 };
+	ui_state.player_x.rect = {
+		cell_width  ,
+		cell_height * 5 / 2,
+		cell_width * 3,
+		cell_height
+	};
 
-	 ui_state.player_o.rect = {
-		 cell_width ,
-		 cell_height * 9 / 2,
-		 cell_width * 3,
-		 cell_height
-	 };
+	ui_state.player_o.rect = {
+		cell_width ,
+		cell_height * 9 / 2,
+		cell_width * 3,
+		cell_height
+	};
 
-	 ui_state.timer_button.rect = {
-		 cell_width * 12,
-		 cell_height ,
-		 cell_height * 3,
-		 cell_height * 3 / 2,
-	 };
+	ui_state.timer_button.rect = {
+		cell_width * 12,
+		cell_height ,
+		cell_height * 3,
+		cell_height * 3 / 2,
+	};
 }
 
 void drawSymbol(const Window& window, const GameState& game_state) {
@@ -174,7 +174,8 @@ void drawSymbol(const Window& window, const GameState& game_state) {
 			if (CURRENT_CELL_MARK == X) {
 				SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0, 0, 255);
 				symbol = "X";
-			} else {
+			}
+			else {
 				SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 255, 255);
 				symbol = "O";
 			}
@@ -195,7 +196,7 @@ void drawImage(const Window& window, const SDL_Rect& button, std::vector<SDL_Tex
 	}
 
 	SDL_RenderCopy(window.renderer_ptr, temp_texture[idx], NULL, &button); // draw image
-	
+
 }
 
 void drawGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won) {
@@ -214,7 +215,7 @@ void drawGameOverScreen(MainGameUIState& ui_state, const Window& window, Images&
 
 	if (ui_state.end_game_button.Exit.state) drawImage(window, ui_state.end_game_button.Exit.rect, picture.game_over_button_texture_on, picture.EXIT);
 	else drawImage(window, ui_state.end_game_button.Exit.rect, picture.game_over_button_texture, picture.EXIT);
-	
+
 }
 
 void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won) {
@@ -225,7 +226,8 @@ void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images
 	int idx;
 	if (who_won == X) {
 		idx = Images::eGameOverScreen::PLAYER_X_WIN;
-	} else {
+	}
+	else {
 		idx = Images::eGameOverScreen::PLAYER_O_WIN;
 	}
 	int picW = 0;
@@ -235,8 +237,8 @@ void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images
 		std::cout << "Query Error Texture: " << SDL_GetError() << std::endl;
 		return;
 	}
-	
-	int imgW = (picW) * window.height / (picH);
+
+	int imgW = (picW)*window.height / (picH);
 	int imgH = window.height;
 
 	ui_state.winner.rect = {
@@ -295,13 +297,12 @@ Cell handleMouseClick(MainGameUIState& ui_state, const Window& window, const Gam
 	int cellH = cellW;
 	int col = (mouseX / cellW) / 2 + (mouseX / cellW) % 2 - 3;
 	int row = (mouseY / cellH) / 2 + (mouseY / cellH) % 2 - 1; // from mouse pos to row, col of board
-	
-	Cell cell { row, col };
+
+	Cell cell{ row, col };
 
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
-	
-	
+
+
 
 	return cell;
 }
-

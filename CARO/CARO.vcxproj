@@ -20,9 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CaroEnum.h" />
-    <ClInclude Include="include\ChooseTypeGame.h" />
-    <ClInclude Include="include\ChooseTypePlayer.h" />
-    <ClInclude Include="include\choose_mode_screen.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\MainGameController.h" />
@@ -32,8 +29,6 @@
     <ClInclude Include="include\MenuScreen.h" />
     <ClInclude Include="include\MenuUI.h" />
     <ClInclude Include="include\PrintMenuScreen.h" />
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\TyLe.h" />
     <ClInclude Include="include\utitlity.h" />
     <ClInclude Include="include\Video.h" />
   </ItemGroup>
@@ -121,6 +116,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +133,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -168,6 +165,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
