@@ -9,13 +9,12 @@
 int main(int argc, char* argv[]) {
 	Window window{};
 	MainGameUIState main_game_ui_state{};
-	Images picture;
 	MenuState menu_state;
 
 	initVideo(window);
 	loadMenuTextures(window.renderer_ptr);
+	loadTimerTextures(window.renderer_ptr);
 	loadMainGameTextures(window.renderer_ptr);
-	initMainGameUI(window, main_game_ui_state, picture);
 
 	GameState game_state{};
 	game_state.difficulty = Normal;
@@ -37,13 +36,13 @@ int main(int argc, char* argv[]) {
 			if (game_state.game_is_run == true)
 				handleMainGameInput(event, main_game_ui_state, window, game_state, menu_state);
 			else
-				handleMenuInput(event, window, menu_state, picture, game_state);
+				handleMenuInput(event, window, menu_state, game_state);
 		}
 		if (game_state.game_is_run == true)
-			processMainGame(window, main_game_ui_state, picture, game_state);
+			processMainGame(window, main_game_ui_state, game_state);
 		else
 		{
-			processMenuScreen(window, menu_state, picture);
+			processMenuScreen(window, menu_state);
 		}
 		SDL_RenderPresent(window.renderer_ptr);
 	}

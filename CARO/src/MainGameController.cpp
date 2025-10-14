@@ -3,7 +3,7 @@
 
 void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, const Window& window, GameState& game_state, MenuState& menu_state) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
-		ui_state.selected_cell = handleMouseClick(ui_state, window, game_state, event.button.x, event.button.y);	
+		ui_state.selected_cell = handleMouseClick(window, ui_state, game_state, event.button.x, event.button.y);	
 		if (ui_state.is_game_over)
 		{
 			int mouseX = event.button.x;
@@ -32,15 +32,15 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 	}
 }
 
-void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, GameState& game_state) {
+void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_state) {
 	if (ui_state.is_game_over) {
-		drawGameOverScreen(ui_state, window, picture, checkWinner(game_state.board3x3));
+		drawGameOverScreen(window, ui_state, checkWinner(game_state.board3x3));
 		return;
 	}
 	
 	initGame(game_state);
 
-	drawMainGame(window, ui_state, picture, game_state);
+	drawMainGame(window, ui_state, game_state);
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);
@@ -54,7 +54,7 @@ void processMainGame(Window& window, MainGameUIState& ui_state, Images picture, 
 
 	PlayerMark winner = checkWinner(game_state.board3x3);
 	if (winner != Empty or not isMovesLeft(game_state.board3x3)) {
-		setupGameOverScreen(ui_state, window, picture, winner);
+		setupGameOverScreen(window, ui_state, winner);
 		ui_state.is_game_over = true;
 		game_state.is_init = false;
 	}

@@ -11,10 +11,10 @@
 int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state);
 void checkTabKey(SDL_Event& event, MenuState& menu_state);
 
-void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager);
+void checkMouseMotion(Window& window, MenuState& menu_state);
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, GameState& game_state);
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Images images_manager, GameState& game_state);
-void processMenuScreen(Window& window, MenuState& menu_state, Images picture);
+void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state);
+void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state);
+void processMenuScreen(Window& window, MenuState& menu_state);
 
 #endif // !MENU_CONTROLLER_H

@@ -26,7 +26,6 @@
     <ClInclude Include="include\MainGameLogic.h" />
     <ClInclude Include="include\MainGameUI.h" />
     <ClInclude Include="include\MenuController.h" />
-    <ClInclude Include="include\MenuScreen.h" />
     <ClInclude Include="include\MenuUI.h" />
     <ClInclude Include="include\PrintMenuScreen.h" />
     <ClInclude Include="include\utitlity.h" />

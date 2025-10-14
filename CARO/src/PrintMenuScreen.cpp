@@ -216,7 +216,7 @@ void DrawChangeSettings(Window& window, SettingsButton& settings, MenuState menu
 	}
 }
 
-void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager)
+void buildMenuImages(MenuState& menu_state, Window& window)
 {
 	/*if (MENU_TEXTURES.find(TEXTURE_CARO_TEXT) != MENU_TEXTURES.end()) {
 		std::cout << "Texture exitst!\n";

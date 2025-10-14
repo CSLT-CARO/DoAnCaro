@@ -107,7 +107,7 @@ void loadMainGameTextures(SDL_Renderer* renderer) {
 }
 
 void loadTimerTextures(SDL_Renderer* renderer) {
-	TIMER_TEXTURES.reserve(61);
+	TIMER_TEXTURES.resize(61);
 
 	for (int time = 0; time <= 60; time++) {
 		TIMER_TEXTURES.at(time) = loadTexture(renderer, "./assets/RESOURCE/timer/timer_" + std::to_string(time) + ".bmp");

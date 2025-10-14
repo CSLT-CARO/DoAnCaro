@@ -47,7 +47,7 @@ void checkTabKey(SDL_Event& event, MenuState& menu_state)
 	}
 }
 
-void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager)
+void checkMouseMotion(Window& window, MenuState& menu_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
@@ -67,7 +67,7 @@ void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manag
 	menu_state.transform_idx = MousePositionState;
 }
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, GameState& game_state)
+void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
@@ -131,7 +131,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_m
 	}
 }
 
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Images images_manager, GameState& game_state)
+void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state)
 {
 	switch (event.type)
 	{
@@ -142,17 +142,17 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Im
 	}
 	case SDL_MOUSEMOTION:
 	{
-		checkMouseMotion(window, menu_state, images_manager);
+		checkMouseMotion(window, menu_state);
 		break;
 	}
 	case SDL_MOUSEBUTTONDOWN:
 	{
-		checkMouseButtonDown(window, menu_state, images_manager, game_state);
+		checkMouseButtonDown(window, menu_state, game_state);
 		break;
 	}
 	}
 }
-void processMenuScreen(Window& window, MenuState& menu_state, Images picture)
+void processMenuScreen(Window& window, MenuState& menu_state)
 {
-	buildMenuImages(menu_state, window, picture);
+	buildMenuImages(menu_state, window);
 }

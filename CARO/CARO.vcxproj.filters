@@ -59,9 +59,6 @@
     <ClInclude Include="include\MenuController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\MenuScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\MenuUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>

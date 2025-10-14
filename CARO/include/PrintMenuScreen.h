@@ -87,6 +87,6 @@ void DrawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_p
 void DrawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
 void DrawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
 
-void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager);
+void buildMenuImages(MenuState& menu_state, Window& window);
 
 #endif // !PRINT_MENU_SCREEN_H
