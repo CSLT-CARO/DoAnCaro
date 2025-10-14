@@ -7,44 +7,37 @@
 
 #include "MenuController.h"
 
-
-int settingsCheckMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[], bool turn_music, bool turn_sfx, MenuState& menu_state, print_settings print_settings)
+int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState&menu_state)
 {
-	SDL_Rect button;
-	for (int i = 0; i < sz; i++)
+	int enums_return = -1;
+	for (auto &it : MenuButtonPosition[state])
 	{
-		if (i < 2)
-			button = print_settings.buildLeftSettingsButtonPosition(window, i, TYLEHIGH);
-		else
-			button = print_settings.buildRightSettingsButtonPosition(window, i, TYLEHIGH);
+		int menu_enum = it.first;
+		SDL_Rect button = it.second;
 		if (button.x <= mouseX && mouseX <= button.x + button.w && button.y <= mouseY && mouseY <= button.y + button.h)
 		{
-			if (i < 2) return i;
-			if (menu_state.settings._OnMusic == i && turn_music) return i;
-			if (menu_state.settings._OffMusic == i && !turn_music) return i;
-			if (menu_state.settings._OnSFX == i && turn_sfx) return i;
-			if (menu_state.settings._OffSFX == i && !turn_sfx) return i;
+			if (menu_state.turn_music == true && menu_enum == TEXTURE_MUSIC_OFF_BUTTON)
+				return TEXTURE_MUSIC_ON_BUTTON;
+			else if (menu_state.turn_music == false && menu_enum == TEXTURE_MUSIC_OFF_BUTTON)
+				return TEXTURE_MUSIC_OFF_BUTTON;
+			if (menu_state.turn_sfx == true && menu_enum == TEXTURE_SFX_OFF_BUTTON)
+				return TEXTURE_SFX_ON_BUTTON;
+			else if (menu_state.turn_sfx == false && menu_enum == TEXTURE_SFX_OFF_BUTTON)
+				return TEXTURE_SFX_OFF_BUTTON;
+			else
+				enums_return = menu_enum;
+			
 		}
+			
 	}
-	return -1;
-}
-
-int checkMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[])
-{
-	for (int i = 0; i < sz; i++)
-	{
-		SDL_Rect button = buildButtonPosition(window, i, TYLEHIGH);
-		if (button.x <= mouseX && mouseX <= button.x + button.w && button.y <= mouseY && mouseY <= button.y + button.h)
-			return i;
-	}
-	return -1;
+	return enums_return;
 }
 void checkTabKey(SDL_Event& event, MenuState& menu_state)
 {
 	if (event.key.keysym.sym == SDLK_TAB)
 	{
 		if (menu_state.trans_display == _MainMenu)
-			menu_state.game_is_run = false;
+			menu_state.menu_is_run = false;
 		if (menu_state.trans_display == _ChooseTypePlayer)
 			menu_state.trans_display = _MainMenu;
 		if (menu_state.trans_display == _ChooseTypeGame)
@@ -54,56 +47,59 @@ void checkTabKey(SDL_Event& event, MenuState& menu_state)
 	}
 }
 
-void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings)
+void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	int MousePositionState = 0;
+	int MousePositionState = -1;
+
 	if (menu_state.trans_display == _ChangeSettings)
-		MousePositionState = settingsCheckMousePosition(window, mouseX, mouseY, images_manager.arrSettingsTransform.size(), TyLeChieuCaoSettings, menu_state.turn_music, menu_state.turn_sfx, menu_state, print_settings);
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
 	if (menu_state.trans_display == _MainMenu)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrMainMenuTransform.size(), TyLeChieuCaoMainMenu);
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _MainMenu, menu_state);
 	if (menu_state.trans_display == _ChooseTypePlayer)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrChooseTypePlayerTransform.size(), TyLeChieuCaoTypePlayer);
+	{
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypePlayer, menu_state);
+	}
+		
 	if (menu_state.trans_display == _ChooseTypeGame)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrChooseTypeGameTransform.size(), TyLeChieuCaoTypeGame);
-	//std::cout << MousePositionState << '\n';
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
 	menu_state.transform_idx = MousePositionState;
 }
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings, GameState &game_state)
+void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, GameState &game_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	if (menu_state.trans_display == _MainMenu)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrMainMenuTransform.size(), TyLeChieuCaoMainMenu);
-		if (MousePositionState == menu_state.menu_screen._Play)
+		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _MainMenu, menu_state);
+		if (MousePositionState == TEXTURE_PLAY_BUTTON)
 		{
 			menu_state.trans_display = _ChooseTypePlayer;
 		}
 			
-		if (MousePositionState == menu_state.menu_screen._Settings)
+		if (MousePositionState == TEXTURE_SETTINGS_BUTTON)
 		{
 			menu_state.trans_display = _ChangeSettings;
 
 		}
 
-		if (MousePositionState == menu_state.menu_screen._ExitGame)
-			menu_state.game_is_run = false;
+		if (MousePositionState == TEXTURE_EXIT_BUTTON)
+			menu_state.menu_is_run = false;
 		return;
 	}
 
 	if (menu_state.trans_display == _ChooseTypePlayer)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrChooseTypePlayerTransform.size(), TyLeChieuCaoTypePlayer);
-		if (MousePositionState == menu_state.choose_type_player.PvP)
+		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypePlayer, menu_state);
+		if (MousePositionState == TEXTURE_PVP_BUTTON)
 		{
 			game_state.mode = PVP;
 			menu_state.trans_display = _ChooseTypeGame;
 		}
 			
-		if (MousePositionState == menu_state.choose_type_player.PvE)
+		if (MousePositionState == TEXTURE_PVE_BUTTON)
 		{
 			game_state.mode = PVE;
 			menu_state.trans_display = _ChooseTypeGame;
@@ -113,29 +109,29 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_m
 	}
 	if (menu_state.trans_display == _ChangeSettings)
 	{
-		int MousePositionState = settingsCheckMousePosition(window, mouseX, mouseY, images_manager.arrSettingsTransform.size(), TyLeChieuCaoSettings, menu_state.turn_music, menu_state.turn_sfx, menu_state, print_settings);
-		if (MousePositionState == menu_state.settings._OnMusic)
+		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
+		if (MousePositionState == TEXTURE_MUSIC_ON_BUTTON)
 			menu_state.turn_music = false;
-		if (MousePositionState == menu_state.settings._OnSFX)
+		if (MousePositionState == TEXTURE_SFX_ON_BUTTON)
 			menu_state.turn_sfx = false;
-		if (MousePositionState == menu_state.settings._OffMusic)
+		if (MousePositionState == TEXTURE_MUSIC_OFF_BUTTON)
 			menu_state.turn_music = true;
-		if (MousePositionState == menu_state.settings._OffSFX)
+		if (MousePositionState == TEXTURE_SFX_OFF_BUTTON)
 			menu_state.turn_sfx = true;
 		return;
 	}
 	if (menu_state.trans_display == _ChooseTypeGame)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, images_manager.arrChooseTypeGame.size(), TyLeChieuCaoTypeGame);
+		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
 		game_state.game_is_run = true;
-		if (MousePositionState == menu_state.choose_type_game._3x3)
+		if (MousePositionState == TEXTURE_CLASSIC_BOARD_BUTTON)
 			game_state.board_type = Classic;
-		if (MousePositionState == menu_state.choose_type_game._12x12)
+		if (MousePositionState ==TEXTURE_ULTIMATE_BOARD_BUTTON)
 			;
 	}
 }
 
-void handleMenuInput(SDL_Event& event, Window& window, MenuState & menu_state, Images images_manager, print_settings print_settings, GameState& game_state)
+void handleMenuInput(SDL_Event& event, Window& window, MenuState & menu_state, Images images_manager, GameState& game_state)
 {
 	switch (event.type)
 	{
@@ -146,17 +142,17 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState & menu_state, I
 		}
 		case SDL_MOUSEMOTION:
 		{
-			checkMouseMotion(window, menu_state, images_manager, print_settings);
+			checkMouseMotion(window, menu_state, images_manager);
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			checkMouseButtonDown(window, menu_state, images_manager, print_settings, game_state);
+			checkMouseButtonDown(window, menu_state, images_manager, game_state);
 			break;
 		}
 	}
 }
-void processMenuScreen( Window &window, MenuState &menu_state, Images picture, print_settings print_settings)
+void processMenuScreen( Window &window, MenuState &menu_state, Images picture)
 {
-	buildMenuImages(menu_state, window, picture, print_settings);
+	buildMenuImages(menu_state, window, picture);
 }

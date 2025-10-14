@@ -93,6 +93,11 @@ void loadMenuTextures(SDL_Renderer* renderer) {
 		const auto& file_name = entry.first;
 		const auto& texture_enum = entry.second;
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/Images/" + file_name + ".bmp");
+		//std::cout << file_name << ' ';
+		//if (loaded_texture == nullptr)
+		//	std::cout << "none \n";
+		//else
+		//	std::cout << "yes \n";
 		MENU_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
 }

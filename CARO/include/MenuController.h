@@ -6,19 +6,15 @@
 #include "MenuUI.h"
 #include "PrintMenuScreen.h"
 #include "GameState.h"
-#include "TyLe.h"
 
 
-int settingsCheckMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[], bool turn_music, bool turn_sfx, MenuState& menu_state, print_settings print_settings);
-
-int checkMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[]);
+int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState &menu_state);
 void checkTabKey(SDL_Event& event, MenuState& menu_state);
 
-void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings);
+void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager);
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings, GameState& game_state);
-
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Images images_manager, print_settings print_settings, GameState& game_state);
-void processMenuScreen(Window& window, MenuState& menu_state, Images picture, print_settings print_settings);
+void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, GameState& game_state);
+void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Images images_manager, GameState& game_state);
+void processMenuScreen(Window& window, MenuState& menu_state, Images picture);
 
 #endif // !MENU_CONTROLLER_H

@@ -75,27 +75,27 @@ void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vecto
 	}
 }
 
-void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
-{
-	//Load MainMenu 
-	loadMenuImages(window, images_manager.arrMainMenu, images_manager.mainMenuTexture);
-	loadMenuImages(window, images_manager.arrMainMenuTransform, images_manager.mainMenuTextureTransform);
-
-	//Load type Layer
-	loadMenuImages(window, images_manager.arrChooseTypePlayer, images_manager.chooseTypePlayerTexture);
-	loadMenuImages(window, images_manager.arrChooseTypePlayerTransform, images_manager.chooseTypePlayerTextureTransform);
-
-	//Load type game
-	loadMenuImages(window, images_manager.arrChooseTypeGame, images_manager.chooseTypeGameTexture);
-	loadMenuImages(window, images_manager.arrChooseTypeGameTransform, images_manager.chooseTypeGameTextureTransform);
-
-	//Load settings
-	loadMenuImages(window, images_manager.arrSettings, images_manager.settingsTexture);
-	loadMenuImages(window, images_manager.arrSettingsTransform, images_manager.settingsTextureTransform);
-	// Build Background Pictrue
-	
-	loadMenuImages(window, images_manager.arrBackground, images_manager.backgroundTexture);
-}
+//void initMenuImages(Window& window, MenuState& menu_state, Images& images_manager)
+//{
+//	//Load MainMenu 
+//	loadMenuImages(window, images_manager.arrMainMenu, images_manager.mainMenuTexture);
+//	loadMenuImages(window, images_manager.arrMainMenuTransform, images_manager.mainMenuTextureTransform);
+//
+//	//Load type Layer
+//	loadMenuImages(window, images_manager.arrChooseTypePlayer, images_manager.chooseTypePlayerTexture);
+//	loadMenuImages(window, images_manager.arrChooseTypePlayerTransform, images_manager.chooseTypePlayerTextureTransform);
+//
+//	//Load type game
+//	loadMenuImages(window, images_manager.arrChooseTypeGame, images_manager.chooseTypeGameTexture);
+//	loadMenuImages(window, images_manager.arrChooseTypeGameTransform, images_manager.chooseTypeGameTextureTransform);
+//
+//	//Load settings
+//	loadMenuImages(window, images_manager.arrSettings, images_manager.settingsTexture);
+//	loadMenuImages(window, images_manager.arrSettingsTransform, images_manager.settingsTextureTransform);
+//	// Build Background Pictrue
+//	
+//	loadMenuImages(window, images_manager.arrBackground, images_manager.backgroundTexture);
+//}
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;

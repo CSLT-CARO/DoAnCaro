@@ -7,34 +7,86 @@
 #include <string>
 #include <math.h>
 #include <vector>
+#include <unordered_map>
 
 #include "Video.h"
 #include "MainGameUI.h"
 #include "MenuUI.h"
-#include "Settings.h"
-#include "TyLe.h"
+#include "Texture.h"
 
-struct print_settings
+extern std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10]; 
+
+struct SettingsButton
 {
-	SDL_Rect buildCarroPosition(Window& window, int idx); // Build Carro Text Position
-	SDL_Rect buildLeftSettingsButtonPosition(Window& window, int idx, const double TYLEHIGH[]);
-	SDL_Rect buildRightSettingsButtonPosition(Window& window, int idx, const double TYLEHIGH[]);
 
-	void buildLayerDoubleButton(Window& window, std::vector< SDL_Texture*> texture_transform, std::vector< SDL_Texture*> texture, const double TYLEHIGH[], int state);
-	void TurnOnOff(Window& window, bool turn_music, bool turn_sfx, int transform_idx, Images texture_manager, MenuState& menu_state);
+	std::vector <MenuTexturesEnum> SettingsButtonEnums = {
+		TEXTURE_MUSIC_BUTTON, TEXTURE_MUSIC_ON_BUTTON, TEXTURE_MUSIC_OFF_BUTTON,
+		TEXTURE_SFX_BUTTON, TEXTURE_SFX_ON_BUTTON, TEXTURE_SFX_OFF_BUTTON };
+	std::vector <MenuTexturesEnum> SettingsButtonHoveredEnums = {
+		TEXTURE_MUSIC_BUTTON_HOVERED, TEXTURE_MUSIC_ON_BUTTON_HOVERED, TEXTURE_MUSIC_OFF_BUTTON_HOVERED,
+		TEXTURE_SFX_BUTTON_HOVERED, TEXTURE_SFX_ON_BUTTON_HOVERED, TEXTURE_SFX_OFF_BUTTON_HOVERED };
+
+	SDL_Rect settings_button{};
+	Button music_button;
+	Button sfx_button;
+	Button on_music_button;
+	Button off_music_button;
+	Button on_sfx_button;
+	Button off_sfx_button;
+};
+struct CaroTextPosition
+{
+	Button caro_button;
 };
 
-//void buildBackgroundLayer(Window& window, int idx, Images texture_manager)
-//{
-//	SDL_RenderCopy(window.renderer_ptr, texture_manager.backgroundTexture[idx], NULL, NULL);
-//}
+struct MenuButton
+{
+	std::vector <MenuTexturesEnum> MenuButtonEnums = {
+		TEXTURE_PLAY_BUTTON, TEXTURE_LOAD_BUTTON,
+		TEXTURE_SETTINGS_BUTTON, TEXTURE_EXIT_BUTTON };
+	std::vector <MenuTexturesEnum> MenuButtonHoveredEnums = {
+		TEXTURE_PLAY_BUTTON_HOVERED, TEXTURE_LOAD_BUTTON_HOVERED,
+		TEXTURE_SETTINGS_BUTTON_HOVERED, TEXTURE_EXIT_BUTTON_HOVERED };
+	Button play_button{};
+	Button load_button{};
+	Button exit_button{};
+	SettingsButton settings_button{};
+};
 
-SDL_Rect buildButtonPosition(Window& window, int idx, const double TYLEHIGH[]);
+struct ChooseTypePlayer_Change
+{
+	std::vector <MenuTexturesEnum> ChoosePlayerButtonEnums = {
+		TEXTURE_PVE_BUTTON, TEXTURE_PVP_BUTTON};
+	std::vector <MenuTexturesEnum> ChoosePlayerButtonHoveredEnums = {
+		TEXTURE_PVE_BUTTON_HOVERED, TEXTURE_PVP_BUTTON_HOVERED };
+	Button pvp_button{};
+	Button pve_button{};
+};
 
-SDL_Rect buildCarroPosition(Window& window, int idx); // Build Carro Text Position
+struct ChooseTypeGame_Change
+{
+	std::vector <MenuTexturesEnum> ChooseGameButtonEnums = {
+		TEXTURE_CLASSIC_BOARD_BUTTON, TEXTURE_ULTIMATE_BOARD_BUTTON };
+	std::vector <MenuTexturesEnum> ChooseGameButtonHoveredEnums = {
+		TEXTURE_CLASSIC_BOARD_BUTTON_HOVERED, TEXTURE_ULTIMATE_BOARD_BUTTON_HOVERED };
+	Button _3x3_button{};
+	Button _12x12_button{};
+};
 
 
-void buildLayer(Window& window, int transform_idx, std::vector< SDL_Texture*> texture_transform, std::vector< SDL_Texture*> texture, const double TYLEHIGH[]);
-void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager, print_settings print_settings);
+void InitCaroButton(Window& window, CaroTextPosition& caro_text_position);
+void InitMenuButton(Window &window, MenuButton& menu_button);
+void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player);
+void InitChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game);
+void InitSettings(Window& window, SettingsButton &settings_button);
+
+
+
+void DrawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
+void DrawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);
+void DrawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
+void DrawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
+
+void buildMenuImages(MenuState& menu_state, Window& window, Images texture_manager);
 
 #endif // !PRINT_MENU_SCREEN_H
