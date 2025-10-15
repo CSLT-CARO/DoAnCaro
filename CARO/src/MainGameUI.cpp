@@ -68,21 +68,18 @@ void drawSymbol(const Window& window, const GameState& game_state) {
 			if (isCellEmpty(game_state.board3x3, cell)) continue;
 
 			int x = (column * 2 + 6) * cell_width;
-			int y = (row * 2 + 2) * cell_height; // get pos to draw symbol 
+			int y = (row * 2 + 2) * cell_height;
 
 			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board3x3, cell);
 			const char* symbol{};
+			SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_X_PLAYER);
 
-			if (CURRENT_CELL_MARK == X) {
-				SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0, 0, 255);
-				symbol = "X";
-			}
-			else {
-				SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 255, 255);
-				symbol = "O";
+			if (CURRENT_CELL_MARK == O) {
+				mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_O_PLAYER);
 			}
 
-			SDLTest_DrawString(window.renderer_ptr, x, y, symbol);
+			SDL_Rect rect = { x - cell_width/2, y - cell_height/2, cell_width, cell_height };
+			drawTexture(window.renderer_ptr, mark_texture, rect);
 		}
 	}
 }

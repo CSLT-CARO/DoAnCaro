@@ -57,6 +57,9 @@ enum MenuTexturesEnum {
 };
 
 enum MainGameTexturesEnum {
+	TEXTURE_O_PLAYER,
+	TEXTURE_X_PLAYER,
+
 	TEXTURE_PLAYER_X_ON,
 	TEXTURE_PLAYER_X_OFF,
 

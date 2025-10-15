@@ -34,13 +34,13 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 
 void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_state) {
 	if (ui_state.is_game_over) {
+		drawMainGame(window, ui_state, game_state);
 		drawGameOverScreen(window, ui_state, checkWinner(game_state.board3x3));
 		return;
 	}
 	
-	initGame(game_state);
-
 	drawMainGame(window, ui_state, game_state);
+	initGame(game_state);
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);

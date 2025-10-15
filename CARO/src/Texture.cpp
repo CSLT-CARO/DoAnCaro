@@ -51,6 +51,8 @@ const std::vector<std::pair<std::string, MenuTexturesEnum>> MENU_IMAGE_LOAD_ENTR
 };
 
 const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_LOAD_ENTRIES{
+	{ "O_PLAYER", TEXTURE_O_PLAYER },
+	{ "X_PLAYER", TEXTURE_X_PLAYER },
 	{ "player_X_on", TEXTURE_PLAYER_X_ON },
 	{ "player_O_on", TEXTURE_PLAYER_O_ON },
 
