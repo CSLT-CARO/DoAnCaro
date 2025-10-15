@@ -9,7 +9,7 @@
 
 
 int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state);
-void checkTabKey(SDL_Event& event, MenuState& menu_state);
+void turnBack(MenuState& menu_state);
 
 void checkMouseMotion(Window& window, MenuState& menu_state);
 

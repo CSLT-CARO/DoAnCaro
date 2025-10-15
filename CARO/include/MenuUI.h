@@ -13,6 +13,7 @@
 enum gameLayer
 {
 	_None,
+	_TurnBackButton,
 	_MainMenu,
 	_ChangeSound,
 	_ChooseTypePlayer,

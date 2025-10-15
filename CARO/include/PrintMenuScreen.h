@@ -34,6 +34,11 @@ struct SettingsButton
 	Button on_sfx_button;
 	Button off_sfx_button;
 };
+
+struct TurnBackButton
+{
+	Button turn_back_button;
+};
 struct CaroTextPosition
 {
 	Button caro_button;
@@ -75,6 +80,7 @@ struct ChooseTypeGame_Change
 
 
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position);
+void InitTurnBackButton(Window& window, TurnBackButton& turn_back_button);
 void InitMenuButton(Window& window, MenuButton& menu_button);
 void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player);
 void InitChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game);
@@ -82,10 +88,11 @@ void InitSettings(Window& window, SettingsButton& settings_button);
 
 
 
-void DrawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
-void DrawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);
-void DrawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
-void DrawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
+void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
+void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
+void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);
+void drawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
+void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
 
 void buildMenuImages(MenuState& menu_state, Window& window);
 
