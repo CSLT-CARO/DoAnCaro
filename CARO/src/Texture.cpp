@@ -61,6 +61,8 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 	{ "player_X_win", TEXTURE_PLAYER_X_WIN },
 	{ "player_O_win", TEXTURE_PLAYER_O_WIN },
+	{"PLAYER_LOSE", TEXTURE_YOU_LOSE},
+	{"PLAYER_WIN", TEXTURE_YOU_WIN},
 	{ "game_draw", TEXTURE_GAME_DRAW },
 
 	{ "Restart", TEXTURE_RESTART },

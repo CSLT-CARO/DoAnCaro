@@ -35,6 +35,7 @@ void drawTable(const Window& window, MainGameUIState& ui_state) {
 	for (int i = 1; i <= 7; i += 2)
 		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
 
+
 	ui_state.player_x.rect = {
 		cell_width  ,
 		cell_height * 5 / 2,
@@ -84,20 +85,34 @@ void drawSymbol(const Window& window, const GameState& game_state) {
 	}
 }
 
-void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won) {
+void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won) {
 	auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 	SDL_Texture* restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART);
 	SDL_Texture* new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME);
 	SDL_Texture* exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT);
-
-	if (who_won == X) {
-		winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
+	if (game_state.mode == PVP)
+	{
+		if (who_won == X) {
+			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
+		}
+		else if (who_won == O) {
+			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
+		}
 	}
-	else if (who_won == O) {
-		winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
+	else
+	{
+		if (game_state.bot_marker == X)
+		{
+			if (who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+		}
+		else
+		{
+			if (who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+		}
 	}
-
 	if (ui_state.end_game_button.Restart.state) {
 		restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART_ON);
 	}
@@ -138,7 +153,7 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 	}
 
 	int imgW = (picW)*window.height / (picH);
-	int imgH = window.height;
+	int imgH = window.height * 9 / 10;
 
 	ui_state.winner.rect = {
 		x - imgW / 2,

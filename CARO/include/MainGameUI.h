@@ -49,7 +49,7 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 
 void drawTable(const Window& window, MainGameUIState& ui_state);
 void drawSymbol(const Window& window, const GameState& game_state);
-void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won);
+void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
