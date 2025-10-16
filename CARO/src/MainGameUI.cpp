@@ -34,20 +34,21 @@ void drawTable(const Window& window, MainGameUIState& ui_state) {
 
 	for (int i = 1; i <= 7; i += 2)
 		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
-
+	int imgW = cell_width * 4;
+	int imgH = cell_height;
 
 	ui_state.player_x.rect = {
-		cell_width  ,
+		cell_width / 2  ,
 		cell_height * 5 / 2,
-		cell_width * 3,
-		cell_height
+		imgW,
+		imgH
 	};
 
 	ui_state.player_o.rect = {
-		cell_width ,
+		cell_width / 2 ,
 		cell_height * 9 / 2,
-		cell_width * 3,
-		cell_height
+		imgW,
+		imgH
 	};
 
 	ui_state.timer_button.rect = {
@@ -105,12 +106,12 @@ void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameSta
 		if (game_state.bot_marker == X)
 		{
 			if (who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			else if (who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 		else
 		{
 			if (who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			else if (who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 	}
 	if (ui_state.end_game_button.Restart.state) {
@@ -152,7 +153,7 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 		return;
 	}
 
-	int imgW = (picW)*window.height / (picH);
+	int imgW = (picW)*window.height / (picH) - window.width / 32;
 	int imgH = window.height * 9 / 10;
 
 	ui_state.winner.rect = {
