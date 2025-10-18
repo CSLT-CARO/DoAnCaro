@@ -130,6 +130,6 @@ void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_Rect& d
 	SDL_RenderCopy(renderer, texture, NULL, &destination);
 }
 
-void drawTimer(SDL_Renderer* renderer, int current_time, const SDL_Rect& destination) {
+void drawTimer(SDL_Renderer* renderer, Second current_time, const SDL_Rect& destination) {
 	drawTexture(renderer, TIMER_TEXTURES.at(current_time), destination);
 }

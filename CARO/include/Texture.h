@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "Video.h"
+#include "Timer.h"
 
 enum MenuTexturesEnum {
 	TEXTURE_BACKGROUND,
@@ -98,6 +99,6 @@ void loadMainGameTextures(SDL_Renderer* renderer);
 void loadTimerTextures(SDL_Renderer* renderer);
 
 void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_Rect& destination);
-void drawTimer(SDL_Renderer* renderer, int current_time, const SDL_Rect& destination);
+void drawTimer(SDL_Renderer* renderer, Second current_time, const SDL_Rect& destination);
 
 #endif

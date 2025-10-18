@@ -21,7 +21,9 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 		}
 	}
 
-	drawTimer(renderer, ui_state.timer_button.dis_time, ui_state.timer_button.rect);
+	// Seminar 2 :)
+	//Millisecond time_remaining = getTimeRemaining(ui_state.turn_timer);
+	//drawTimer(renderer, toSecond(time_remaining), ui_state.timer_button.rect);
 }
 
 void drawTable(const Window& window, MainGameUIState& ui_state) {

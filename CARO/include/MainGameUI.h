@@ -5,6 +5,7 @@
 #include "GameState.h"
 #include "MenuUI.h"
 #include "Texture.h"
+#include "Timer.h"
 
 #include <vector>
 #include <string>
@@ -12,16 +13,6 @@
 struct Button {
 	SDL_Rect rect{};
 	bool state;
-};
-
-struct Timer {
-	SDL_Rect rect{};
-	std::string image_path{};
-	int start_time{};
-	int time_left{};
-	int dis_time{};
-	int current_time{};
-	bool isRunning{};
 };
 
 struct GameOverButton
@@ -37,9 +28,11 @@ struct MainGameUIState {
 	Button player_x {};
 	Button player_o {};
 	Button winner {};
-	Timer timer_button {};
+	Button timer_button {};
 	GameOverButton end_game_button;
 
+	Timer turn_timer{};
+	Timer before_game_end_timer{};
 	Cell selected_cell = NOT_SELECTED;
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;

@@ -5,7 +5,7 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (not ui_state.is_game_over)
 			ui_state.selected_cell = handleMouseClick(window, ui_state, game_state, event.button.x, event.button.y);	
-		if (ui_state.is_game_over)
+		if (ui_state.is_game_over and not isTimerRunning(ui_state.before_game_end_timer))
 		{
 			int mouseX = event.button.x;
 			int mouseY = event.button.y;
@@ -42,10 +42,12 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_state) {
 	if (ui_state.is_game_over) {
 		drawMainGame(window, ui_state, game_state);
+
+		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
 		drawGameOverScreen(window, ui_state, game_state, checkWinner(game_state.board3x3));
 		return;
 	}
-	
+
 	initGame(game_state);
 	drawMainGame(window, ui_state, game_state);
 
@@ -63,7 +65,7 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 	if (winner != Empty or not isMovesLeft(game_state.board3x3)) {
 		drawMainGame(window, ui_state, game_state);
 		SDL_RenderPresent(window.renderer_ptr);
-		SDL_Delay(1000);
+		activateTimer(ui_state.before_game_end_timer);
 		setupGameOverScreen(window, ui_state, winner);
 		ui_state.is_game_over = true;
 		game_state.is_init = false;

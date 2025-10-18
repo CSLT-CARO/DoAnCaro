@@ -28,6 +28,7 @@
     <ClInclude Include="include\MenuController.h" />
     <ClInclude Include="include\MenuUI.h" />
     <ClInclude Include="include\PrintMenuScreen.h" />
+    <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\utitlity.h" />
     <ClInclude Include="include\Video.h" />
   </ItemGroup>
@@ -40,6 +41,7 @@
     <ClCompile Include="src\MainGameUI.cpp" />
     <ClCompile Include="src\MenuController.cpp" />
     <ClCompile Include="src\PrintMenuScreen.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\Video.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
