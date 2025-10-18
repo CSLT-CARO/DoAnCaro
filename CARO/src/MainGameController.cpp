@@ -46,8 +46,8 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 		return;
 	}
 	
-	drawMainGame(window, ui_state, game_state);
 	initGame(game_state);
+	drawMainGame(window, ui_state, game_state);
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);
