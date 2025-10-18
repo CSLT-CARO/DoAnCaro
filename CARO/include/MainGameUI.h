@@ -1,7 +1,7 @@
 #ifndef MAIN_GAME_UI_H
 #define MAIN_GAME_UI_H
 
-#include "video.h"
+#include "Video.h"
 #include "GameState.h"
 #include "MenuUI.h"
 #include "Texture.h"
