@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 	MenuState menu_state;
 
 	setTimeout(main_game_ui_state.turn_timer, 60000);
-	setTimeout(main_game_ui_state.before_game_end_timer, 2000);
+	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);
 	loadMenuTextures(window.renderer_ptr);
