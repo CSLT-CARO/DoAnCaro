@@ -64,7 +64,6 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 	PlayerMark winner = checkWinner(game_state.board3x3);
 	if (winner != Empty or not isMovesLeft(game_state.board3x3)) {
 		drawMainGame(window, ui_state, game_state);
-		SDL_RenderPresent(window.renderer_ptr);
 		activateTimer(ui_state.before_game_end_timer);
 		setupGameOverScreen(window, ui_state, winner);
 		ui_state.is_game_over = true;
