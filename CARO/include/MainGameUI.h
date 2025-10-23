@@ -22,6 +22,8 @@ struct GameOverButton
 	Button Exit;
 };
 
+
+
 const Cell NOT_SELECTED = { -1, -1 };
 
 struct MainGameUIState {
@@ -29,8 +31,8 @@ struct MainGameUIState {
 	Button player_o {};
 	Button winner {};
 	Button timer_button {};
+	SDL_Rect hover_cell;
 	GameOverButton end_game_button;
-
 	Timer turn_timer{};
 	Timer before_game_end_timer{};
 	Cell selected_cell = NOT_SELECTED;
@@ -40,12 +42,19 @@ struct MainGameUIState {
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 
-void drawTable(const Window& window, MainGameUIState& ui_state);
-void drawSymbol(const Window& window, const GameState& game_state);
+void drawTable3x3(const Window& window, MainGameUIState& ui_state);
+void drawTable12x12(const Window& window, MainGameUIState& ui_state);
+void drawSymbol3x3(const Window& window, const GameState& game_state);
+void drawSymbol12x12(const Window& window, const GameState& game_state);
+void drawSelectingCell(const Window& window, const GameState& game_state, MainGameUIState& ui_state);
 void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
 void checkMouseHoverButton(MainGameUIState& ui_state);
-Cell handleMouseClick(const Window& window, MainGameUIState& context, const GameState& game_state, int mouseX, int mouseY);
+Cell handleMouseClick3x3(const Window& window, MainGameUIState& context, const GameState& game_state, int mouseX, int mouseY);
+Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY);
+
+void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state);
+void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state);
 #endif

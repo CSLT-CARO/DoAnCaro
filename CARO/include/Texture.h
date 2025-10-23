@@ -54,7 +54,10 @@ enum MenuTexturesEnum {
 	TEXTURE_SFX_OFF_BUTTON_HOVERED,
 
 	TEXTURE_TURN_BACK_BUTTON,
-	TEXTURE_TURN_BACK_BUTTON_HOVERED
+	TEXTURE_TURN_BACK_BUTTON_HOVERED,
+
+	
+
 };
 
 enum MainGameTexturesEnum {
@@ -66,6 +69,9 @@ enum MainGameTexturesEnum {
 
 	TEXTURE_PLAYER_O_ON,
 	TEXTURE_PLAYER_O_OFF,
+
+	TEXTURE_PLAYER_X_SELECTING,
+	TEXTURE_PLAYER_O_SELECTING,
 
 	TEXTURE_PLAYER_X_WIN,
 	TEXTURE_PLAYER_O_WIN,
@@ -82,6 +88,7 @@ enum MainGameTexturesEnum {
 	TEXTURE_RESTART_ON,
 	TEXTURE_NEW_GAME_ON,
 	TEXTURE_EXIT_ON
+
 };
 
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;

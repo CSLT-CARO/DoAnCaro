@@ -65,7 +65,10 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 	if (menu_state.trans_display == _ChooseTypePlayer)
 		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypePlayer, menu_state);
 	if (menu_state.trans_display == _ChooseTypeGame)
+	{
 		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
+		
+	}
 	menu_state.transform_idx = MousePositionState;
 }
 
@@ -138,7 +141,10 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		}
 			
 		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON)
-			;
+		{
+			game_state.game_is_run = true;
+			game_state.board_type = Ultimate;
+		}
 	}
 }
 

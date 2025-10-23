@@ -48,6 +48,7 @@ const std::vector<std::pair<std::string, MenuTexturesEnum>> MENU_IMAGE_LOAD_ENTR
 
 	{ "TURN_BACK_BUTTON", TEXTURE_TURN_BACK_BUTTON},
 	{ "TURN_BACK_BUTTON_HOVERED", TEXTURE_TURN_BACK_BUTTON_HOVERED},
+
 };
 
 const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_LOAD_ENTRIES{
@@ -58,6 +59,9 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 	{ "player_X_off", TEXTURE_PLAYER_X_OFF },
 	{ "player_O_off", TEXTURE_PLAYER_O_OFF },
+
+	{"Select_X", TEXTURE_PLAYER_X_SELECTING},
+	{"Select_O", TEXTURE_PLAYER_O_SELECTING},
 
 	{ "player_X_win", TEXTURE_PLAYER_X_WIN },
 	{ "player_O_win", TEXTURE_PLAYER_O_WIN },
@@ -71,7 +75,8 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 	{ "Restart_on", TEXTURE_RESTART_ON },
 	{ "Newgame_on", TEXTURE_NEW_GAME_ON },
-	{ "Exit_on", TEXTURE_EXIT_ON }
+	{ "Exit_on", TEXTURE_EXIT_ON },
+
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

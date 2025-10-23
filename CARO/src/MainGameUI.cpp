@@ -5,8 +5,16 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 
-	drawTable(window, ui_state);
-	drawSymbol(window, game_state);
+	if (game_state.board_type == Classic)
+	{
+		drawTable3x3(window, ui_state);
+		drawSymbol3x3(window, game_state);
+	}
+	else 
+	{
+		drawTable12x12(window, ui_state);
+		drawSymbol12x12(window, game_state);
+	}
 	if (game_state.mode == PVP)
 	{
 		if (game_state.whose_turn == X)
@@ -20,13 +28,13 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_ON), ui_state.player_o.rect);
 		}
 	}
-
+	drawSelectingCell(window, game_state, ui_state);
 	// Seminar 2 :)
 	//Millisecond time_remaining = getTimeRemaining(ui_state.turn_timer);
 	//drawTimer(renderer, toSecond(time_remaining), ui_state.timer_button.rect);
 }
 
-void drawTable(const Window& window, MainGameUIState& ui_state) {
+void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 
@@ -61,7 +69,48 @@ void drawTable(const Window& window, MainGameUIState& ui_state) {
 	};
 }
 
-void drawSymbol(const Window& window, const GameState& game_state) {
+void drawTable12x12(const Window& window, MainGameUIState& ui_state)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	for (int i = 10; i <= 22; i++)
+		SDL_RenderDrawLine(window.renderer_ptr, i * cell_width, 3 * cell_height, i * cell_width, 15 * cell_height);// column 
+
+	for (int i = 3; i <= 15; i++)
+		SDL_RenderDrawLine(window.renderer_ptr, 10 * cell_width, i * cell_height, 22 * cell_width, i * cell_height); // row; // row
+	
+	cell_width = window.width / 16;
+	cell_height = cell_width;
+
+	int imgW = cell_width * 4;
+	int imgH = cell_height;
+
+	ui_state.player_x.rect = {
+		cell_width / 2  ,
+		cell_height * 5 / 2,
+		imgW,
+		imgH
+	};
+
+	ui_state.player_o.rect = {
+		cell_width / 2 ,
+		cell_height * 9 / 2,
+		imgW,
+		imgH
+	};
+
+	ui_state.timer_button.rect = {
+		cell_width * 12,
+		cell_height ,
+		cell_height * 3,
+		cell_height * 3 / 2,
+	};
+}
+
+void drawSymbol3x3(const Window& window, const GameState& game_state) {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 
@@ -86,6 +135,42 @@ void drawSymbol(const Window& window, const GameState& game_state) {
 			drawTexture(window.renderer_ptr, mark_texture, rect);
 		}
 	}
+}
+
+void drawSymbol12x12(const Window& window, const GameState& game_state)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+
+	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0, 0, 255);
+	for (int row = 0; row < 12; row++) {
+		for (int column = 0; column < 12; column++) {
+			Cell cell{ row, column };
+			if (isCellEmpty(game_state.board12x12, cell)) continue;
+
+			int x = (column + 10) * cell_height  ;
+			int y = (row + 3) * cell_width  ;
+
+			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board12x12, cell);
+			const char* symbol{};
+			SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_X_PLAYER);
+
+			if (CURRENT_CELL_MARK == O) {
+				mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_O_PLAYER);
+			}
+
+			SDL_Rect rect = { x, y, cell_width, cell_height };
+			drawTexture(window.renderer_ptr, mark_texture, rect);
+		}
+	}
+}
+
+void drawSelectingCell(const Window& window, const GameState& game_state, MainGameUIState& ui_state)
+{
+	SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_SELECTING);
+	if (game_state.whose_turn == O)
+		mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_SELECTING);
+	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
 void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won) {
@@ -191,7 +276,7 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 		buttonW,
 		buttonH
 	};
-
+	ui_state.hover_cell = { 0,0,0,0 };
 	ui_state.is_set_up_game_over_screen = true;
 }
 
@@ -210,7 +295,7 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.Exit.state = true;
 }
 
-Cell handleMouseClick(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY) {
+Cell handleMouseClick3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY) {
 	int cellW = window.width / 16;
 	int cellH = cellW;
 	int col = (mouseX / cellW) / 2 + (mouseX / cellW) % 2 - 3;
@@ -221,4 +306,53 @@ Cell handleMouseClick(const Window& window, MainGameUIState& ui_state, const Gam
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
 
 	return cell;
+}
+
+Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
+	int col = (mouseX / cell_width) - 10;
+	Cell cell{ row, col };
+
+	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NOT_SELECTED;
+
+	return cell;
+}
+
+void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state)
+{
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+	int col = (mouseX / cell_width) / 2 + (mouseX / cell_width) % 2 - 3;
+	int row = (mouseY / cell_height) / 2 + (mouseY / cell_height) % 2 - 1;
+	if (col > 2) col = 2;
+	if (row > 2) row = 2;
+	if (col < 0) col = 0;
+	if (row < 0) row = 0;
+	int x = (col * 2 + 6) * cell_width - cell_width * 90 / 100;
+	int y = (row * 2 + 2) * cell_height - cell_height * 90 / 100;
+	int width = 2 * cell_width * 90 / 100;
+	ui_state.hover_cell = { x, y , width, width };
+}
+
+void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
+{
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
+	int col = (mouseX / cell_width) - 10;
+	if (row < 0) row = 0;
+	if (col < 0) col = 0;
+	if (row > 11) row = 11;
+	if (col > 11) col = 11;
+	int x = (col + 10) * cell_height + cell_height / 2 - cell_width * 90 / 200;
+	int y = (row + 3) * cell_width + cell_width / 2 - cell_width * 90 / 200;
+	int width = cell_width * 90 / 100;
+	ui_state.hover_cell = { x, y, width, width };
 }
