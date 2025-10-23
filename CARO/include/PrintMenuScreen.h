@@ -58,7 +58,7 @@ struct MenuButton
 	SettingsButton settings_button{};
 };
 
-struct ChooseTypePlayer_Change
+struct ChooseTypePlayer
 {
 	std::vector <MenuTexturesEnum> ChoosePlayerButtonEnums = {
 		TEXTURE_PVE_BUTTON, TEXTURE_PVP_BUTTON };
@@ -68,7 +68,7 @@ struct ChooseTypePlayer_Change
 	Button pve_button{};
 };
 
-struct ChooseTypeGame_Change
+struct ChooseTypeGame
 {
 	std::vector <MenuTexturesEnum> ChooseGameButtonEnums = {
 		TEXTURE_CLASSIC_BOARD_BUTTON, TEXTURE_ULTIMATE_BOARD_BUTTON };
@@ -82,17 +82,25 @@ struct ChooseTypeGame_Change
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position);
 void InitTurnBackButton(Window& window, TurnBackButton& turn_back_button);
 void InitMenuButton(Window& window, MenuButton& menu_button);
-void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player);
-void InitChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game);
+void InitChooseTypePlayer(Window& window, ChooseTypePlayer& choose_type_player);
+void InitChooseTypeGame(Window& window, ChooseTypeGame& choose_type_game);
 void InitSettings(Window& window, SettingsButton& settings_button);
 
 
 
-void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
-void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
-void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);
-void drawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
-void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
+void drawMenuGame(Window& window, MenuState& menu_state);
+void drawTurnBackButton(Window& window, MenuState& menu_state);
+void drawChooseTypePlayer(Window& window, MenuState& menu_state);
+void drawChooseTypeGame(Window& window, MenuState& menu_state);
+void drawChangeSettings(Window& window, MenuState menu_state);
+
+
+//void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
+//void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
+//void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);
+//void drawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state);
+//void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
+
 
 void buildMenuImages(MenuState& menu_state, Window& window);
 

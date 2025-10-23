@@ -65,7 +65,7 @@ void InitMenuButton(Window& window, MenuButton& menu_button)
 	MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON] = menu_button.exit_button.rect;
 }
 
-void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player)
+void InitChooseTypePlayer(Window& window, ChooseTypePlayer& choose_type_player)
 {
 	int window_width = window.width;
 	int window_height = window.height;
@@ -85,7 +85,7 @@ void InitChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_p
 	MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON] = choose_type_player.pve_button.rect;
 }
 
-void InitChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game)
+void InitChooseTypeGame(Window& window, ChooseTypeGame& choose_type_game)
 {
 	int window_width = window.width;
 	int window_height = window.height;
@@ -146,9 +146,31 @@ void InitSettings(Window& window, SettingsButton& settings_button)
 }
 
 
-void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state)
+void drawMenuGame(Window& window, MenuState& menu_state)
 {
-	int sz = menu_button.MenuButtonEnums.size();
+	std::cout << menu_state.transform_idx << '\n';
+	if (menu_state.transform_idx == TEXTURE_PLAY_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PLAY_BUTTON_HOVERED), MenuButtonPosition[_MainMenu][TEXTURE_PLAY_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PLAY_BUTTON), MenuButtonPosition[_MainMenu][TEXTURE_PLAY_BUTTON]);
+
+
+	if (menu_state.transform_idx == TEXTURE_LOAD_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_BUTTON_HOVERED), MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_BUTTON), MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON]);
+
+	if (menu_state.transform_idx == TEXTURE_SETTINGS_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_SETTINGS_BUTTON_HOVERED), MenuButtonPosition[_MainMenu][TEXTURE_SETTINGS_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_SETTINGS_BUTTON), MenuButtonPosition[_MainMenu][TEXTURE_SETTINGS_BUTTON]);
+
+	if (menu_state.transform_idx == TEXTURE_EXIT_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXIT_BUTTON_HOVERED), MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXIT_BUTTON), MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON]);
+
+	/*int sz = menu_button.MenuButtonEnums.size();
 	for (int i = 0; i < sz; i++)
 	{
 		MenuTexturesEnum menu_enums_button_hovered = menu_button.MenuButtonHoveredEnums[i];
@@ -157,10 +179,10 @@ void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state
 			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button_hovered), MenuButtonPosition[_MainMenu][menu_enums_button]);
 		else
 			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button), MenuButtonPosition[_MainMenu][menu_enums_button]);
-	}
+	}*/
 }
 
-void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState &menu_state)
+void drawTurnBackButton(Window& window, MenuState &menu_state)
 {
 	MenuTexturesEnum enums_button_hovered = TEXTURE_TURN_BACK_BUTTON_HOVERED;
 	MenuTexturesEnum enums_button = TEXTURE_TURN_BACK_BUTTON;
@@ -170,9 +192,19 @@ void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuSt
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_TurnBackButton][enums_button]);
 }
 
-void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state)
+void drawChooseTypePlayer(Window& window, MenuState& menu_state)
 {
-	int sz = choose_type_player_change.ChoosePlayerButtonEnums.size();
+	if (menu_state.transform_idx == TEXTURE_PVP_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PVP_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVP_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PVP_BUTTON), MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVP_BUTTON]);
+
+	if (menu_state.transform_idx == TEXTURE_PVE_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PVE_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PVE_BUTTON), MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON]);
+
+	/*int sz = choose_type_player_change.ChoosePlayerButtonEnums.size();
 	for (int i = 0; i < sz; i++)
 	{
 		MenuTexturesEnum enums_button_hovered = choose_type_player_change.ChoosePlayerButtonHoveredEnums[i];
@@ -183,13 +215,25 @@ void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_p
 		{
 			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypePlayer][enums_button]);
 		}
-	}
+	}*/
 }
 
 
-void drawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_change, MenuState& menu_state)
+void drawChooseTypeGame(Window& window, MenuState& menu_state)
 {
-	int sz = choose_type_game_change.ChooseGameButtonEnums.size();
+
+
+	if (menu_state.transform_idx == TEXTURE_CLASSIC_BOARD_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CLASSIC_BOARD_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypeGame][TEXTURE_CLASSIC_BOARD_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CLASSIC_BOARD_BUTTON), MenuButtonPosition[_ChooseTypeGame][TEXTURE_CLASSIC_BOARD_BUTTON]);
+
+	if (menu_state.transform_idx == TEXTURE_ULTIMATE_BOARD_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ULTIMATE_BOARD_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON]);
+	else
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ULTIMATE_BOARD_BUTTON), MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON]);
+
+	/*int sz = choose_type_game_change.ChooseGameButtonEnums.size();
 	for (int i = 0; i < sz; i++)
 	{
 		MenuTexturesEnum enums_button_hovered = choose_type_game_change.ChooseGameButtonHoveredEnums[i];
@@ -201,9 +245,10 @@ void drawChooseTypeGame(Window& window, ChooseTypeGame_Change& choose_type_game_
 			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypeGame][enums_button]);
 		}
 	}
+	*/
 }
 
-void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state)
+void drawChangeSettings(Window& window, MenuState menu_state)
 {
 
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_SFX_BUTTON), MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_BUTTON]);
@@ -240,16 +285,10 @@ void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu
 
 void buildMenuImages(MenuState& menu_state, Window& window)
 {
-	/*if (MENU_TEXTURES.find(TEXTURE_CARO_TEXT) != MENU_TEXTURES.end()) {
-		std::cout << "Texture exitst!\n";
-	}
-	else {
-		std::cout << "Texture no exitst\n";
-	}*/
 	MenuButton menu_button;
 	CaroTextPosition caro_text_position;
-	ChooseTypePlayer_Change choose_type_player_change;
-	ChooseTypeGame_Change choose_type_game_change;
+	ChooseTypePlayer choose_type_player_change;
+	ChooseTypeGame choose_type_game_change;
 	SettingsButton settings;
 	TurnBackButton turn_back_button;
 
@@ -263,20 +302,20 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), caro_text_position.caro_button.rect);
 	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
-		drawTurnBackButton(window, turn_back_button, menu_state);
+		drawTurnBackButton(window, menu_state);
 	if (menu_state.trans_display == _MainMenu)
 	{
-		drawMenuGame(window, menu_button, menu_state);
+		drawMenuGame(window, menu_state);
 	}
 	if (menu_state.trans_display == _ChooseTypePlayer)
 	{
-		drawChooseTypePlayer(window, choose_type_player_change, menu_state);
+		drawChooseTypePlayer(window, menu_state);
 	}
 	if (menu_state.trans_display == _ChooseTypeGame)
 	{
-		drawChooseTypeGame(window, choose_type_game_change, menu_state);
+		drawChooseTypeGame(window, menu_state);
 	}
 	if (menu_state.trans_display == _ChangeSettings)
-		drawChangeSettings(window, settings, menu_state);
+		drawChangeSettings(window, menu_state);
 
 }
