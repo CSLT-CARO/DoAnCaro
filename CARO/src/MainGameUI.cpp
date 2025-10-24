@@ -10,7 +10,7 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 		drawTable3x3(window, ui_state);
 		drawSymbol3x3(window, game_state);
 	}
-	else 
+	else
 	{
 		drawTable12x12(window, ui_state);
 		drawSymbol12x12(window, game_state);
@@ -81,7 +81,7 @@ void drawTable12x12(const Window& window, MainGameUIState& ui_state)
 
 	for (int i = 3; i <= 15; i++)
 		SDL_RenderDrawLine(window.renderer_ptr, 10 * cell_width, i * cell_height, 22 * cell_width, i * cell_height); // row; // row
-	
+
 	cell_width = window.width / 16;
 	cell_height = cell_width;
 
@@ -120,8 +120,8 @@ void drawSymbol3x3(const Window& window, const GameState& game_state) {
 			Cell cell{ row, column };
 			if (isCellEmpty(game_state.board3x3, cell)) continue;
 
-			int x = (column * 2 + 6) * cell_width;
-			int y = (row * 2 + 2) * cell_height;
+			int x, y;
+			convertRowColToXY_3x3(window, row, column, x, y);
 
 			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board3x3, cell);
 			const char* symbol{};
@@ -131,7 +131,7 @@ void drawSymbol3x3(const Window& window, const GameState& game_state) {
 				mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_O_PLAYER);
 			}
 
-			SDL_Rect rect = { x - cell_width/2, y - cell_height/2, cell_width, cell_height };
+			SDL_Rect rect = { x - cell_width / 2, y - cell_height / 2, cell_width, cell_height };
 			drawTexture(window.renderer_ptr, mark_texture, rect);
 		}
 	}
@@ -148,8 +148,8 @@ void drawSymbol12x12(const Window& window, const GameState& game_state)
 			Cell cell{ row, column };
 			if (isCellEmpty(game_state.board12x12, cell)) continue;
 
-			int x = (column + 10) * cell_height  ;
-			int y = (row + 3) * cell_width  ;
+			int x, y;
+			convertRowColToXY_12x12(window, row, column, x, y);
 
 			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board12x12, cell);
 			const char* symbol{};
@@ -159,7 +159,7 @@ void drawSymbol12x12(const Window& window, const GameState& game_state)
 				mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_O_PLAYER);
 			}
 
-			SDL_Rect rect = { x, y, cell_width, cell_height };
+			SDL_Rect rect = { x - cell_width / 2, y - cell_height / 2, cell_width, cell_height };
 			drawTexture(window.renderer_ptr, mark_texture, rect);
 		}
 	}
@@ -240,7 +240,7 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 		return;
 	}
 
-	int imgW = (picW)*window.height / (picH) - window.width / 32;
+	int imgW = (picW)*window.height / (picH)-window.width / 32;
 	int imgH = window.height * 9 / 10;
 
 	ui_state.winner.rect = {
@@ -295,6 +295,21 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.Exit.state = true;
 }
 
+void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y)
+{
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+	x = (col * 2 + 6) * cell_width;
+	y = (row * 2 + 2) * cell_height;
+}
+void convertRowColToXY_12x12(const Window window, int row, int col, int& x, int& y)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	x = (col + 10) * cell_height + cell_height / 2;
+	y = (row + 3) * cell_width + cell_width / 2;
+}
+
 Cell handleMouseClick3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY) {
 	int cellW = window.width / 16;
 	int cellH = cellW;
@@ -329,14 +344,15 @@ void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state)
 	int cell_height = cell_width;
 	int col = (mouseX / cell_width) / 2 + (mouseX / cell_width) % 2 - 3;
 	int row = (mouseY / cell_height) / 2 + (mouseY / cell_height) % 2 - 1;
-	if (col > 2) col = 2;
+	/*if (col > 2) col = 2;
 	if (row > 2) row = 2;
 	if (col < 0) col = 0;
-	if (row < 0) row = 0;
-	int x = (col * 2 + 6) * cell_width - cell_width * 90 / 100;
-	int y = (row * 2 + 2) * cell_height - cell_height * 90 / 100;
+	if (row < 0) row = 0;*/
+	if (row < 0 || col < 0 || row > 2 || col > 2) return;
+	int x, y;
+	convertRowColToXY_3x3(window, row, col, x, y);
 	int width = 2 * cell_width * 90 / 100;
-	ui_state.hover_cell = { x, y , width, width };
+	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
 }
 
 void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
@@ -347,12 +363,80 @@ void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
 	int cell_height = cell_width;
 	int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
 	int col = (mouseX / cell_width) - 10;
-	if (row < 0) row = 0;
+	/*if (row < 0) row = 0;
 	if (col < 0) col = 0;
 	if (row > 11) row = 11;
-	if (col > 11) col = 11;
-	int x = (col + 10) * cell_height + cell_height / 2 - cell_width * 90 / 200;
-	int y = (row + 3) * cell_width + cell_width / 2 - cell_width * 90 / 200;
+	if (col > 11) col = 11;*/
+	if (row < 0 || col < 0 || row > 11 || col > 11) return;
+	int x, y;
+	convertRowColToXY_12x12(window, row, col, x, y);
 	int width = cell_width * 90 / 100;
-	ui_state.hover_cell = { x, y, width, width };
+	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
+}
+
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+{
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
+	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
+
+	if (input == SDL_SCANCODE_A) col -= 1;
+	if (input == SDL_SCANCODE_D) col += 1;
+	if (input == SDL_SCANCODE_W) row -= 1;
+	if (input == SDL_SCANCODE_S) row += 1;
+
+	if (row < 0 || col < 0 || row > 2 || col > 2) return;
+	int x, y;
+	convertRowColToXY_3x3(window, row, col, x, y);
+
+	ui_state.hover_cell.x = x - cell_width * 9 / 10;
+	ui_state.hover_cell.y = y - cell_width * 9 / 10;
+}
+
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	int row = (ui_state.hover_cell.y / cell_height) - 3; // from mouse pos to row, col of board
+	int col = (ui_state.hover_cell.x / cell_width) - 10;
+	if (input == SDL_SCANCODE_A) col -= 1;
+	if (input == SDL_SCANCODE_D) col += 1;
+	if (input == SDL_SCANCODE_W) row -= 1;
+	if (input == SDL_SCANCODE_S) row += 1;
+
+	if (row < 0 || col < 0 || row > 11 || col > 11) return;
+	int x, y;
+	convertRowColToXY_12x12(window, row, col, x, y);
+
+	ui_state.hover_cell.x = x - cell_width * 9 / 20;
+	ui_state.hover_cell.y = y - cell_width * 9 / 20;
+}
+
+Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state)
+{
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
+	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
+
+	Cell cell{ row, col };
+
+	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
+
+	return cell;
+}
+
+Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state)
+{
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	int row = (ui_state.hover_cell.y / cell_height) - 3;
+	int col = (ui_state.hover_cell.x / cell_width) - 10;
+
+	Cell cell{ row, col };
+
+	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NOT_SELECTED;
+
+	return cell;
 }

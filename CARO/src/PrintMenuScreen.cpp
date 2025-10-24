@@ -148,7 +148,6 @@ void InitSettings(Window& window, SettingsButton& settings_button)
 
 void drawMenuGame(Window& window, MenuState& menu_state)
 {
-	std::cout << menu_state.transform_idx << '\n';
 	if (menu_state.transform_idx == TEXTURE_PLAY_BUTTON)
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PLAY_BUTTON_HOVERED), MenuButtonPosition[_MainMenu][TEXTURE_PLAY_BUTTON]);
 	else
