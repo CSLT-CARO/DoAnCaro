@@ -36,7 +36,7 @@ Millisecond getTimePassed(const Timer& timer) {
 }
 
 Millisecond getTimeRemaining(const Timer& timer) {
-	return std::max(timer.timeout - getTimePassed(timer), 0ULL);
+	return std::max(timer.timeout - getTimePassed(timer), static_cast<Millisecond>(0));
 }
 
 Second toSecond(const Millisecond time) {

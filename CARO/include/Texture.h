@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 #include "Video.h"
