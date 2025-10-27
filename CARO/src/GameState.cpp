@@ -1,7 +1,5 @@
 #include "GameState.h"
 
-#include "MainGameUI.h"
-
 bool operator==(const Cell& a, const Cell& b) {
     return a.row == b.row and a.column == b.column;
 }
