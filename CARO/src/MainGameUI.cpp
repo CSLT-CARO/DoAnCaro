@@ -318,7 +318,7 @@ Cell handleMouseClick3x3(const Window& window, MainGameUIState& ui_state, const 
 
 	Cell cell{ row, col };
 
-	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
+	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NULL_CELL;
 
 	return cell;
 }
@@ -331,7 +331,7 @@ Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, cons
 	int col = (mouseX / cell_width) - 10;
 	Cell cell{ row, col };
 
-	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NOT_SELECTED;
+	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NULL_CELL;
 
 	return cell;
 }
@@ -422,7 +422,7 @@ Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, 
 
 	Cell cell{ row, col };
 
-	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NOT_SELECTED;
+	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NULL_CELL;
 
 	return cell;
 }
@@ -436,7 +436,7 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state
 
 	Cell cell{ row, col };
 
-	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NOT_SELECTED;
+	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NULL_CELL;
 
 	return cell;
 }

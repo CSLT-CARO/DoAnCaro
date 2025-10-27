@@ -14,7 +14,7 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			int mouseX = event.button.x;
 			int mouseY = event.button.y;
 
-			ui_state.selected_cell = NOT_SELECTED;
+			ui_state.selected_cell = NULL_CELL;
 			if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) // Restart
 			{
 				game_state.game_is_run = true;
@@ -70,7 +70,7 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 		drawMainGame(window, ui_state, game_state);
 
 		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
-		drawGameOverScreen(window, ui_state, game_state, checkWinner(game_state.board3x3));
+		drawGameOverScreen(window, ui_state, game_state, checkWinner(game_state.board3x3).mark);
 		return;
 	}
 
@@ -82,7 +82,7 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 		alternateTurn(game_state.whose_turn);
 	}
 	else {
-		if (ui_state.selected_cell == NOT_SELECTED) return;
+		if (ui_state.selected_cell == NULL_CELL) return;
 		if (game_state.board_type == Classic)
 			tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
 		else tryPlaceMark(game_state.board12x12, ui_state.selected_cell, game_state.whose_turn);
@@ -91,11 +91,11 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 
 	if (game_state.board_type == Classic)
 	{
-		PlayerMark winner = checkWinner(game_state.board3x3);
-		if (winner != Empty or not isMovesLeft(game_state.board3x3)) {
+		const WinnerData data = checkWinner(game_state.board3x3);
+		if (data.mark != Empty or not isMovesLeft(game_state.board3x3)) {
 			drawMainGame(window, ui_state, game_state);
 			activateTimer(ui_state.before_game_end_timer);
-			setupGameOverScreen(window, ui_state, winner);
+			setupGameOverScreen(window, ui_state, data.mark);
 			ui_state.is_game_over = true;
 			game_state.is_init = false;
 		}
@@ -104,5 +104,5 @@ void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_
 	{
 
 	}
-	ui_state.selected_cell = NOT_SELECTED;
+	ui_state.selected_cell = NULL_CELL;
 }

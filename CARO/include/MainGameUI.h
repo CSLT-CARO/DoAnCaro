@@ -22,10 +22,6 @@ struct GameOverButton
 	Button Exit;
 };
 
-
-
-const Cell NOT_SELECTED = { -1, -1 };
-
 struct MainGameUIState {
 	Button player_x{};
 	Button player_o{};
@@ -35,7 +31,7 @@ struct MainGameUIState {
 	GameOverButton end_game_button;
 	Timer turn_timer{};
 	Timer before_game_end_timer{};
-	Cell selected_cell = NOT_SELECTED;
+	Cell selected_cell = NULL_CELL;
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
 };

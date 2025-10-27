@@ -14,6 +14,14 @@ struct Cell {
     int row{}, column{};
 };
 
+constexpr Cell NULL_CELL { -1, -1 };
+
+struct WinnerData {
+    PlayerMark mark {};
+    Cell start_coordinates {};
+    Cell end_coordinates {};
+};
+
 bool operator==(const Cell& a, const Cell& b);
 bool operator!=(const Cell& a, const Cell& b);
 
@@ -53,7 +61,8 @@ bool trySetEmpty(Board12x12& board, const Cell& cell);
 bool isTerminated(const Board3x3& board);
 bool shouldAbortByDepth(const int depth, const int depth_threshold);
 
-PlayerMark checkWinner(const Board3x3& board);
+WinnerData checkWinner(const Board3x3& board);
+WinnerData checkWinner(const Board12x12& board, const Cell& last_chosen_cell);
 
 bool isCellEmpty(const Board3x3& board, const Cell& cell);
 bool isCellEmpty(const Board12x12& board, const Cell& cell);
