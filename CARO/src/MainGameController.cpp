@@ -152,12 +152,10 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 			setupGameOverScreen(window, ui_state, data.mark);
 
 			ui_state.stopped_at_moment = -1;
-			if (game_state.board_type == Ultimate) {
-				if (game_state.mode == PVP) {
-					ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
-				} else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
-					ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
-				}
+			if (game_state.mode == PVP) {
+				ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+			} else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
+				ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
 			}
 
 			ui_state.is_game_over = true;
