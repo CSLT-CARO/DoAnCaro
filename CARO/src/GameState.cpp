@@ -377,10 +377,10 @@ WinnerData checkWinner(const Board12x12& board, const Cell& last_chosen_cell) {
             }
         }
 
-        num_consecutive_marks_vertical += is_checking_up or is_checking_down;
-        num_consecutive_marks_horizontal += is_checking_left or is_checking_right;
-        num_consecutive_marks_primary_diagonal += is_checking_primary_diagonal_up or is_checking_primary_diagonal_down;
-        num_consecutive_marks_secondary_diagonal += is_checking_secondary_diagonal_up or is_checking_secondary_diagonal_down;
+        num_consecutive_marks_vertical += is_checking_up + is_checking_down;
+        num_consecutive_marks_horizontal += is_checking_left + is_checking_right;
+        num_consecutive_marks_primary_diagonal += is_checking_primary_diagonal_up + is_checking_primary_diagonal_down;
+        num_consecutive_marks_secondary_diagonal += is_checking_secondary_diagonal_up + is_checking_secondary_diagonal_down;
 
         if (num_consecutive_marks_vertical == 5) {
             return { whose_mark, temp_up, temp_down };
@@ -419,6 +419,16 @@ bool isCellOutOfBound12x12(const Cell& cell) {
 }
 
 bool isMovesLeft(const Board3x3& board) {
+    for (auto const& row : board) {
+        for (auto const& column : row) {
+            if (column == Empty) return true;
+        }
+    }
+
+    return false;
+}
+
+bool isMovesLeft(const Board12x12& board) {
     for (auto const& row : board) {
         for (auto const& column : row) {
             if (column == Empty) return true;

@@ -65,44 +65,105 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 	}
 }
 
-void processMainGame(Window& window, MainGameUIState& ui_state, GameState& game_state) {
+void processMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state) {
 	if (ui_state.is_game_over) {
-		drawMainGame(window, ui_state, game_state);
+		// draw timer here
+		// only draw if ui_state.stopped_at_moment != -1;
 
+		drawMainGame(window, ui_state, game_state);
 		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
-		drawGameOverScreen(window, ui_state, game_state, checkWinner(game_state.board3x3).mark);
+		drawGameOverScreen(window, ui_state, game_state);
 		return;
 	}
 
 	initGame(window, game_state, ui_state);
 	drawMainGame(window, ui_state, game_state);
 
+	Second time_remaining = -1;
+
+	if (game_state.board_type == Ultimate) {
+		if (ui_state.should_reset_turn_timer) {
+			if (game_state.mode == PVE) {
+				activateTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+			} else {
+				activateTimer(ui_state.pvp_turn_timer);
+			}
+
+			ui_state.should_reset_turn_timer = false;
+		}
+
+		if (game_state.mode == PVP) {
+			time_remaining = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+		} else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
+			time_remaining = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
+		}
+	}
+
+	// draw timer here
+	std::cout << time_remaining << std::endl;
+
+	bool is_placed_success_3x3 = false;
+	bool is_placed_success_12x12 = false;
+
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);
 		alternateTurn(game_state.whose_turn);
-	}
-	else {
-		if (ui_state.selected_cell == NULL_CELL) return;
+		ui_state.should_reset_turn_timer = true;
+	} else {
+		if (ui_state.selected_cell == NULL_CELL) {
+			if (game_state.board_type == Classic) return;
+			if (game_state.mode == PVE) {
+				return;
+				// if (not hasReachedTimeout(ui_state.pve_turn_timer.at(game_state.difficulty))) return;
+			} else {
+				if (not hasReachedTimeout(ui_state.pvp_turn_timer)) return;
+			}
+
+			alternateTurn(game_state.whose_turn);
+			ui_state.should_reset_turn_timer = true;
+			return;
+		}
+
 		if (game_state.board_type == Classic)
-			tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
-		else tryPlaceMark(game_state.board12x12, ui_state.selected_cell, game_state.whose_turn);
+			is_placed_success_3x3 = tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
+		else {
+			is_placed_success_12x12 = tryPlaceMark(game_state.board12x12, ui_state.selected_cell, game_state.whose_turn);
+			ui_state.should_reset_turn_timer = true;
+		}
+
 		alternateTurn(game_state.whose_turn);
 	}
 
-	if (game_state.board_type == Classic)
-	{
+	if (is_placed_success_3x3 and game_state.board_type == Classic) {
 		const WinnerData data = checkWinner(game_state.board3x3);
 		if (data.mark != Empty or not isMovesLeft(game_state.board3x3)) {
 			drawMainGame(window, ui_state, game_state);
 			activateTimer(ui_state.before_game_end_timer);
 			setupGameOverScreen(window, ui_state, data.mark);
+			ui_state.stopped_at_moment = -1;
+			ui_state.is_game_over = true;
+			game_state.is_init = false;
+		}
+	} else if (is_placed_success_12x12 and game_state.board_type == Ultimate) {
+		const WinnerData data = checkWinner(game_state.board12x12, ui_state.selected_cell);
+		if (data.mark != Empty or not isMovesLeft(game_state.board12x12)) {
+			drawMainGame(window, ui_state, game_state);
+			activateTimer(ui_state.before_game_end_timer);
+			setupGameOverScreen(window, ui_state, data.mark);
+
+			ui_state.stopped_at_moment = -1;
+			if (game_state.board_type == Ultimate) {
+				if (game_state.mode == PVP) {
+					ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+				} else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
+					ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
+				}
+			}
+
 			ui_state.is_game_over = true;
 			game_state.is_init = false;
 		}
 	}
-	else
-	{
 
-	}
 	ui_state.selected_cell = NULL_CELL;
 }

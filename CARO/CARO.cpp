@@ -11,7 +11,10 @@ int main(int argc, char* argv[]) {
 	MainGameUIState main_game_ui_state{};
 	MenuState menu_state;
 
-	setTimeout(main_game_ui_state.turn_timer, 60000);
+	setTimeout(main_game_ui_state.pve_turn_timer[Easy], 60999);
+	setTimeout(main_game_ui_state.pve_turn_timer[Normal], 30999);
+	setTimeout(main_game_ui_state.pve_turn_timer[Hard], 10999);
+	setTimeout(main_game_ui_state.pvp_turn_timer, 20999);
 	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);

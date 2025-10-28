@@ -69,6 +69,7 @@ bool isCellEmpty(const Board12x12& board, const Cell& cell);
 bool isCellOutOfBound3x3(const Cell& cell);
 bool isCellOutOfBound12x12(const Cell& cell);
 bool isMovesLeft(const Board3x3& board);
+bool isMovesLeft(const Board12x12& board);
 
 PlayerMark getMark(const Board3x3&, const Cell& cell);
 PlayerMark getMark(const Board12x12&, const Cell& cell);

@@ -173,18 +173,19 @@ void drawSelectingCell(const Window& window, const GameState& game_state, MainGa
 	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
-void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won) {
+void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 	SDL_Texture* restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART);
 	SDL_Texture* new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME);
 	SDL_Texture* exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT);
+
 	if (game_state.mode == PVP)
 	{
-		if (who_won == X) {
+		if (ui_state.who_won == X) {
 			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
 		}
-		else if (who_won == O) {
+		else if (ui_state.who_won == O) {
 			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
 		}
 	}
@@ -192,13 +193,13 @@ void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameSta
 	{
 		if (game_state.bot_marker == X)
 		{
-			if (who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else if (who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			if (ui_state.who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else if (ui_state.who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 		else
 		{
-			if (who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else if (who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			if (ui_state.who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else if (ui_state.who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 	}
 	if (ui_state.end_game_button.Restart.state) {
@@ -221,14 +222,17 @@ void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameSta
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won) {
 	if (ui_state.is_set_up_game_over_screen) return;
+	ui_state.who_won = who_won;
 
 	int x = window.width / 2; // x pos
 	int y = window.height / 2; // y pos
 
-	auto texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
+	auto texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 
 	if (who_won == O) {
 		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
+	} else if (who_won == X) {
+		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
 	}
 
 	int picW = 0;

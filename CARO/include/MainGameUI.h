@@ -27,13 +27,20 @@ struct MainGameUIState {
 	Button player_o{};
 	Button winner{};
 	Button timer_button{};
-	SDL_Rect hover_cell;
+	SDL_Rect hover_cell{};
 	GameOverButton end_game_button;
-	Timer turn_timer{};
 	Timer before_game_end_timer{};
+
+	Timer pvp_turn_timer{};
+	std::unordered_map<Difficulty, Timer> pve_turn_timer{};
+
+	Second stopped_at_moment {};
+
 	Cell selected_cell = NULL_CELL;
+	PlayerMark who_won{};
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
+	bool should_reset_turn_timer = false;
 };
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
@@ -43,7 +50,7 @@ void drawTable12x12(const Window& window, MainGameUIState& ui_state);
 void drawSymbol3x3(const Window& window, const GameState& game_state);
 void drawSymbol12x12(const Window& window, const GameState& game_state);
 void drawSelectingCell(const Window& window, const GameState& game_state, MainGameUIState& ui_state);
-void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, const PlayerMark& who_won);
+void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
