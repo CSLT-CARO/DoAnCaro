@@ -26,6 +26,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    add_compile_options(-static -static-libgcc -static-libstdc++)
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2main SDL2::SDL2-static)
+endif()
+
 if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux"))
     target_link_libraries(${PROJECT_NAME} SDL2::SDL2)
 endif()
