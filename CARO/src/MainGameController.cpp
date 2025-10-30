@@ -1,4 +1,5 @@
 #include "MainGameController.h"
+#include "MainGameUI.h"
 #include "MenuUI.h"
 
 void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, const Window& window, GameState& game_state, MenuState& menu_state) {
@@ -46,9 +47,9 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 		}
 		checkMouseHoverButton(ui_state);
 	}
-	if (event.type == SDL_KEYDOWN)
+	if (event.type == SDL_KEYDOWN && not ui_state.is_game_over)
 	{
-		if (game_state.board_type == Classic)
+		if (game_state.board_type == Classic )
 		{
 			handleKeyboardMove3x3(window, ui_state, event.key.keysym.scancode);
 			if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
@@ -69,15 +70,15 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	if (ui_state.is_game_over) {
 		// draw timer here
 		// only draw if ui_state.stopped_at_moment != -1;
-
+		
 		drawMainGame(window, ui_state, game_state);
 		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
 		drawGameOverScreen(window, ui_state, game_state);
 		return;
 	}
-
 	initGame(window, game_state, ui_state);
 	drawMainGame(window, ui_state, game_state);
+
 
 	Second time_remaining = -1;
 
@@ -100,10 +101,36 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	}
 
 	// draw timer here
-	std::cout << time_remaining << std::endl;
+	if (game_state.board_type == Ultimate)
+		drawTimer(window.renderer_ptr, time_remaining, ui_state.timer_button.rect);
+
+
+	if (time_remaining == 0) {
+		PlayerMark who_win;
+		if (game_state.whose_turn == X) who_win = O;
+		else who_win = X;
+		setupGameOverScreen(window, ui_state, who_win);
+		ui_state.is_game_over = true;
+		game_state.is_init = false;
+	}
 
 	bool is_placed_success_3x3 = false;
 	bool is_placed_success_12x12 = false;
+
+	
+	if (ui_state.have_winner)
+	{
+		WinnerData data;
+		if (game_state.board_type == Classic) data = checkWinner(game_state.board3x3);
+		else data = checkWinner(game_state.board12x12, ui_state.selected_cell);
+		drawMainGame(window, ui_state, game_state);
+		activateTimer(ui_state.before_game_end_timer);
+		setupGameOverScreen(window, ui_state, data.mark);
+		ui_state.is_game_over = true;
+		game_state.is_init = false;
+		return;
+	}
+
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);
@@ -134,8 +161,11 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		alternateTurn(game_state.whose_turn);
 	}
 
+	
+
 	if (is_placed_success_3x3 and game_state.board_type == Classic) {
 		const WinnerData data = checkWinner(game_state.board3x3);
+		//std::cout << data.start_coordinates.row << ' ' << data.start_coordinates.column << "    " << data.end_coordinates.row << ' ' << data.end_coordinates.column << '\n';
 		if (data.mark != Empty or not isMovesLeft(game_state.board3x3)) {
 			drawMainGame(window, ui_state, game_state);
 			activateTimer(ui_state.before_game_end_timer);
@@ -146,6 +176,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		}
 	} else if (is_placed_success_12x12 and game_state.board_type == Ultimate) {
 		const WinnerData data = checkWinner(game_state.board12x12, ui_state.selected_cell);
+		//std::cout << data.start_coordinates.row << ' ' << data.start_coordinates.column << "    " << data.end_coordinates.row << ' ' << data.end_coordinates.column << '\n';
 		if (data.mark != Empty or not isMovesLeft(game_state.board12x12)) {
 			drawMainGame(window, ui_state, game_state);
 			activateTimer(ui_state.before_game_end_timer);

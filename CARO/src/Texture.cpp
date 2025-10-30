@@ -77,6 +77,17 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 	{ "Newgame_on", TEXTURE_NEW_GAME_ON },
 	{ "Exit_on", TEXTURE_EXIT_ON },
 
+	{ "row_line_X", TEXTURE_ROW_LINE_X},
+	{ "row_line_O", TEXTURE_ROW_LINE_O},
+	
+	{ "column_line_X", TEXTURE_COLUMN_LINE_X},
+	{ "column_line_O", TEXTURE_COLUMN_LINE_O},
+
+	{ "diagonal_line_X", TEXTURE_DIAGONAL_LINE_X},
+	{ "diagonal_line_O", TEXTURE_DIAGONAL_LINE_O},
+
+	{ "anti_diagonal_line_X", TEXTURE_ANTI_DIAGONAL_LINE_X},
+	{ "anti_diagonal_line_O", TEXTURE_ANTI_DIAGONAL_LINE_O},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

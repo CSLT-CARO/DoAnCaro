@@ -5,15 +5,29 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 
+	
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
 		drawSymbol3x3(window, game_state);
+		if (checkWinner(game_state.board3x3).mark != Empty)
+		{
+			drawWinnerLine3x3(window, checkWinner(game_state.board3x3));
+			ui_state.have_winner = true;
+
+		}
 	}
 	else
 	{
 		drawTable12x12(window, ui_state);
 		drawSymbol12x12(window, game_state);
+		if (ui_state.selected_cell != NULL_CELL)
+			ui_state.last_select = ui_state.selected_cell;
+		if (checkWinner(game_state.board12x12, ui_state.last_select).mark != Empty)
+		{
+			drawWinnerLine12x12(window, checkWinner(game_state.board12x12, ui_state.last_select));
+			ui_state.have_winner = true;
+		}
 	}
 	if (game_state.mode == PVP)
 	{
@@ -29,6 +43,13 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 		}
 	}
 	drawSelectingCell(window, game_state, ui_state);
+
+	/*std::cout << checkWinner(game_state.board3x3).mark << '\n';*/
+
+	
+
+	
+	
 	// Seminar 2 :)
 	//Millisecond time_remaining = getTimeRemaining(ui_state.turn_timer);
 	//drawTimer(renderer, toSecond(time_remaining), ui_state.timer_button.rect);
@@ -218,6 +239,112 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 	drawTexture(renderer, restart_button_texture, ui_state.end_game_button.Restart.rect);
 	drawTexture(renderer, new_game_button_texture, ui_state.end_game_button.New_game.rect);
 	drawTexture(renderer, exit_button_texture, ui_state.end_game_button.Exit.rect);
+}
+
+void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
+{
+	Cell start = winner_data.start_coordinates;
+	Cell end = winner_data.end_coordinates;
+	SDL_Rect tmp_rect;
+	SDL_Texture* mark_texture = nullptr;
+	int x, y;
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+	convertRowColToXY_3x3(window, start.row, start.column, x, y);
+	x -= cell_width;
+	y -= cell_height;
+	if(start.row == end.row)
+	{
+		tmp_rect = { x, y, 6 * cell_width, 2 * cell_height };
+		if(winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_O);
+		
+	}
+	else if (start.column == end.column)
+	{
+		tmp_rect = { x, y, 2 * cell_width, 6 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_O);
+
+	}
+	else if (start.column < end.column && start.row < end.row)
+	{
+		convertRowColToXY_3x3(window, 0, 0, x, y);
+		x -= cell_width;
+		y -= cell_height;
+		tmp_rect = { x, y, 6 * cell_width, 6 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_DIAGONAL_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_DIAGONAL_LINE_O);
+	}
+	else
+	{
+		convertRowColToXY_3x3(window, 0, 0, x, y);
+		x -= cell_width;
+		y -= cell_height;
+		tmp_rect = { x, y, 6 * cell_width, 6 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ANTI_DIAGONAL_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ANTI_DIAGONAL_LINE_O);
+	}
+	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
+}
+
+void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
+{
+	Cell start = winner_data.start_coordinates;
+	Cell end = winner_data.end_coordinates;
+	SDL_Rect tmp_rect;
+	SDL_Texture* mark_texture = nullptr;
+	int x, y;
+	int cell_width = window.width / 32;
+	int cell_height = cell_width;
+	convertRowColToXY_12x12(window, start.row, start.column, x, y);
+	x -= cell_width / 2;
+	y -= cell_height / 2;
+	if (start.row == end.row)
+	{
+		tmp_rect = { x, y, 5 * cell_width, cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_O);
+
+	}
+	else if (start.column == end.column)
+	{
+		tmp_rect = { x, y, cell_width, 5 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_O);
+
+	}
+	else if (start.column < end.column && start.row < end.row)
+	{
+		tmp_rect = { x, y, 5 * cell_width, 5 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_DIAGONAL_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_DIAGONAL_LINE_O);
+	}
+	else
+	{
+		x -= 4 * cell_width;
+		tmp_rect = { x, y, 5 * cell_width, 5 * cell_height };
+		if (winner_data.mark == X)
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ANTI_DIAGONAL_LINE_X);
+		else
+			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ANTI_DIAGONAL_LINE_O);
+
+	}
+	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won) {

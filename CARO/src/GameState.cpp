@@ -252,8 +252,8 @@ WinnerData checkWinner(const Board3x3& board) {
 
     if (board[2][0] == board[1][1] and board[1][1] == board[0][2] and board[2][0] != Empty) {
         data.mark = board[2][0];
-        data.start_coordinates = { 2, 0 };
-        data.end_coordinates = { 0, 2 };
+        data.start_coordinates = { 0, 2 };
+        data.end_coordinates = { 2, 0 };
         return data;
     }
 
