@@ -20,6 +20,7 @@ struct GameOverButton
 	Button New_game;
 	Button Restart;
 	Button Exit;
+	int index;
 };
 
 struct MainGameUIState {
@@ -74,4 +75,6 @@ void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SD
 
 Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+
+void handelKeyBoardButton(const Window& window, MenuState & menu_state, GameState &game_state, MainGameUIState& ui_state, SDL_Scancode input);
 #endif

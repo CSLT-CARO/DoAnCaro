@@ -1,5 +1,5 @@
 #include "MainGameUI.h"
-
+#include "MenuController.h"
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
@@ -223,15 +223,15 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 			else if (ui_state.who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 	}
-	if (ui_state.end_game_button.Restart.state) {
+	if (ui_state.end_game_button.index == TEXTURE_RESTART_ON) {
 		restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART_ON);
 	}
 
-	if (ui_state.end_game_button.New_game.state) {
+	if (ui_state.end_game_button.index == TEXTURE_NEW_GAME_ON) {
 		new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME_ON);
 	}
 
-	if (ui_state.end_game_button.Exit.state) {
+	if (ui_state.end_game_button.index == TEXTURE_EXIT_ON) {
 		exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT_ON);
 	}
 
@@ -351,6 +351,7 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 	if (ui_state.is_set_up_game_over_screen) return;
 	ui_state.who_won = who_won;
 
+	ui_state.end_game_button.index = TEXTURE_RESTART_ON;
 	int x = window.width / 2; // x pos
 	int y = window.height / 2; // y pos
 
@@ -420,10 +421,9 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	ui_state.end_game_button.Restart.state = ui_state.end_game_button.New_game.state = ui_state.end_game_button.Exit.state = false;
-	if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.end_game_button.Restart.state = true;
-	if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.end_game_button.New_game.state = true;
-	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.Exit.state = true;
+	if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_RESTART_ON;
+	if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_NEW_GAME_ON;
+	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_EXIT_ON;
 }
 
 void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y)
@@ -570,4 +570,51 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state
 	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NULL_CELL;
 
 	return cell;
+}
+
+
+void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, SDL_Scancode input)
+{
+	
+
+	if (input == SDL_SCANCODE_RETURN)
+	{
+		switch(ui_state.end_game_button.index)
+		{
+			case TEXTURE_RESTART_ON:
+				game_state.game_is_run = true;
+				ui_state.is_game_over = false;
+				game_state.is_init = false;
+				break;
+			case TEXTURE_NEW_GAME_ON:
+				game_state.game_is_run = false;
+				ui_state.is_game_over = false;
+				game_state.is_init = false;
+				menu_state.transform_idx = TEXTURE_PVP_BUTTON;
+				menu_state.trans_display = _ChooseTypePlayer;
+				break;
+			case TEXTURE_EXIT_ON:
+				game_state.game_is_run = false;
+				ui_state.is_game_over = false;
+				game_state.is_init = false;
+				menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+				menu_state.trans_display = _MainMenu;
+				break;
+		}
+		ui_state.end_game_button.index = TEXTURE_RESTART_ON;
+
+	}
+	if (input == SDL_SCANCODE_W || input == SDL_SCANCODE_UP)
+	{
+		ui_state.end_game_button.index -= 1;
+		checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+		return;
+	}
+	if (input == SDL_SCANCODE_S || input == SDL_SCANCODE_DOWN)
+	{
+		ui_state.end_game_button.index += 1;
+		checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+		return;
+	}
+
 }

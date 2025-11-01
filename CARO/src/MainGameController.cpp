@@ -47,20 +47,38 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 		}
 		checkMouseHoverButton(ui_state);
 	}
-	if (event.type == SDL_KEYDOWN && not ui_state.is_game_over)
+	if (event.type == SDL_KEYDOWN )
 	{
-		if (game_state.board_type == Classic )
+		if (not ui_state.is_game_over)
 		{
-			handleKeyboardMove3x3(window, ui_state, event.key.keysym.scancode);
-			if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
-				ui_state.selected_cell = handleKeyboardMakeTurn3x3(window, ui_state, game_state);
+			if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+			{
+				ui_state.selected_cell = NULL_CELL;
+				game_state.game_is_run = false;
+				ui_state.is_game_over = false;
+				game_state.is_init = false;
+				menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+				menu_state.trans_display = _MainMenu;
+				return;
+			}
 
+			if (game_state.board_type == Classic)
+			{
+				handleKeyboardMove3x3(window, ui_state, event.key.keysym.scancode);
+				if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
+					ui_state.selected_cell = handleKeyboardMakeTurn3x3(window, ui_state, game_state);
+
+			}
+			else
+			{
+				handleKeyboardMove12x12(window, ui_state, event.key.keysym.scancode);
+				if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
+					ui_state.selected_cell = handleKeyboardMakeTurn12x12(window, ui_state, game_state);
+			}
 		}
 		else
 		{
-			handleKeyboardMove12x12(window, ui_state, event.key.keysym.scancode);
-			if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
-				ui_state.selected_cell = handleKeyboardMakeTurn12x12(window, ui_state, game_state);
+			handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 		}
 
 	}

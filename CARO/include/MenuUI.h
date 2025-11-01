@@ -15,11 +15,14 @@ enum gameLayer
 	_None,
 	_TurnBackButton,
 	_MainMenu,
+	_ChooseLoadFile,
 	_ChangeSound,
 	_ChooseTypePlayer,
 	_ChooseTypeGame,
 	_ChangeSettings,
 };
+
+
 
 struct MenuState
 {
@@ -28,9 +31,9 @@ struct MenuState
 	bool menu_is_run = true;
 	bool turn_sfx = true;
 	bool turn_music = true;
-	bool background_display = true;
-	int transform_idx = -1;
+	int transform_idx = 1;
 	int trans_display = _MainMenu;
+
 };
 
 #endif // MENU_UI_H

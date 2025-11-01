@@ -34,11 +34,7 @@ int main(int argc, char* argv[]) {
 				menu_state.menu_is_run = false;
 			}
 
-			if (event.type == SDL_KEYDOWN) {
-				if (event.key.keysym.sym == SDLK_ESCAPE) {
-					menu_state.menu_is_run = false;
-				}
-			}
+
 			if (game_state.game_is_run == true)
 				handleMainGameInput(event, main_game_ui_state, window, game_state, menu_state);
 			else
