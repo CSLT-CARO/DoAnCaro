@@ -256,7 +256,7 @@ WinnerData checkWinner(const Board3x3& board) {
         data.end_coordinates = { 2, 0 };
         return data;
     }
-
+ 
     return { Empty, NULL_CELL, NULL_CELL};
 }
 

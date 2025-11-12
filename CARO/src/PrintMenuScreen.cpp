@@ -6,7 +6,9 @@
 #include <vector>
 
 #include "PrintMenuScreen.h"
+#include "MenuController.h"
 std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
+std::unordered_map< int, Button> Slot;
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position)
 {
 	int window_width = window.width;
@@ -145,6 +147,72 @@ void InitSettings(Window& window, SettingsButton& settings_button)
 	MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_OFF_BUTTON] = settings_button.on_sfx_button.rect;
 }
 
+void InitChooseDifficulty(Window& window, DifficultyButton& diff)
+{
+	int imgW = 350;
+	int imgH = 80;
+	int windowW = window.width;
+	int windowH = window.height;
+
+	diff.easy.rect =
+	{
+		windowW / 2 - imgW / 2,
+		windowH / 2 - imgH / 2 - (int)(windowH * 1.25) / 10,
+		imgW,
+		imgH
+	};
+	diff.normal.rect =
+	{
+		windowW / 2 - imgW / 2,
+		windowH / 2 - imgH / 2,
+		imgW,
+		imgH
+	};
+	diff.hard.rect =
+	{
+		windowW / 2 - imgW / 2,
+		windowH / 2 - imgH / 2 + (int)(windowH * 1.25) / 10,
+		imgW,
+		imgH
+	};
+	MenuButtonPosition[_ChooseDifficulty][TEXTURE_EASY_BUTTON] = diff.easy.rect;
+	MenuButtonPosition[_ChooseDifficulty][TEXTURE_NORMAL_BUTTON] = diff.normal.rect;
+	MenuButtonPosition[_ChooseDifficulty][TEXTURE_HARD_BUTTON] = diff.hard.rect;
+}
+
+void InitLoadFile(Window& window, FileSave& load_file)
+{
+	int window_width = window.width ;
+	int window_height = window.height ;
+
+
+	load_file.load_screen = {
+		0,
+		0,
+		window_width ,
+		window_height 
+		
+	};
+	MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN] = load_file.load_screen.rect;
+	
+	int pos_x = 254, pos_y = 103;
+	int imgW = 1459, imgH = 173;
+	SDL_Rect tmp;
+	for (int i = 1; i <= 5; i++)
+	{
+		tmp =
+		{
+			pos_x, pos_y,
+			imgW,imgH
+		};
+		SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0,0, 255);
+		SDL_RenderFillRect(window.renderer_ptr, &tmp);
+		Slot[i].rect = tmp;
+		pos_y += 8 + imgH;
+	}
+
+
+}
 
 void drawMenuGame(Window& window, MenuState& menu_state)
 {
@@ -217,7 +285,6 @@ void drawChooseTypePlayer(Window& window, MenuState& menu_state)
 	}*/
 }
 
-
 void drawChooseTypeGame(Window& window, MenuState& menu_state)
 {
 
@@ -232,19 +299,23 @@ void drawChooseTypeGame(Window& window, MenuState& menu_state)
 	else
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ULTIMATE_BOARD_BUTTON), MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON]);
 
-	/*int sz = choose_type_game_change.ChooseGameButtonEnums.size();
-	for (int i = 0; i < sz; i++)
-	{
-		MenuTexturesEnum enums_button_hovered = choose_type_game_change.ChooseGameButtonHoveredEnums[i];
-		MenuTexturesEnum enums_button = choose_type_game_change.ChooseGameButtonEnums[i];
-		if (enums_button == menu_state.transform_idx)
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button_hovered), MenuButtonPosition[_ChooseTypeGame][enums_button]);
-		else
-		{
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypeGame][enums_button]);
-		}
-	}
-	*/
+
+}
+
+void drawChooseDifficulty(Window& window, MenuState& menu_state)
+{
+	if (menu_state.transform_idx == TEXTURE_EASY_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EASY_BUTTON_HOVERED), MenuButtonPosition[_ChooseDifficulty][TEXTURE_EASY_BUTTON]);
+	else 
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EASY_BUTTON), MenuButtonPosition[_ChooseDifficulty][TEXTURE_EASY_BUTTON]);
+	if (menu_state.transform_idx == TEXTURE_NORMAL_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_NORMAL_BUTTON_HOVERED), MenuButtonPosition[_ChooseDifficulty][TEXTURE_NORMAL_BUTTON]);
+	else 
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_NORMAL_BUTTON), MenuButtonPosition[_ChooseDifficulty][TEXTURE_NORMAL_BUTTON]);
+	if (menu_state.transform_idx == TEXTURE_HARD_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_HARD_BUTTON_HOVERED), MenuButtonPosition[_ChooseDifficulty][TEXTURE_HARD_BUTTON]);
+	else 
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_HARD_BUTTON), MenuButtonPosition[_ChooseDifficulty][TEXTURE_HARD_BUTTON]);
 }
 
 void drawChangeSettings(Window& window, MenuState menu_state)
@@ -282,14 +353,50 @@ void drawChangeSettings(Window& window, MenuState menu_state)
 	}
 }
 
+void drawChooseFileSave(Window& window, MenuState& menu_state)
+{
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_SCREEN), MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN]);
+	
+	int idx = mouseInLoad();
+	if (idx == -1) return;
+	int pos_x = 254 + 25;
+	int imgW = 173;
+	int imgH = imgW;
+	int pos_y = Slot[idx].rect.y ;
+
+	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
+
+
+
+}
+
+void drawTableTest(Window window)
+{
+	int cell_width = window.width / 64;
+	int cell_height = cell_width;
+
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	//for (int i = 1; i <= 64; i++)
+	//	SDL_RenderDrawLine(window.renderer_ptr, i * cell_width, 0, i * cell_width, window.height);// column 
+
+	//for (int i = 1; i <= 64; i++)
+	//	SDL_RenderDrawLine(window.renderer_ptr, 0, i * cell_height, window.width, i * cell_height); // row; // row
+	int x = 1715;
+	int y = 276;
+	SDL_RenderDrawLine(window.renderer_ptr, 0, y, window.width, y);
+}
+
 void buildMenuImages(MenuState& menu_state, Window& window)
 {
 	MenuButton menu_button;
 	CaroTextPosition caro_text_position;
+	FileSave load_file;
 	ChooseTypePlayer choose_type_player_change;
 	ChooseTypeGame choose_type_game_change;
 	SettingsButton settings;
 	TurnBackButton turn_back_button;
+	DifficultyButton diff;
 
 	InitTurnBackButton(window, turn_back_button);
 	InitMenuButton(window, menu_button);
@@ -297,11 +404,13 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 	InitChooseTypePlayer(window, choose_type_player_change);
 	InitChooseTypeGame(window, choose_type_game_change);
 	InitSettings(window, settings);
+	InitLoadFile(window, load_file);
+	InitChooseDifficulty(window, diff);
 
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });
-	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), caro_text_position.caro_button.rect);
-	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
-		drawTurnBackButton(window, menu_state);
+	if (menu_state.trans_display != _ChooseLoadFile)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), caro_text_position.caro_button.rect);
+	
 	if (menu_state.trans_display == _MainMenu)
 	{
 		drawMenuGame(window, menu_state);
@@ -314,7 +423,18 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 	{
 		drawChooseTypeGame(window, menu_state);
 	}
+	if (menu_state.trans_display == _ChooseDifficulty)
+	{
+		drawChooseDifficulty(window, menu_state);
+	}
 	if (menu_state.trans_display == _ChangeSettings)
 		drawChangeSettings(window, menu_state);
-
+	if (menu_state.trans_display == _ChooseLoadFile)
+	{
+		drawChooseFileSave(window, menu_state);
+		//drawTableTest(window);
+		//std::cout << window.width << " " << window.height << std::endl;
+	}
+	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
+		drawTurnBackButton(window, menu_state);
 }

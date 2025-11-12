@@ -348,6 +348,7 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 }
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won) {
+	//std::cout << who_won << std::endl;
 	if (ui_state.is_set_up_game_over_screen) return;
 	ui_state.who_won = who_won;
 

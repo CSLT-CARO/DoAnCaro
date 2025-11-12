@@ -40,16 +40,45 @@ int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuSt
 	}
 	return enums_return;
 }
-void turnBack(MenuState& menu_state)
+void turnBack(MenuState& menu_state, GameState game_state)
 {
-	if (menu_state.trans_display == _MainMenu)
-		menu_state.menu_is_run = false;
-	if (menu_state.trans_display == _ChooseTypePlayer)
-		menu_state.trans_display = _MainMenu, menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
-	if (menu_state.trans_display == _ChooseTypeGame)
-		menu_state.trans_display = _ChooseTypePlayer, menu_state.transform_idx = TEXTURE_PVP_BUTTON;
-	if (menu_state.trans_display == _ChangeSettings)
-		menu_state.trans_display = _MainMenu, menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+	switch (menu_state.trans_display)
+	{
+		case _MainMenu:
+			menu_state.menu_is_run = false;
+			break;
+		case _ChooseTypePlayer:
+			menu_state.trans_display = _MainMenu;
+			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+			break;
+		case _ChooseTypeGame:
+			if (game_state.mode == PVE)
+			{
+				menu_state.trans_display = _ChooseDifficulty;
+				menu_state.transform_idx = TEXTURE_EASY_BUTTON;
+			}
+			else
+			{
+				menu_state.trans_display = _ChooseTypePlayer;
+				menu_state.transform_idx = TEXTURE_PVP_BUTTON;
+			}
+			break;
+		case _ChangeSettings:
+			menu_state.trans_display = _MainMenu;
+			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+			break;
+		case _ChooseLoadFile:
+			menu_state.trans_display = _MainMenu;
+			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+			break;
+		case _ChooseDifficulty:
+			menu_state.trans_display = _ChooseTypePlayer;
+			menu_state.transform_idx = TEXTURE_PVP_BUTTON;
+			break;
+
+
+
+	}
 }
 bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y) {
 	return (mouse_x >= button.x && mouse_x <= (button.x + button.w) &&
@@ -72,6 +101,10 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
 		
 	}
+	if (menu_state.trans_display == _ChooseDifficulty)
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseDifficulty, menu_state);
+	if(menu_state.trans_display == _ChooseLoadFile)
+		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseLoadFile, menu_state);
 	menu_state.transform_idx = MousePositionState;
 }
 
@@ -82,7 +115,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 	int MousePositionState = checkMousePosition(window, mouseX, mouseY, _TurnBackButton, menu_state);
 	if (MousePositionState == TEXTURE_TURN_BACK_BUTTON && menu_state.trans_display != _MainMenu)
 	{
-		turnBack(menu_state);
+		turnBack(menu_state, game_state);
 		return;
 	}
 	if (menu_state.trans_display == _MainMenu)
@@ -99,9 +132,21 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		{
 			menu_state.trans_display = _ChangeSettings;
 		}
-
+		if (MousePositionState == TEXTURE_LOAD_BUTTON
+			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON], mouseX, mouseY))
+			menu_state.trans_display = _ChooseLoadFile;
 		if (MousePositionState == TEXTURE_EXIT_BUTTON)
 			menu_state.menu_is_run = false;
+		return;
+	}
+
+	if (menu_state.trans_display == _ChooseLoadFile)
+	{
+		int load_idx = mouseInLoad(); // get the index of the load slot
+		if (load_idx != -1)
+		{
+			// Load game here
+		}
 		return;
 	}
 
@@ -119,11 +164,34 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 			&& checkButton(MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON], mouseX, mouseY))
 		{
 			game_state.mode = PVE;
-			menu_state.trans_display = _ChooseTypeGame;
+			menu_state.trans_display = _ChooseDifficulty;
 		}
 
 		return;
 	}
+
+	if (menu_state.trans_display == _ChooseDifficulty)
+	{
+		if (MousePositionState == TEXTURE_EASY_BUTTON
+			&& checkButton(MenuButtonPosition[_ChooseDifficulty][TEXTURE_EASY_BUTTON], mouseX, mouseY))
+		{
+			game_state.difficulty = Easy;
+			menu_state.trans_display = _ChooseTypeGame;
+		}
+		if (MousePositionState == TEXTURE_NORMAL_BUTTON
+			&& checkButton(MenuButtonPosition[_ChooseDifficulty][TEXTURE_NORMAL_BUTTON], mouseX, mouseY))
+		{
+			game_state.difficulty = Normal;
+			menu_state.trans_display = _ChooseTypeGame;
+		}
+		if (MousePositionState == TEXTURE_HARD_BUTTON
+			&& checkButton(MenuButtonPosition[_ChooseDifficulty][TEXTURE_HARD_BUTTON], mouseX, mouseY))
+		{
+			game_state.difficulty = Hard;
+			menu_state.trans_display = _ChooseTypeGame;
+		}
+	}
+
 	if (menu_state.trans_display == _ChangeSettings)
 	{
 		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
@@ -156,6 +224,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 			game_state.game_is_run = true;
 			game_state.board_type = Ultimate;
 		}
+
 	}
 }
 
@@ -163,6 +232,22 @@ void checkInRange(int &idx, int lelf, int right)
 {
 	if (idx < lelf) idx = lelf;
 	if (idx > right) idx = right;
+}
+
+int mouseInLoad()
+{
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (mouseX < 254 || mouseX > 1713 || mouseY < 103 || mouseY > 103 + 5 * 173 + 4 * 8)
+		return -1;
+	SDL_Rect tmp;
+	for (int i = 1; i <= 5; i++)
+	{
+		tmp = Slot[i].rect;
+		if (checkButton({tmp.x, tmp.y, tmp.w, tmp.h + 8}, mouseX, mouseY))
+			return i;
+	}
+	return -1;
 }
 
 void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
@@ -177,7 +262,8 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 		}
 		if (menu_state.transform_idx == TEXTURE_LOAD_BUTTON)
 		{
-			// Load game here
+			menu_state.trans_display = _ChooseLoadFile;
+			return;
 		}
 		if (menu_state.transform_idx == TEXTURE_SETTINGS_BUTTON)
 		{
@@ -230,8 +316,8 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 		if (menu_state.transform_idx == TEXTURE_PVE_BUTTON)
 		{
 			game_state.mode = PVE;
-			menu_state.transform_idx = TEXTURE_CLASSIC_BOARD_BUTTON;
-			menu_state.trans_display = _ChooseTypeGame;
+			menu_state.transform_idx = TEXTURE_EASY_BUTTON;
+			menu_state.trans_display = _ChooseDifficulty;
 			return;
 		}
 	}
@@ -251,13 +337,32 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 			return;
 		}
 	}
+	
+	if (menu_state.trans_display == _ChooseDifficulty)
+	{
+		switch (menu_state.transform_idx)
+		{
+		case TEXTURE_EASY_BUTTON:
+			game_state.difficulty = Easy;
+			break;
+		case TEXTURE_NORMAL_BUTTON:
+			game_state.difficulty = Normal;
+			break;
+		case TEXTURE_HARD_BUTTON:
+			game_state.difficulty = Hard;
+			break;
+			
+		}
+		menu_state.trans_display = _ChooseTypeGame;
+		menu_state.transform_idx = TEXTURE_CLASSIC_BOARD_BUTTON;
+	}
 }
 
 void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state)
 {
 	if (event.key.keysym.sym == SDLK_ESCAPE)
 	{
-		turnBack(menu_state);
+		turnBack(menu_state, game_state);
 	}
 	if (event.key.keysym.scancode == SDL_SCANCODE_W || event.key.keysym.sym == SDLK_UP)
 	{
@@ -288,6 +393,11 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 			}
 
 		}
+		if (menu_state.trans_display == _ChooseDifficulty)
+		{
+			menu_state.transform_idx -= 1;
+			checkInRange(menu_state.transform_idx, TEXTURE_EASY_BUTTON, TEXTURE_HARD_BUTTON);
+		}
 	}
 	if (event.key.keysym.scancode == SDL_SCANCODE_S || event.key.keysym.sym == SDLK_DOWN)
 	{
@@ -317,6 +427,11 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 					menu_state.transform_idx = TEXTURE_SFX_OFF_BUTTON;
 			}
 
+		}
+		if (menu_state.trans_display == _ChooseDifficulty)
+		{
+			menu_state.transform_idx += 1;
+			checkInRange(menu_state.transform_idx, TEXTURE_EASY_BUTTON, TEXTURE_HARD_BUTTON);
 		}
 	}
 	if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER)

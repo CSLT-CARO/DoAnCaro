@@ -20,6 +20,7 @@ enum gameLayer
 	_ChooseTypePlayer,
 	_ChooseTypeGame,
 	_ChangeSettings,
+	_ChooseDifficulty,
 };
 
 

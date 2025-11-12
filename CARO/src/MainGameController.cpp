@@ -94,6 +94,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		drawGameOverScreen(window, ui_state, game_state);
 		return;
 	}
+	
 	initGame(window, game_state, ui_state);
 	drawMainGame(window, ui_state, game_state);
 
@@ -149,6 +150,39 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		return;
 	}
 
+	if ( game_state.board_type == Classic) {
+		const WinnerData data = checkWinner(game_state.board3x3);
+		//std::cout << data.start_coordinates.row << ' ' << data.start_coordinates.column << "    " << data.end_coordinates.row << ' ' << data.end_coordinates.column << '\n';
+		if (data.mark != Empty or not isMovesLeft(game_state.board3x3)) {
+			drawMainGame(window, ui_state, game_state);
+			activateTimer(ui_state.before_game_end_timer);
+			setupGameOverScreen(window, ui_state, data.mark);
+			ui_state.stopped_at_moment = -1;
+			ui_state.is_game_over = true;
+			game_state.is_init = false;
+		}
+	}
+	else if ( game_state.board_type == Ultimate) {
+		const WinnerData data = checkWinner(game_state.board12x12, ui_state.selected_cell);
+		//std::cout << data.start_coordinates.row << ' ' << data.start_coordinates.column << "    " << data.end_coordinates.row << ' ' << data.end_coordinates.column << '\n';
+		if (data.mark != Empty or not isMovesLeft(game_state.board12x12)) {
+			drawMainGame(window, ui_state, game_state);
+			activateTimer(ui_state.before_game_end_timer);
+			setupGameOverScreen(window, ui_state, data.mark);
+
+			ui_state.stopped_at_moment = -1;
+			if (game_state.mode == PVP) {
+				ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+			}
+			else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
+				ui_state.stopped_at_moment = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
+			}
+
+			ui_state.is_game_over = true;
+			game_state.is_init = false;
+		}
+	}
+
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		botTurn(game_state);
@@ -168,6 +202,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 			ui_state.should_reset_turn_timer = true;
 			return;
 		}
+			std::cout << isMovesLeft(game_state.board3x3) << '\n';
 
 		if (game_state.board_type == Classic)
 			is_placed_success_3x3 = tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);

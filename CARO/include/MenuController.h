@@ -9,10 +9,11 @@
 
 
 int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state);
-void turnBack(MenuState& menu_state);
+void turnBack(MenuState& menu_state, GameState game_state);
 bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y);
 void chooseByKeyBoard(MenuState& menu_state, GameState& game_state);
 void checkMouseMotion(Window& window, MenuState& menu_state);
+int mouseInLoad();
 
 void checkInRange(int& idx, int lelf, int right);
 void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state);

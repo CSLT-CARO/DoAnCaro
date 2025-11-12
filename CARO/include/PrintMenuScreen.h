@@ -15,6 +15,7 @@
 #include "Texture.h"
 
 extern std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
+extern std::unordered_map< int, Button> Slot;
 
 struct SettingsButton
 {
@@ -34,6 +35,7 @@ struct SettingsButton
 	Button on_sfx_button;
 	Button off_sfx_button;
 };
+
 
 struct TurnBackButton
 {
@@ -67,6 +69,24 @@ struct ChooseTypePlayer
 	Button pvp_button{};
 	Button pve_button{};
 };
+struct DifficultyButton
+{
+	std::vector<MenuTexturesEnum> difficultyButton = {
+		TEXTURE_EASY_BUTTON,
+		TEXTURE_NORMAL_BUTTON,
+		TEXTURE_HARD_BUTTON
+	};
+	std::vector <MenuTexturesEnum> difficultyButtonHovered =
+	{
+		TEXTURE_EASY_BUTTON_HOVERED,
+		TEXTURE_NORMAL_BUTTON_HOVERED,
+		TEXTURE_HARD_BUTTON_HOVERED
+	};
+	Button easy;
+	Button normal;
+	Button hard;
+
+};
 
 struct ChooseTypeGame
 {
@@ -78,22 +98,34 @@ struct ChooseTypeGame
 	Button _12x12_button{};
 };
 
+struct FileSave
+{
+	std::vector <MenuTexturesEnum> ChooseButton = {
+		TEXTURE_EXPORT_BUTTON, TEXTURE_ERASE_BUTTON };
+	std::vector <MenuTexturesEnum> ChooseButtonHovered = {
+		 TEXTURE_ERASE_BUTTON_HOVERED };
+	Button load_screen;
+	Button save_button{};
+	Button erase_button{};
+};
+
 
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position);
 void InitTurnBackButton(Window& window, TurnBackButton& turn_back_button);
 void InitMenuButton(Window& window, MenuButton& menu_button);
 void InitChooseTypePlayer(Window& window, ChooseTypePlayer& choose_type_player);
+void InitChooseDifficulty(Window& window, DifficultyButton& diff);
 void InitChooseTypeGame(Window& window, ChooseTypeGame& choose_type_game);
 void InitSettings(Window& window, SettingsButton& settings_button);
+void InitLoadFile(Window& window, FileSave& load_file);
 
-
-
+void drawChooseDifficulty(Window& window, MenuState& menu_state);
 void drawMenuGame(Window& window, MenuState& menu_state);
 void drawTurnBackButton(Window& window, MenuState& menu_state);
 void drawChooseTypePlayer(Window& window, MenuState& menu_state);
 void drawChooseTypeGame(Window& window, MenuState& menu_state);
 void drawChangeSettings(Window& window, MenuState menu_state);
-
+void drawChooseFileSave(Window& window, MenuState& menu_state);
 
 //void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
 //void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
