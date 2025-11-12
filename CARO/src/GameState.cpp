@@ -60,7 +60,7 @@ void printBoard(const Board12x12& board) {
     }
 }
 
-void botTurn(GameState& game_state) {
+Cell botTurn(GameState& game_state) {
     Cell bot_move{};
 
     if (game_state.difficulty == Easy) {
@@ -72,6 +72,7 @@ void botTurn(GameState& game_state) {
     }
 
     tryPlaceMark(game_state.board3x3, bot_move, game_state.bot_marker);
+    return bot_move;
 }
 
 Cell getBotMoveEasy(const Board3x3& board) {
@@ -235,7 +236,7 @@ WinnerData checkWinner(const Board3x3& board) {
             return data;
         }
 
-        if (board[0][i] == board[1][i] and board[1][i] == board[2][i] and board[i][0] != Empty) {
+        if (board[0][i] == board[1][i] and board[1][i] == board[2][i] and board[0][i] != Empty) {
             data.mark = board[0][i];
             data.start_coordinates = { 0, i };
             data.end_coordinates = { 2, i };
@@ -261,7 +262,7 @@ WinnerData checkWinner(const Board3x3& board) {
 }
 
 WinnerData checkWinner(const Board12x12& board, const Cell& last_chosen_cell) {
-    if (isCellEmpty(board, last_chosen_cell)) return { Empty, NULL_CELL, NULL_CELL };
+    if (last_chosen_cell == NULL_CELL or isCellEmpty(board, last_chosen_cell)) return { Empty, NULL_CELL, NULL_CELL };
     const PlayerMark whose_mark = getMark(board, last_chosen_cell);
 
     Cell temp_up = last_chosen_cell;

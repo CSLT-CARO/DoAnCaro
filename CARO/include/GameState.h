@@ -14,7 +14,7 @@ struct Cell {
     int row{}, column{};
 };
 
-constexpr Cell NULL_CELL { -1, -1 };
+constexpr Cell NULL_CELL { -100, -100 };
 
 struct WinnerData {
     PlayerMark mark {};
@@ -45,7 +45,7 @@ void resetBoard(Board12x12& board);
 void printBoard(const Board3x3& board);
 void printBoard(const Board12x12& board);
 
-void botTurn(GameState& game_state);
+Cell botTurn(GameState& game_state);
 Cell getBotMoveEasy(const Board3x3& board);
 Cell getBotMoveNormal(const GameState& game_state);
 Cell getBotMoveHard(const GameState& game_state);

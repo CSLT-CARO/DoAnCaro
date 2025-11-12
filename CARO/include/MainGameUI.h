@@ -38,9 +38,9 @@ struct MainGameUIState {
 	Second stopped_at_moment {};
 
 	Cell selected_cell = NULL_CELL;
-	Cell last_select;
+	WinnerData winner_data {};
 	PlayerMark who_won{};
-	bool have_winner = false;
+
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
 	bool should_reset_turn_timer = false;
@@ -52,11 +52,11 @@ void drawTable3x3(const Window& window, MainGameUIState& ui_state);
 void drawTable12x12(const Window& window, MainGameUIState& ui_state);
 void drawSymbol3x3(const Window& window, const GameState& game_state);
 void drawSymbol12x12(const Window& window, const GameState& game_state);
-void drawSelectingCell(const Window& window, const GameState& game_state, MainGameUIState& ui_state);
+void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state);
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
-void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won);
+void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
 void checkMouseHoverButton(MainGameUIState& ui_state);

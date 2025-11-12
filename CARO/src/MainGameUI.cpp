@@ -4,29 +4,23 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
-
 	
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
 		drawSymbol3x3(window, game_state);
-		if (checkWinner(game_state.board3x3).mark != Empty)
+		if (ui_state.winner_data.mark != Empty)
 		{
-			drawWinnerLine3x3(window, checkWinner(game_state.board3x3));
-			ui_state.have_winner = true;
-
+			drawWinnerLine3x3(window, ui_state.winner_data);
 		}
 	}
 	else
 	{
 		drawTable12x12(window, ui_state);
 		drawSymbol12x12(window, game_state);
-		if (ui_state.selected_cell != NULL_CELL)
-			ui_state.last_select = ui_state.selected_cell;
-		if (checkWinner(game_state.board12x12, ui_state.last_select).mark != Empty)
+		if (ui_state.winner_data.mark != Empty)
 		{
-			drawWinnerLine12x12(window, checkWinner(game_state.board12x12, ui_state.last_select));
-			ui_state.have_winner = true;
+			drawWinnerLine12x12(window, ui_state.winner_data);
 		}
 	}
 	if (game_state.mode == PVP)
@@ -43,16 +37,6 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 		}
 	}
 	drawSelectingCell(window, game_state, ui_state);
-
-	/*std::cout << checkWinner(game_state.board3x3).mark << '\n';*/
-
-	
-
-	
-	
-	// Seminar 2 :)
-	//Millisecond time_remaining = getTimeRemaining(ui_state.turn_timer);
-	//drawTimer(renderer, toSecond(time_remaining), ui_state.timer_button.rect);
 }
 
 void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
@@ -186,7 +170,7 @@ void drawSymbol12x12(const Window& window, const GameState& game_state)
 	}
 }
 
-void drawSelectingCell(const Window& window, const GameState& game_state, MainGameUIState& ui_state)
+void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state)
 {
 	SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_SELECTING);
 	if (game_state.whose_turn == O)
@@ -203,10 +187,10 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 
 	if (game_state.mode == PVP)
 	{
-		if (ui_state.who_won == X) {
+		if (ui_state.winner_data.mark == X) {
 			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
 		}
-		else if (ui_state.who_won == O) {
+		else if (ui_state.winner_data.mark == O) {
 			winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
 		}
 	}
@@ -214,13 +198,13 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 	{
 		if (game_state.bot_marker == X)
 		{
-			if (ui_state.who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else if (ui_state.who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			if (ui_state.winner_data.mark == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else if (ui_state.winner_data.mark == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 		else
 		{
-			if (ui_state.who_won == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
-			else if (ui_state.who_won == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
+			if (ui_state.winner_data.mark == O) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_LOSE);
+			else if (ui_state.winner_data.mark == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 	}
 	if (ui_state.end_game_button.index == TEXTURE_RESTART_ON) {
@@ -347,10 +331,8 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
-void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const PlayerMark& who_won) {
-	//std::cout << who_won << std::endl;
+void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	if (ui_state.is_set_up_game_over_screen) return;
-	ui_state.who_won = who_won;
 
 	ui_state.end_game_button.index = TEXTURE_RESTART_ON;
 	int x = window.width / 2; // x pos
@@ -358,9 +340,9 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state, const 
 
 	auto texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 
-	if (who_won == O) {
+	if (ui_state.winner_data.mark == O) {
 		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
-	} else if (who_won == X) {
+	} else if (ui_state.winner_data.mark == X) {
 		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
 	}
 
