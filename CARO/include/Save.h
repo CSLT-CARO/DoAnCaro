@@ -9,7 +9,7 @@
 #include <filesystem>
 
 struct LoadedFileContent {
-    bool success;
+    bool success{};
     int date_hour {}, date_min {}, date_sec {};
     int date_wday {}, date_day {}, date_month {}, date_year {};
 
@@ -26,5 +26,6 @@ void initSavesFolder(const std::string& folderPath);
 bool isFileEmpty(const std::string& filename);
 bool Save(const GameState& state, const std::string& filename);
 LoadedFileContent Load(const std::string& filename);
+void eraseData(const std::string& filename);
 
 #endif

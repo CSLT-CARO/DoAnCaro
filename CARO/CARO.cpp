@@ -13,8 +13,6 @@ int main(int argc, char* argv[]) {
 	MainGameUIState main_game_ui_state{};
 	MenuState menu_state;
 
-	std::cout << isFileEmpty("saves/save_1.txt");
-
 	setTimeout(main_game_ui_state.pve_turn_timer[Easy], 60999);
 	setTimeout(main_game_ui_state.pve_turn_timer[Normal], 30999);
 	setTimeout(main_game_ui_state.pve_turn_timer[Hard], 10999);

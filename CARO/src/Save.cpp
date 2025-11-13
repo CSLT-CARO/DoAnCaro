@@ -168,3 +168,9 @@ LoadedFileContent Load(const std::string& filename) {
     result.success = true;
     return result;
 }
+
+void eraseData(const std::string& filename) {
+    std::ofstream ofs;
+    ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
+    ofs.close();
+}
