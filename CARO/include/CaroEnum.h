@@ -17,16 +17,4 @@ enum BoardType {
     Classic, Ultimate
 };
 
-enum State {
-    StartScreen,
-    ChooseMode,
-    ChooseDifficulty,
-    ChooseBoardType,
-    MainGame,
-    PlayAgain,
-    Exit,
-
-};
-
-
 #endif

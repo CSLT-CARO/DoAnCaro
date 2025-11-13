@@ -28,7 +28,6 @@ bool operator!=(const Cell& a, const Cell& b);
 struct GameState {
     bool game_is_run = false;
     bool is_init = false;
-    State current_state{};
 
     PlayerMark whose_turn{};
     PlayerMark bot_marker{};
