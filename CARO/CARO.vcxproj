@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h" />
+    <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\CaroEnum.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Texture.h" />
@@ -34,8 +34,8 @@
     <ClInclude Include="include\Video.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="CARO.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\Save.cpp" />
     <ClCompile Include="src\Texture.cpp" />

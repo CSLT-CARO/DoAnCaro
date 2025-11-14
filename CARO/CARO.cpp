@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 
 	SDL_Event event;
 	menu_state.menu_is_run = true;
+
 	Audio_Init();
 	Play_BGM_Menu();
 
