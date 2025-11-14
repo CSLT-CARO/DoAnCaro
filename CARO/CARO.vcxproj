@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="include\CaroEnum.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Texture.h" />
@@ -33,8 +34,10 @@
     <ClInclude Include="include\Video.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="CARO.cpp" />
     <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\Save.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\MainGameController.cpp" />
     <ClCompile Include="src\MainGameLogic.cpp" />
@@ -101,7 +104,7 @@
     <LibraryPath>./lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);./include/SDL2/</IncludePath>
+    <IncludePath>$(IncludePath);./include/SDL2/;./include/SDL2_mixer/</IncludePath>
     <LibraryPath>./lib/;D:\Code\Project\DoAnCaro\CARO\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,7 +157,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;./lib/SDL2_mixer.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_mixer.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

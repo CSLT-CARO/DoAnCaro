@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Save.h"
 #include "GameState.h"
 #include <fstream>
