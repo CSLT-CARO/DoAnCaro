@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);
-	initSavesFolder("./saves");
+	initSavesFolder(menu_state.save_path);
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
 	loadMainGameTextures(window.renderer_ptr);

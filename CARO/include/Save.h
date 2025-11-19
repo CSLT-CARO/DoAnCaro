@@ -23,6 +23,8 @@ struct LoadedFileContent {
 };
 
 void initSavesFolder(const std::string& folderPath);
+std::string getSaveFileName(const std::string& folderPath, int slot);
+bool isFileExist(const std::string& filename);
 bool isFileEmpty(const std::string& filename);
 bool Save(const GameState& state, const std::string& filename);
 LoadedFileContent Load(const std::string& filename);

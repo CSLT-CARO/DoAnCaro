@@ -1,10 +1,15 @@
 #include "MainGameUI.h"
 #include "MenuController.h"
+#include "Save.h"
+
+std::unordered_map< int, Button> Saving_Slot;
+
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 	
+	initMainGameUIState(window, ui_state);
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
@@ -37,20 +42,25 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 		}
 	}
 	drawSelectingCell(window, game_state, ui_state);
+	drawButton(window, ui_state);
+	
+	drawScreen(window, ui_state);
 }
 
-void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
+void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
+{
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 
-	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
-	for (int i = 5; i <= 11; i += 2)
-		SDL_RenderDrawLine(window.renderer_ptr, i * cell_width, cell_height, i * cell_width, 7 * cell_height);// column 
-
-	for (int i = 1; i <= 7; i += 2)
-		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
 	int imgW = cell_width * 4;
 	int imgH = cell_height;
+
+	ui_state.turn_back_button[0] = {
+		cell_width / 4,
+		cell_height / 4,
+		cell_width * 3 / 2,
+		cell_height * 3 / 2
+	};
 
 	ui_state.player_x.rect = {
 		cell_width / 2  ,
@@ -72,6 +82,73 @@ void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
 		cell_height * 3,
 		cell_height * 3 / 2,
 	};
+
+	ui_state.save_button.rect = {
+		cell_width * 12,
+		cell_height * 4,
+		cell_height * 3,
+		cell_height * 3 * 32 / 160,
+	};
+	int x = window.width / 2;
+	int y = window.height / 2;
+	imgW = 804;
+	imgH = 972;
+	ui_state.save_sreen.rect =
+	{
+		x - imgW / 2,
+		y - imgH / 2,
+		imgW,
+		imgH
+	};
+
+	x = 668, y = 224;
+	imgW = 603, imgH = 102;
+
+	for (int i = 1; i<= 5; i++)
+	{
+		Saving_Slot[i].rect = {
+			x,
+			y,
+			imgW,
+			imgH
+		};
+		y += imgH + 5;
+	}
+
+}
+
+void drawTurnBackButton(const Window& window, MainGameUIState& ui_state, int idx)
+{
+	SDL_Texture* turn_back_button = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON);
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (checkMouseInButton(ui_state.turn_back_button[idx], mouseX, mouseY) && ui_state.screen == 0)
+		turn_back_button = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED);
+	drawTexture(window.renderer_ptr, turn_back_button, ui_state.turn_back_button[idx]);
+
+}
+
+void drawDimmingLayer(const Window& window)
+{
+	SDL_SetRenderDrawBlendMode(window.renderer_ptr, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 100);
+	SDL_Rect dimming_rect = { 0,0,window.width, window.height };
+	SDL_RenderFillRect(window.renderer_ptr, &dimming_rect);
+	SDL_SetRenderDrawBlendMode(window.renderer_ptr, SDL_BLENDMODE_NONE);
+}
+
+void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
+	int cell_width = window.width / 16;
+	int cell_height = cell_width;
+
+	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
+	for (int i = 5; i <= 11; i += 2)
+		SDL_RenderDrawLine(window.renderer_ptr, i * cell_width, cell_height, i * cell_width, 7 * cell_height);// column 
+
+	for (int i = 1; i <= 7; i += 2)
+		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
+	
+	
 }
 
 void drawTable12x12(const Window& window, MainGameUIState& ui_state)
@@ -87,32 +164,17 @@ void drawTable12x12(const Window& window, MainGameUIState& ui_state)
 	for (int i = 3; i <= 15; i++)
 		SDL_RenderDrawLine(window.renderer_ptr, 10 * cell_width, i * cell_height, 22 * cell_width, i * cell_height); // row; // row
 
-	cell_width = window.width / 16;
-	cell_height = cell_width;
+}
 
-	int imgW = cell_width * 4;
-	int imgH = cell_height;
+void drawButton(const Window& window, MainGameUIState& ui_state)
+{
+	drawTurnBackButton(window, ui_state, 0);
 
-	ui_state.player_x.rect = {
-		cell_width / 2  ,
-		cell_height * 5 / 2,
-		imgW,
-		imgH
-	};
-
-	ui_state.player_o.rect = {
-		cell_width / 2 ,
-		cell_height * 9 / 2,
-		imgW,
-		imgH
-	};
-
-	ui_state.timer_button.rect = {
-		cell_width * 12,
-		cell_height ,
-		cell_height * 3,
-		cell_height * 3 / 2,
-	};
+	SDL_Texture* button = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_BUTTON);
+	checkMouseHoverButton(ui_state);
+	if (ui_state.save_button.state)
+		button = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_BUTTON_HOVERED);
+	drawTexture(window.renderer_ptr, button, ui_state.save_button.rect);
 }
 
 void drawSymbol3x3(const Window& window, const GameState& game_state) {
@@ -178,6 +240,7 @@ void drawSelectingCell(const Window& window, const GameState& game_state, const 
 	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
+
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
@@ -218,7 +281,7 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 	if (ui_state.end_game_button.index == TEXTURE_EXIT_ON) {
 		exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT_ON);
 	}
-
+	drawDimmingLayer(window);
 	drawTexture(renderer, winner_background_texture, ui_state.winner.rect);
 	drawTexture(renderer, restart_button_texture, ui_state.end_game_button.Restart.rect);
 	drawTexture(renderer, new_game_button_texture, ui_state.end_game_button.New_game.rect);
@@ -331,6 +394,59 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
+void drawScreen(const Window& window, MainGameUIState& ui_state)
+{
+	int x, y, imgW, imgH;
+	if (ui_state.screen == TEXTURE_SAVE_SCREEN)
+	{
+		drawDimmingLayer(window);
+		drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_SCREEN), ui_state.save_sreen.rect);
+
+		x = 558, y = 54;
+		imgH = imgW = 80;
+		ui_state.turn_back_button[1] = { x, y, imgW, imgH };
+
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		SDL_Texture* tmp = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON);
+		if (checkButton(ui_state.turn_back_button[1], mouseX, mouseY))
+			tmp = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED);
+		drawTexture(window.renderer_ptr, tmp, ui_state.turn_back_button[1]);
+
+		int idex = mouseInLoadOrSave("save");
+		if (idex != -1)
+		{
+			x = Saving_Slot[idex].rect.x;
+			y = Saving_Slot[idex].rect.y;
+			imgW = imgH = 102;
+			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, imgW, imgH });
+		}
+		
+
+		imgH = imgW = 102 / 2;
+		x = 1271 - imgW;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		for (int i = 1; i <= 5; i++)
+		{
+			y = Saving_Slot[i].rect.y;
+			std::string fileName = getSaveFileName(ui_state.save_path, i);
+			if (!isFileEmpty(fileName))
+			{
+				if (checkButton({ x, y, imgW, imgH }, mouseX, mouseY))
+				{
+
+					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { x, y, imgW, imgH });
+				}
+				else
+					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, imgW, imgH });
+			}
+			//std::cout << isFileExist(fileName) << ' ';
+
+		}
+		return;
+	}
+}
+
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	if (ui_state.is_set_up_game_over_screen) return;
 
@@ -357,7 +473,6 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 
 	int imgW = (picW)*window.height / (picH)-window.width / 32;
 	int imgH = window.height * 9 / 10;
-
 	ui_state.winner.rect = {
 		x - imgW / 2,
 		y - imgH / 2,
@@ -407,6 +522,10 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 	if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_RESTART_ON;
 	if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_NEW_GAME_ON;
 	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_EXIT_ON;
+
+	if (checkButton(ui_state.save_button.rect, mouseX, mouseY)) ui_state.save_button.state = true;
+	else ui_state.save_button.state = false;
+
 }
 
 void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y)
@@ -431,7 +550,6 @@ Cell handleMouseClick3x3(const Window& window, MainGameUIState& ui_state, const 
 	int row = (mouseY / cellH) / 2 + (mouseY / cellH) % 2 - 1; // from mouse pos to row, col of board
 
 	Cell cell{ row, col };
-
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NULL_CELL;
 
 	return cell;
@@ -555,49 +673,131 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state
 	return cell;
 }
 
-
 void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, SDL_Scancode input)
 {
-	
-
-	if (input == SDL_SCANCODE_RETURN)
+	if (input == SDL_SCANCODE_ESCAPE)
 	{
-		switch(ui_state.end_game_button.index)
+		Back(ui_state, game_state, menu_state);
+	}
+
+	if (ui_state.is_game_over)
+	{
+
+		if (input == SDL_SCANCODE_RETURN)
 		{
-			case TEXTURE_RESTART_ON:
-				game_state.game_is_run = true;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				break;
-			case TEXTURE_NEW_GAME_ON:
-				game_state.game_is_run = false;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				menu_state.transform_idx = TEXTURE_PVP_BUTTON;
-				menu_state.trans_display = _ChooseTypePlayer;
-				break;
-			case TEXTURE_EXIT_ON:
-				game_state.game_is_run = false;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
-				menu_state.trans_display = _MainMenu;
-				break;
-		}
-		ui_state.end_game_button.index = TEXTURE_RESTART_ON;
+		
+			switch(ui_state.end_game_button.index)
+			{
+				case TEXTURE_RESTART_ON:
+					game_state.game_is_run = true;
+					ui_state.is_game_over = false;
+					game_state.is_init = false;
+					break;
+				case TEXTURE_NEW_GAME_ON:
+					game_state.game_is_run = false;
+					ui_state.is_game_over = false;
+					game_state.is_init = false;
+					menu_state.transform_idx = TEXTURE_PVP_BUTTON;
+					menu_state.trans_display = _ChooseTypePlayer;
+					break;
+				case TEXTURE_EXIT_ON:
+					game_state.game_is_run = false;
+					ui_state.is_game_over = false;
+					game_state.is_init = false;
+					menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+					menu_state.trans_display = _MainMenu;
+					break;
+			}
+			ui_state.end_game_button.index = TEXTURE_RESTART_ON;
 
+		}
+		if (input == SDL_SCANCODE_W || input == SDL_SCANCODE_UP)
+		{
+			ui_state.end_game_button.index -= 1;
+			checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			return;
+		}
+		if (input == SDL_SCANCODE_S || input == SDL_SCANCODE_DOWN)
+		{
+			ui_state.end_game_button.index += 1;
+			checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			return;
+		}
 	}
-	if (input == SDL_SCANCODE_W || input == SDL_SCANCODE_UP)
+
+}
+
+void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
+{
+	switch (ui_state.screen)
 	{
-		ui_state.end_game_button.index -= 1;
-		checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+		case TEXTURE_SAVE_SCREEN:
+			ui_state.screen = 0;
+			break;
+		case 0:
+		{
+			game_state.game_is_run = false;
+			ui_state.is_game_over = false;
+			game_state.is_init = false;
+			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+			menu_state.trans_display = _MainMenu;
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, int mouseX, int mouseY)
+{
+	
+	if (ui_state.save_button.state) 
+	{ 
+		ui_state.screen = TEXTURE_SAVE_SCREEN;
 		return;
 	}
-	if (input == SDL_SCANCODE_S || input == SDL_SCANCODE_DOWN)
+
+	switch (ui_state.screen)
 	{
-		ui_state.end_game_button.index += 1;
-		checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
-		return;
+	case 0:
+	{
+		if (checkMouseInButton(ui_state.turn_back_button[0], mouseX, mouseY))
+		{
+			Back(ui_state, game_state, menu_state);
+			return;
+		}
+		if (game_state.board_type == Classic)
+			ui_state.selected_cell = handleMouseClick3x3(window, ui_state, game_state, mouseX, mouseY);
+		else ui_state.selected_cell = handleMouseClick12x12(window, ui_state, game_state, mouseX, mouseY);
+		break;
 	}
+	case TEXTURE_SAVE_SCREEN:
+	{
+		if (checkMouseInButton(ui_state.turn_back_button[1], mouseX, mouseY))
+		{
+			Back(ui_state, game_state, menu_state);
+			return;
+		}
+
+		int idex = mouseInLoadOrSave("save");
+		SDL_Rect tmp = Saving_Slot[idex].rect;
+		if (checkButton({ tmp.x + tmp.w - tmp.h / 2, tmp.y, tmp.h / 2, tmp.h / 2 }, mouseX, mouseY))
+		{
+			std::string file_name = getSaveFileName(ui_state.save_path, idex);
+			if (!isFileEmpty(file_name))
+			{
+				eraseData(file_name);
+			}
+			return;
+		}
+		if (idex == -1)
+			return;
+		std::string file_name = getSaveFileName(ui_state.save_path, idex);
+		Save(game_state, file_name);
+		
+		break;
+	}
+	}
+
 
 }

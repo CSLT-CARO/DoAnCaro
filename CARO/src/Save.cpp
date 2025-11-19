@@ -49,6 +49,10 @@ void initSavesFolder(const std::string &folderPath) {
     }
 }
 
+std::string getSaveFileName(const std::string& folderPath, int slot) {
+    return folderPath + "/save_" + std::to_string(slot) + ".txt";
+}
+
 bool Save(const GameState& state, const std::string& filename) {
     std::ofstream outfile(filename);
     if (!outfile.is_open()) {

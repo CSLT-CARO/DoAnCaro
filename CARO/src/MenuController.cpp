@@ -7,6 +7,7 @@
 
 #include "MenuController.h"
 
+
 int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state)
 {
 	int enums_return = menu_state.transform_idx;
@@ -142,10 +143,34 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
-		int load_idx = mouseInLoad(); // get the index of the load slot
+		int load_idx = mouseInLoadOrSave("load"); // get the index of the load slot
 		if (load_idx != -1)
 		{
-			// Load game here
+			if (menu_state.transform_idx == TEXTURE_ERASE_BUTTON)
+			{
+				std::string filename = getSaveFileName(menu_state.save_path, load_idx);
+				eraseData(filename);
+			}
+			std::string filename = getSaveFileName(menu_state.save_path, load_idx);
+			if (isFileEmpty(filename))
+				return;
+			LoadedFileContent loaded_content = Load(filename);
+			if (loaded_content.success)
+			{
+				game_state.mode = loaded_content.mode;
+				game_state.difficulty = loaded_content.difficulty;
+				game_state.board_type = loaded_content.board_type;
+				game_state.board3x3 = loaded_content.board3x3;
+				game_state.board12x12 = loaded_content.board12x12;
+				game_state.whose_turn = loaded_content.whose_turn;
+				game_state.bot_marker = loaded_content.bot_marker;
+				game_state.game_is_run = true;
+				game_state.is_init = true;
+				return;
+			}
+			else std::cout << "Failed to load the game from " << filename << '\n';
+
+			
 		}
 		return;
 	}
@@ -234,20 +259,38 @@ void checkInRange(int &idx, int lelf, int right)
 	if (idx > right) idx = right;
 }
 
-int mouseInLoad()
+int mouseInLoadOrSave(std::string type)
 {
+	if(type != "load" && type != "save")
+		return -1;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	if (mouseX < 254 || mouseX > 1713 || mouseY < 103 || mouseY > 103 + 5 * 173 + 4 * 8)
-		return -1;
-	SDL_Rect tmp;
-	for (int i = 1; i <= 5; i++)
+	if(type == "load")
 	{
-		tmp = Slot[i].rect;
-		if (checkButton({tmp.x, tmp.y, tmp.w, tmp.h + 8}, mouseX, mouseY))
-			return i;
+		if (mouseX < 254 || mouseX > 1713 || mouseY < 103 || mouseY > 103 + 5 * 173 + 4 * 8)
+			return -1;
+		SDL_Rect tmp;
+		for (int i = 1; i <= 5; i++)
+		{
+			tmp = Loading_Slot[i].rect;
+			if (checkButton({tmp.x, tmp.y, tmp.w, tmp.h + 8}, mouseX, mouseY))
+				return i;
+		}
+		return -1;
 	}
-	return -1;
+	else
+	{
+		if (mouseX < 668 || mouseX > 1271 || mouseY < 224 || mouseY > 754)
+			return -1;
+		SDL_Rect tmp;
+		for (int i = 1; i <= 5; i++)
+		{
+			tmp = Saving_Slot[i].rect;
+			if (checkButton({ tmp.x, tmp.y, tmp.w, tmp.h + 5 }, mouseX, mouseY))
+				return i;
+		}
+		return -1;
+	}
 }
 
 void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)

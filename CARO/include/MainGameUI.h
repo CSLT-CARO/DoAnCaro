@@ -15,6 +15,8 @@ struct Button {
 	bool state;
 };
 
+extern std::unordered_map< int, Button> Saving_Slot;
+
 struct GameOverButton
 {
 	Button New_game;
@@ -28,7 +30,11 @@ struct MainGameUIState {
 	Button player_o{};
 	Button winner{};
 	Button timer_button{};
+	Button save_button{};
+	Button save_sreen{};
+	
 	SDL_Rect hover_cell{};
+	SDL_Rect turn_back_button[2]{};
 	GameOverButton end_game_button;
 	Timer before_game_end_timer{};
 
@@ -41,6 +47,8 @@ struct MainGameUIState {
 	WinnerData winner_data {};
 	PlayerMark who_won{};
 
+	std::string save_path = "./saves";
+	int screen = 0;
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
 	bool should_reset_turn_timer = false;
@@ -48,14 +56,18 @@ struct MainGameUIState {
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 
+void initMainGameUIState(const Window& window, MainGameUIState& ui_state);
+void drawDimmingLayer(const Window& window);
 void drawTable3x3(const Window& window, MainGameUIState& ui_state);
 void drawTable12x12(const Window& window, MainGameUIState& ui_state);
+void drawButton(const Window& window, MainGameUIState& ui_state);
 void drawSymbol3x3(const Window& window, const GameState& game_state);
 void drawSymbol12x12(const Window& window, const GameState& game_state);
 void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state);
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
+void drawScreen(const Window& window, MainGameUIState& ui_state);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
@@ -75,6 +87,8 @@ void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SD
 
 Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
 
 void handelKeyBoardButton(const Window& window, MenuState & menu_state, GameState &game_state, MainGameUIState& ui_state, SDL_Scancode input);
+void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, int mouseX, int mouseY);
 #endif

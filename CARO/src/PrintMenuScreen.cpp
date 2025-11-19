@@ -7,8 +7,10 @@
 
 #include "PrintMenuScreen.h"
 #include "MenuController.h"
+#include "MainGameUI.h"
+#include "Save.h"
 std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
-std::unordered_map< int, Button> Slot;
+std::unordered_map< int, Button> Loading_Slot;
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position)
 {
 	int window_width = window.width;
@@ -205,9 +207,7 @@ void InitLoadFile(Window& window, FileSave& load_file)
 			pos_x, pos_y,
 			imgW,imgH
 		};
-		SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0,0, 255);
-		SDL_RenderFillRect(window.renderer_ptr, &tmp);
-		Slot[i].rect = tmp;
+		Loading_Slot[i].rect = tmp;
 		pos_y += 8 + imgH;
 	}
 
@@ -353,16 +353,45 @@ void drawChangeSettings(Window& window, MenuState menu_state)
 	}
 }
 
-void drawChooseFileSave(Window& window, MenuState& menu_state)
+void drawRemoveFileSave(Window& window, MenuState& menu_state)
+{
+	int imgH = 173 / 2;
+	int imgW = imgH;
+	int pos_x = 254 + 1459 - imgW;
+	int pos_y;
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	for (int i = 1; i <= 5; i++)
+	{
+		pos_y = Loading_Slot[i].rect.y;
+		std::string fileName = getSaveFileName(menu_state.save_path,i);
+		if (!isFileEmpty(fileName))
+		{
+			if (checkButton({ pos_x, pos_y, imgW, imgH }, mouseX, mouseY))
+			{
+				menu_state.transform_idx = TEXTURE_ERASE_BUTTON;
+				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { pos_x, pos_y, imgW, imgH });
+			}
+			else
+				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { pos_x, pos_y, imgW, imgH });
+		}
+		//std::cout << isFileExist(fileName) << ' ';
+		
+	}
+	//std::cout << '\n';
+
+}
+
+void drawChooseFileLoad(Window& window, MenuState& menu_state)
 {
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_SCREEN), MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN]);
 	
-	int idx = mouseInLoad();
+	int idx = mouseInLoadOrSave("load");
 	if (idx == -1) return;
 	int pos_x = 254 + 25;
 	int imgW = 173;
 	int imgH = imgW;
-	int pos_y = Slot[idx].rect.y ;
+	int pos_y = Loading_Slot[idx].rect.y ;
 
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
 
@@ -431,7 +460,8 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 		drawChangeSettings(window, menu_state);
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
-		drawChooseFileSave(window, menu_state);
+		drawChooseFileLoad(window, menu_state);
+		drawRemoveFileSave(window, menu_state);
 		//drawTableTest(window);
 		//std::cout << window.width << " " << window.height << std::endl;
 	}

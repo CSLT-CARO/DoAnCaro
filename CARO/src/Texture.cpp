@@ -99,6 +99,11 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 	{ "anti_diagonal_line_X", TEXTURE_ANTI_DIAGONAL_LINE_X},
 	{ "anti_diagonal_line_O", TEXTURE_ANTI_DIAGONAL_LINE_O},
+
+	{ "SAVE_BUTTON", TEXTURE_SAVE_BUTTON},
+	{ "SAVE_BUTTON_HOVERED", TEXTURE_SAVE_BUTTON_HOVERED},
+	{ "SAVE_SCREEN", TEXTURE_SAVE_SCREEN},
+	{ "IMPORT", TEXURE_IMPORT_BUTTON},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

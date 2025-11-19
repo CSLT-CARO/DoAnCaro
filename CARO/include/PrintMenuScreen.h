@@ -13,9 +13,10 @@
 #include "MainGameUI.h"
 #include "MenuUI.h"
 #include "Texture.h"
+#include "Save.h"
 
 extern std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
-extern std::unordered_map< int, Button> Slot;
+extern std::unordered_map< int, Button> Loading_Slot;
 
 struct SettingsButton
 {
@@ -125,7 +126,7 @@ void drawTurnBackButton(Window& window, MenuState& menu_state);
 void drawChooseTypePlayer(Window& window, MenuState& menu_state);
 void drawChooseTypeGame(Window& window, MenuState& menu_state);
 void drawChangeSettings(Window& window, MenuState menu_state);
-void drawChooseFileSave(Window& window, MenuState& menu_state);
+void drawChooseFileLoad(Window& window, MenuState& menu_state);
 
 //void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
 //void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);

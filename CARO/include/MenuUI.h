@@ -35,6 +35,7 @@ struct MenuState
 	int transform_idx = 1;
 	int trans_display = _MainMenu;
 
+	std::string save_path = "./saves";
 };
 
 #endif // MENU_UI_H
