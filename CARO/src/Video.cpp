@@ -1,6 +1,7 @@
 #include "Video.h"
 
 void initVideo(Window& window) {
+	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		std::cerr << "SDL could not be initialized: " << SDL_GetError();
 		exit(1);
