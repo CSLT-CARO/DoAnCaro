@@ -1,5 +1,38 @@
-#include "MainGameUI.h"
+﻿#include "MainGameUI.h"
 #include "MenuController.h"
+#include "Audio.h"
+#include "GameState.h"
+#include "PrintMenuScreen.h"
+
+
+void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
+{
+	switch (ui_state.screen)
+	{
+	case TEXTURE_SAVE_SCREEN:
+		ui_state.screen = 0;
+		break;
+	case 0:
+	{
+		game_state.game_is_run = false;
+		ui_state.is_game_over = false;
+		game_state.is_init = false;
+		menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+		menu_state.trans_display = _MainMenu;
+
+		// TẮT tất cả âm thanh game và SFX
+		Stop_BGM();
+		Stop_All_SFX();
+
+		// Trở về menu - phát nhạc menu
+		Play_BGM_Menu();
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
@@ -559,6 +592,10 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state
 void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, SDL_Scancode input)
 {
 	
+	if (input == SDL_SCANCODE_ESCAPE && ui_state.is_game_over)
+	{
+		Back(ui_state, game_state, menu_state);
+	}
 
 	if (input == SDL_SCANCODE_RETURN)
 	{
@@ -568,20 +605,27 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 				game_state.game_is_run = true;
 				ui_state.is_game_over = false;
 				game_state.is_init = false;
+				ui_state.winner_data.mark = Empty;
 				break;
 			case TEXTURE_NEW_GAME_ON:
 				game_state.game_is_run = false;
 				ui_state.is_game_over = false;
 				game_state.is_init = false;
+				ui_state.winner_data.mark = Empty;
 				menu_state.transform_idx = TEXTURE_PVP_BUTTON;
 				menu_state.trans_display = _ChooseTypePlayer;
+
+				Play_BGM_Menu();
 				break;
 			case TEXTURE_EXIT_ON:
 				game_state.game_is_run = false;
 				ui_state.is_game_over = false;
 				game_state.is_init = false;
+				ui_state.winner_data.mark = Empty;
 				menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 				menu_state.trans_display = _MainMenu;
+
+				Play_BGM_Menu();
 				break;
 		}
 		ui_state.end_game_button.index = TEXTURE_RESTART_ON;
@@ -601,3 +645,4 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 	}
 
 }
+

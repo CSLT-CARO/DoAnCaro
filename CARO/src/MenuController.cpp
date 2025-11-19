@@ -4,8 +4,10 @@
 #include <string>
 #include <math.h>
 #include <vector>
-
+#include "Video.h"
 #include "MenuController.h"
+#include "Audio.h"
+#include <SDL_mixer.h>
 
 int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state)
 {
@@ -110,6 +112,7 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 
 void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state)
 {
+	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	int MousePositionState = checkMousePosition(window, mouseX, mouseY, _TurnBackButton, menu_state);
@@ -196,17 +199,25 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 	{
 		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
 		if (MousePositionState == TEXTURE_MUSIC_ON_BUTTON
-			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON], mouseX, mouseY))
+			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_music = false;
+			Toggle_Music();
+		}
 		if (MousePositionState == TEXTURE_SFX_ON_BUTTON
-			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_ON_BUTTON], mouseX, mouseY))
+			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_ON_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_sfx = false;
+			Toggle_SFX();
+		}
 		if (MousePositionState == TEXTURE_MUSIC_OFF_BUTTON
-			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_OFF_BUTTON], mouseX, mouseY))
+			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_OFF_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_music = true;
+			Toggle_Music();
+		}
 		if (MousePositionState == TEXTURE_SFX_OFF_BUTTON
-			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_OFF_BUTTON], mouseX, mouseY))
+			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_OFF_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_sfx = true;
+			Toggle_SFX();
+		}
 		return;
 	}
 	if (menu_state.trans_display == _ChooseTypeGame)
@@ -252,6 +263,7 @@ int mouseInLoad()
 
 void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 {
+	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	if (menu_state.trans_display == _MainMenu)
 	{
 		if (menu_state.transform_idx == TEXTURE_PLAY_BUTTON)
@@ -386,7 +398,7 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 			if (menu_state.transform_idx == TEXTURE_SFX_ON_BUTTON
 				|| menu_state.transform_idx == TEXTURE_SFX_OFF_BUTTON)
 			{
-				if (menu_state.turn_sfx == true)
+				if (menu_state.turn_sfx == true) 
 					menu_state.transform_idx = TEXTURE_MUSIC_ON_BUTTON;
 				else
 					menu_state.transform_idx = TEXTURE_MUSIC_OFF_BUTTON;

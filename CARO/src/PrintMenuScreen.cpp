@@ -4,9 +4,10 @@
 #include <string>
 #include <math.h>
 #include <vector>
-
+#include "Audio.h"
 #include "PrintMenuScreen.h"
 #include "MenuController.h"
+
 std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
 std::unordered_map< int, Button> Slot;
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position)
@@ -437,4 +438,10 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 	}
 	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
 		drawTurnBackButton(window, menu_state);
+
+	static bool menu_music_started = false;
+	if (!menu_music_started) {
+		if (menu_state.turn_music == true) Play_BGM_Menu();
+		menu_music_started = true;
+	}
 }

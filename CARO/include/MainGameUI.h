@@ -1,4 +1,4 @@
-#ifndef MAIN_GAME_UI_H
+﻿#ifndef MAIN_GAME_UI_H
 #define MAIN_GAME_UI_H
 
 #include "Video.h"
@@ -31,6 +31,8 @@ struct MainGameUIState {
 	SDL_Rect hover_cell{};
 	GameOverButton end_game_button;
 	Timer before_game_end_timer{};
+
+	int screen = 0; // quản lí màn hình
 
 	Timer pvp_turn_timer{};
 	std::unordered_map<Difficulty, Timer> pve_turn_timer{};
