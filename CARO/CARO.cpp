@@ -7,6 +7,7 @@
 #include "MenuController.h"
 #include "MenuUI.h"
 #include "Save.h"
+#include "Audio.h"
 
 int main(int argc, char* argv[]) {
 	Window window{};
@@ -21,6 +22,7 @@ int main(int argc, char* argv[]) {
 
 	initVideo(window);
 	initTTF(main_game_ui_state);
+	Audio_Init();
 	initSavesFolder(menu_state.save_path);
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
