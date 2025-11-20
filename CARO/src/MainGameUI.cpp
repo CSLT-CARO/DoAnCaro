@@ -1,5 +1,6 @@
 #include "MainGameUI.h"
 #include "MenuController.h"
+#include "Audio.h"
 #include "Save.h"
 #include <SDL_ttf.h>
 
@@ -831,6 +832,7 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 					game_state.is_init = false;
 					menu_state.transform_idx = TEXTURE_PVP_BUTTON;
 					menu_state.trans_display = _ChooseTypePlayer;
+					Play_BGM_Menu();
 					break;
 				case TEXTURE_EXIT_ON:
 					game_state.game_is_run = false;
@@ -838,6 +840,7 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 					game_state.is_init = false;
 					menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 					menu_state.trans_display = _MainMenu;
+					Play_BGM_Menu();
 					break;
 			}
 			ui_state.end_game_button.index = TEXTURE_RESTART_ON;
@@ -873,6 +876,13 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 			game_state.is_init = false;
 			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 			menu_state.trans_display = _MainMenu;
+
+			// TẮT tất cả âm thanh game và SFX
+			Stop_BGM();
+			Stop_All_SFX();
+
+			// Trở về menu - phát nhạc menu
+			Play_BGM_Menu();
 			break;
 		}
 		default:

@@ -53,6 +53,8 @@ int main(int argc, char* argv[]) {
 		}
 		SDL_RenderPresent(window.renderer_ptr);
 	}
+
+	Audio_Quit();
 	destroyTTF(main_game_ui_state);
 	destroyVideo(window);
 	return 0;

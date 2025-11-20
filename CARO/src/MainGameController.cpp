@@ -1,11 +1,13 @@
 #include "MainGameController.h"
 #include "MainGameUI.h"
 #include "MenuUI.h"
+#include "Audio.h"
 
 void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, const Window& window, GameState& game_state, MenuState& menu_state) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (not ui_state.is_game_over)
 		{
+			Play_SFX_Move();
 			handleMouseButton(window, ui_state, game_state,menu_state, event.button.x, event.button.y);
 		}
 		if (ui_state.is_game_over and not isTimerRunning(ui_state.before_game_end_timer))
@@ -14,6 +16,10 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			int mouseY = event.button.y;
 
 			ui_state.selected_cell = NULL_CELL;
+
+			Stop_All_SFX();
+			Play_SFX_Click();
+
 			if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) // Restart
 			{
 				game_state.game_is_run = true;
@@ -80,6 +86,8 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 				}
 			}
 			else
+				Stop_All_SFX();
+				Play_SFX_Click();
 				handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 		}
 
@@ -87,6 +95,14 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 }
 
 void processMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state) {
+	static bool game_music_started = false;
+
+	if (!game_music_started && !ui_state.is_game_over) {
+		Stop_BGM();              // Dừng nhạc menu
+		Play_BGM_Game();         // Phát nhạc game
+		game_music_started = true;
+	}
+
 	if (ui_state.is_game_over) {
 		drawMainGame(window, ui_state, game_state);
 
@@ -96,6 +112,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 
 		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
 		drawGameOverScreen(window, ui_state, game_state);
+		game_music_started = false;
 		return;
 	}
 	
@@ -134,6 +151,15 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		ui_state.stopped_at_moment = 0;
 		ui_state.is_game_over = true;
 		game_state.is_init = false;
+
+		Stop_BGM();
+		if (game_state.mode == PVE && who_win == game_state.bot_marker) {
+			Play_SFX_Lose();
+		}
+		else {
+			Play_SFX_Win();
+		}
+
 		return;
 	}
 
@@ -165,6 +191,21 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 			game_state.is_init = false;
 			activateTimer(ui_state.before_game_end_timer);
 			setupGameOverScreen(window, ui_state);
+			Stop_BGM();
+			if (data.mark == Empty) {
+				Play_SFX_Draw(); // Hòa
+			}
+			else if (game_state.mode == PVE) {
+				if (data.mark == game_state.bot_marker) {
+					Play_SFX_Lose(); // Thua
+				}
+				else {
+					Play_SFX_Win(); // Thắng
+				}
+			}
+			else {
+				Play_SFX_Win(); // PVP - có người thắng
+			}
 		}
 	}
 	else if (game_state.board_type == Ultimate) {
@@ -184,6 +225,22 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 
 			activateTimer(ui_state.before_game_end_timer);
 			setupGameOverScreen(window, ui_state);
+
+			Stop_BGM();
+			if (data.mark == Empty) {
+				Play_SFX_Draw();
+			}
+			else if (game_state.mode == PVE) {
+				if (data.mark == game_state.bot_marker) {
+					Play_SFX_Lose();
+				}
+				else {
+					Play_SFX_Win();
+				}
+			}
+			else {
+				Play_SFX_Win();
+			}
 		}
 	}
 

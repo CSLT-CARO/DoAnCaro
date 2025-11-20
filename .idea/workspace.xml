@@ -28,14 +28,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/CARO.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/saves/save_1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/saves/save_2.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/saves/save_3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/saves/save_4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/saves/save_5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/include/Audio.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/Audio.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/Audio.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Audio.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/MenuController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MenuController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,5 +114,15 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/CARO/src/Audio.cpp</url>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

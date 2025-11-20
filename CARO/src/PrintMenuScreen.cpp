@@ -5,11 +5,12 @@
 #include <math.h>
 #include <vector>
 #include <SDL_ttf.h>
-
+#include "Audio.h"
 #include "PrintMenuScreen.h"
 #include "MenuController.h"
 #include "MainGameUI.h"
 #include "Save.h"
+
 std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
 std::unordered_map< int, Button> Loading_Slot;
 void InitCaroButton(Window& window, CaroTextPosition& caro_text_position)
@@ -488,4 +489,10 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 	}
 	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
 		drawTurnBackButton(window, menu_state);
+
+	static bool menu_music_started = false;
+	if (!menu_music_started) {
+		if (menu_state.turn_music == true) Play_BGM_Menu();
+		menu_music_started = true;
+	}
 }

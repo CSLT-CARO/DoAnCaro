@@ -32,11 +32,18 @@ void Play_SFX_Win();
 void Play_SFX_Lose();
 void Play_SFX_Draw();
 
+
+void Stop_All_SFX();
+
 // Toggle mute on/off. If muted, all currently playing sounds stop or are silenced.
 // Returns new mute state (true = muted).
 bool Toggle_Mute();
+bool Toggle_SFX();
+bool Toggle_Music();
 
 // Query mute state
 bool Is_Muted();
+bool Is_Music_Muted();
+bool Is_SFX_Muted();
 
 #endif // AUDIO_H

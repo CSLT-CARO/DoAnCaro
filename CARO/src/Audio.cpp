@@ -1,4 +1,3 @@
-// audio.cpp
 #include "Audio.h"
 
 #include <SDL.h>
@@ -8,7 +7,7 @@
 #include <atomic>
 #include <chrono>
 
-// --- Config: asset paths (tùy chỉnh nếu bạn đặt khác) ---
+// --- Config: asset paths ---
 static const char* PATH_BGM_MENU = "assets/Audio/Background_menu.mp3";
 static const char* PATH_BGM_GAME = "assets/Audio/Background_music.mp3";
 static const char* PATH_SFX_CLICK = "assets/Audio/Click_button.wav";
@@ -16,6 +15,12 @@ static const char* PATH_SFX_MOVE = "assets/Audio/Move.wav";
 static const char* PATH_SFX_WIN = "assets/Audio/Game_win.wav";
 static const char* PATH_SFX_LOSE = "assets/Audio/Game_lose.wav";
 static const char* PATH_SFX_DRAW = "assets/Audio/Game_draw.wav";
+
+// --- Volume Configuration ---
+static const int MUSIC_VOLUME = 64;
+static const int SFX_VOLUME = 96;
+static const int DUCKING_VOLUME = 32;
+static const int DUCKING_DURATION = 400;
 
 // --- Internal state ---
 static Mix_Music* bgm_music = nullptr;
@@ -25,11 +30,13 @@ static Mix_Chunk* sfx_win = nullptr;
 static Mix_Chunk* sfx_lose = nullptr;
 static Mix_Chunk* sfx_draw = nullptr;
 
-static std::atomic<bool> is_muted(false);
-static int saved_music_volume = MIX_MAX_VOLUME; // to restore after ducking
+// Tách riêng trạng thái music và SFX
+static std::atomic<bool> is_music_muted(false);
+static std::atomic<bool> is_sfx_muted(false);
+static int saved_music_volume = MUSIC_VOLUME;
 static std::atomic<bool> audio_initialized(false);
 
-// Helper: load Mix_Music (replaces bgm_music)
+// Helper: load Mix_Music
 static void load_bgm(const char* path) {
     if (bgm_music) {
         Mix_HaltMusic();
@@ -44,30 +51,24 @@ static void load_bgm(const char* path) {
 
 // Helper: play Mix_Music looped
 static void play_bgm_looped() {
-    if (is_muted.load()) return;
+    if (is_music_muted.load()) return;  // Chỉ kiểm tra music muted
     if (!bgm_music) return;
-    // ensure volume is current saved volume
     Mix_VolumeMusic(saved_music_volume);
     if (Mix_PlayMusic(bgm_music, -1) == -1) {
         SDL_Log("Mix_PlayMusic error: %s", Mix_GetError());
     }
 }
 
-// Simple ducking: lower BGM while SFX plays, then restore.
-// Implementation: reduce music volume to 25% for approx duck_ms milliseconds in a detached thread.
-// NOTE: We cannot reliably get chunk duration cross-platform easily, so we approximate with duck_ms.
-static void duck_music_temporarily(int duck_ms = 400) {
+// Simple ducking
+static void duck_music_temporarily(int duck_ms = DUCKING_DURATION) {
     if (!bgm_music) return;
-    if (is_muted.load()) return;
-    int current = Mix_VolumeMusic(-1);
-    // store saved volume to restore (atomic-safe copy)
-    int target = (current * 25) / 100;
-    if (target < 1) target = 0;
+    if (is_music_muted.load()) return;  // Chỉ kiểm tra music muted
+    int current = saved_music_volume;
+    int target = DUCKING_VOLUME;
     Mix_VolumeMusic(target);
     std::thread([current, duck_ms]() {
         std::this_thread::sleep_for(std::chrono::milliseconds(duck_ms));
-        // restore if not muted and music is still playing
-        if (!is_muted.load()) {
+        if (!is_music_muted.load()) {
             Mix_VolumeMusic(current);
         }
         else {
@@ -79,9 +80,9 @@ static void duck_music_temporarily(int duck_ms = 400) {
 // Helper: play a chunk with ducking
 static void play_chunk_with_duck(Mix_Chunk* chunk) {
     if (!chunk) return;
-    if (is_muted.load()) return;
+    if (is_sfx_muted.load()) return;  // Chỉ kiểm tra SFX muted
     // Lower music while chunk plays
-    duck_music_temporarily(400); // ~400ms duck; tweak if needed
+    duck_music_temporarily(DUCKING_DURATION);
     if (Mix_PlayChannel(-1, chunk, 0) == -1) {
         SDL_Log("Mix_PlayChannel error: %s", Mix_GetError());
     }
@@ -95,34 +96,56 @@ bool Audio_Init() {
         return false;
     }
 
-    // Initialize SDL_mixer: request 44100 hz, MIX_DEFAULT_FORMAT, 2 channels, 2048 chunk size
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
         SDL_Log("Mix_OpenAudio failed: %s", Mix_GetError());
         SDL_Quit();
         return false;
     }
 
-    // Allocate mixing channels for SFX
     Mix_AllocateChannels(16);
 
-    // Load SFX files (use WAV/OGG recommended for chunks)
+    // Load SFX files
     sfx_click = Mix_LoadWAV(PATH_SFX_CLICK);
-    if (!sfx_click) SDL_Log("Warning: cannot load SFX_CLICK '%s': %s", PATH_SFX_CLICK, Mix_GetError());
+    if (!sfx_click) {
+        SDL_Log("Warning: cannot load SFX_CLICK '%s': %s", PATH_SFX_CLICK, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_click, SFX_VOLUME);
+    }
 
     sfx_move = Mix_LoadWAV(PATH_SFX_MOVE);
-    if (!sfx_move) SDL_Log("Warning: cannot load SFX_MOVE '%s': %s", PATH_SFX_MOVE, Mix_GetError());
+    if (!sfx_move) {
+        SDL_Log("Warning: cannot load SFX_MOVE '%s': %s", PATH_SFX_MOVE, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_move, SFX_VOLUME);
+    }
 
     sfx_win = Mix_LoadWAV(PATH_SFX_WIN);
-    if (!sfx_win) SDL_Log("Warning: cannot load SFX_WIN '%s': %s", PATH_SFX_WIN, Mix_GetError());
+    if (!sfx_win) {
+        SDL_Log("Warning: cannot load SFX_WIN '%s': %s", PATH_SFX_WIN, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_win, SFX_VOLUME);
+    }
 
     sfx_lose = Mix_LoadWAV(PATH_SFX_LOSE);
-    if (!sfx_lose) SDL_Log("Warning: cannot load SFX_LOSE '%s': %s", PATH_SFX_LOSE, Mix_GetError());
+    if (!sfx_lose) {
+        SDL_Log("Warning: cannot load SFX_LOSE '%s': %s", PATH_SFX_LOSE, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_lose, SFX_VOLUME);
+    }
 
     sfx_draw = Mix_LoadWAV(PATH_SFX_DRAW);
-    if (!sfx_draw) SDL_Log("Warning: cannot load SFX_DRAW '%s': %s", PATH_SFX_DRAW, Mix_GetError());
+    if (!sfx_draw) {
+        SDL_Log("Warning: cannot load SFX_DRAW '%s': %s", PATH_SFX_DRAW, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_draw, SFX_VOLUME);
+    }
 
-    // default music volume
-    saved_music_volume = MIX_MAX_VOLUME / 2; // 50% by default
+    saved_music_volume = MUSIC_VOLUME;
     Mix_VolumeMusic(saved_music_volume);
 
     audio_initialized.store(true);
@@ -132,7 +155,6 @@ bool Audio_Init() {
 void Audio_Quit() {
     if (!audio_initialized.load()) return;
 
-    // stop music and free
     Mix_HaltMusic();
     if (bgm_music) {
         Mix_FreeMusic(bgm_music);
@@ -153,8 +175,7 @@ void Audio_Quit() {
 
 void Play_BGM_Menu() {
     if (!audio_initialized.load()) return;
-    if (is_muted.load()) {
-        // still load so switching back restores quickly
+    if (is_music_muted.load()) {
         load_bgm(PATH_BGM_MENU);
         return;
     }
@@ -164,7 +185,7 @@ void Play_BGM_Menu() {
 
 void Play_BGM_Game() {
     if (!audio_initialized.load()) return;
-    if (is_muted.load()) {
+    if (is_music_muted.load()) {
         load_bgm(PATH_BGM_GAME);
         return;
     }
@@ -202,28 +223,52 @@ void Play_SFX_Draw() {
     play_chunk_with_duck(sfx_draw);
 }
 
-bool Toggle_Mute() {
-    bool now = !is_muted.load();
-    is_muted.store(now);
+void Stop_All_SFX() {
+    if (!audio_initialized.load()) return;
+    Mix_HaltChannel(-1);
+}
+
+
+bool Toggle_Music() {
+    bool now = !is_music_muted.load();
+    is_music_muted.store(now);
     if (now) {
-        // mute: stop music and silence channels
+        // Tắt music
         Mix_HaltMusic();
         Mix_VolumeMusic(0);
-        Mix_Volume(-1, 0);
     }
     else {
-        // unmute: restore music volume and resume bgm if loaded
+        // Bật music
         Mix_VolumeMusic(saved_music_volume);
         if (bgm_music) {
             if (Mix_PlayingMusic() == 0) {
                 Mix_PlayMusic(bgm_music, -1);
             }
         }
-        Mix_Volume(-1, MIX_MAX_VOLUME);
     }
     return now;
 }
 
-bool Is_Muted() {
-    return is_muted.load();
+
+bool Toggle_SFX() {
+    bool now = !is_sfx_muted.load();
+    is_sfx_muted.store(now);
+    if (now) {
+        // Tắt SFX
+        Mix_HaltChannel(-1);
+        Mix_Volume(-1, 0);
+    }
+    else {
+        // Bật SFX
+        Mix_Volume(-1, SFX_VOLUME);
+    }
+    return now;
+}
+
+bool Is_Music_Muted() {
+    return is_music_muted.load();
+}
+
+bool Is_SFX_Muted() {
+    return is_sfx_muted.load();
 }
