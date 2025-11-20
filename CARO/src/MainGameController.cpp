@@ -34,6 +34,7 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 				game_state.is_init = false;
 				ui_state.winner_data.mark = Empty;
 				menu_state.trans_display = _ChooseTypePlayer;
+				Play_BGM_Menu();
 			}
 			if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) // Exit
 			{
@@ -42,6 +43,7 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 				game_state.is_init = false;
 				ui_state.winner_data.mark = Empty;
 				menu_state.trans_display = _MainMenu;
+				Play_BGM_Menu();
 			}
 		}
 	}
