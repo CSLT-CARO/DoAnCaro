@@ -27,12 +27,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0301877b-2605-4816-9f9d-41b702bfcbe6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/font/Jersey10-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/assets/font/Jersey10-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/font/VT323-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/assets/font/VT323-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" afterDir="false" />
+    <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,13 +49,9 @@
     <option name="productBranch" value="Classic" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 6
+  &quot;associatedIndex&quot;: 7
 }</component>
-  <component name="ProjectId" id="35jADHcv2ca2wyDxzl6SqwTa8Z6" />
-  <component name="ProjectStatusUIService">{
-  &quot;uiKindId&quot;: &quot;Widget&quot;
-}</component>
+  <component name="ProjectId" id="35jGajiP67Acs7bZkubwRVCq54O" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -78,25 +70,17 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "khang__merge",
-    "last_opened_file_path": "/media/linux-storage/DoAnCaro/CARO/bin",
+    "last_opened_file_path": "/home/bennett/DoAnCaro",
     "settings.editor.selected.configurable": "CMakeSettings"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/CARO/bin" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/CARO/assets" />
-    </key>
-  </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="CARO" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CARO" TARGET_NAME="CARO" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CARO" RUN_TARGET_NAME="CARO">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CARO" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CARO" TARGET_NAME="CARO" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CARO" RUN_TARGET_NAME="CARO">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -104,14 +88,13 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0301877b-2605-4816-9f9d-41b702bfcbe6" name="Changes" comment="" />
-      <created>1763612990666</created>
+      <changelist id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="" />
+      <created>1763616132878</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1763612990666</updated>
-      <workItem from="1763612993684" duration="1085000" />
-      <workItem from="1763614111313" duration="654000" />
-      <workItem from="1763614815859" duration="871000" />
+      <updated>1763616132878</updated>
+      <workItem from="1763616134344" duration="692000" />
+      <workItem from="1763636931029" duration="146000" />
     </task>
     <servers />
   </component>
