@@ -13,7 +13,7 @@ void initTTF(MainGameUIState& ui_state)
 		return;
 	}
 	std::string font_name = "Jersey10-Regular.ttf";
-	std::string font_path = "./font/" + font_name;
+	std::string font_path = "./assets/font/" + font_name;
 	ui_state.font_small = TTF_OpenFont(font_path.c_str(), 18);
 	ui_state.font = TTF_OpenFont(font_path.c_str(), 32);
 	ui_state.font_big = TTF_OpenFont(font_path.c_str(), 30);
