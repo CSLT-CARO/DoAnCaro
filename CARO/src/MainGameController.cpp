@@ -97,12 +97,10 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 }
 
 void processMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state) {
-	static bool game_music_started = false;
-
-	if (!game_music_started && !ui_state.is_game_over) {
+	if (!ui_state.game_music_started && !ui_state.is_game_over) {
 		Stop_BGM();              // Dừng nhạc menu
 		Play_BGM_Game();         // Phát nhạc game
-		game_music_started = true;
+		ui_state.game_music_started = true;
 	}
 
 	if (ui_state.is_game_over) {
@@ -114,7 +112,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 
 		if (not hasReachedTimeout(ui_state.before_game_end_timer)) return;
 		drawGameOverScreen(window, ui_state, game_state);
-		game_music_started = false;
+		ui_state.game_music_started = false;
 		return;
 	}
 	

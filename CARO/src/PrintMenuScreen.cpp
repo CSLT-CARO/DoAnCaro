@@ -490,9 +490,8 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
 		drawTurnBackButton(window, menu_state);
 
-	static bool menu_music_started = false;
-	if (!menu_music_started) {
+	if (!menu_state.menu_music_started) {
 		if (menu_state.turn_music == true) Play_BGM_Menu();
-		menu_music_started = true;
+		menu_state.menu_music_started = true;
 	}
 }

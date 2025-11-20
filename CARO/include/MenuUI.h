@@ -32,6 +32,7 @@ struct MenuState
 	bool menu_is_run = true;
 	bool turn_sfx = true;
 	bool turn_music = true;
+	bool menu_music_started = false;
 	int transform_idx = 1;
 	int trans_display = _MainMenu;
 

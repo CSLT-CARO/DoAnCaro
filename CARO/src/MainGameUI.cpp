@@ -876,6 +876,7 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 			game_state.is_init = false;
 			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 			menu_state.trans_display = _MainMenu;
+			ui_state.game_music_started = false;
 
 			// TẮT tất cả âm thanh game và SFX
 			Stop_BGM();

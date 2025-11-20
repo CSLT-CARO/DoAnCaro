@@ -35,7 +35,6 @@ struct SaveInform
 };
 
 struct MainGameUIState {
-
 	TTF_Font* font_small = nullptr;
 	TTF_Font* font = nullptr;       
 	TTF_Font* font_big = nullptr;
@@ -69,6 +68,7 @@ struct MainGameUIState {
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
 	bool should_reset_turn_timer = false;
+	bool game_music_started = false;
 };
 
 void initTTF(MainGameUIState& ui_state);
