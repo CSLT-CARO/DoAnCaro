@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
 	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);
+	initTTF(main_game_ui_state);
 	initSavesFolder(menu_state.save_path);
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
@@ -46,11 +47,11 @@ int main(int argc, char* argv[]) {
 			processMainGame(window, main_game_ui_state, game_state);
 		else
 		{
-			processMenuScreen(window, menu_state);
+			processMenuScreen(window, menu_state, main_game_ui_state);
 		}
 		SDL_RenderPresent(window.renderer_ptr);
 	}
-
+	destroyTTF(main_game_ui_state);
 	destroyVideo(window);
 	return 0;
 }

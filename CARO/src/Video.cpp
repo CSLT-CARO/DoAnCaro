@@ -57,5 +57,6 @@ void destroyVideo(Window& window) {
 		SDL_DestroyWindow(window.window_ptr);
 	}
 
+
 	SDL_Quit();
 }

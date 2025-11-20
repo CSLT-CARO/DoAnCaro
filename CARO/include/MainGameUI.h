@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <string>
+#include <SDL_ttf.h>
 
 struct Button {
 	SDL_Rect rect{};
@@ -25,7 +26,21 @@ struct GameOverButton
 	int index;
 };
 
+struct SaveInform
+{
+	std::string title;
+	std::string date;
+	std::string mode;
+	std::string board_type;
+};
+
 struct MainGameUIState {
+
+	TTF_Font* font_small = nullptr;
+	TTF_Font* font = nullptr;       
+	TTF_Font* font_big = nullptr;
+	TTF_Font* font_large = nullptr;
+
 	Button player_x{};
 	Button player_o{};
 	Button winner{};
@@ -43,6 +58,8 @@ struct MainGameUIState {
 
 	Second stopped_at_moment {};
 
+	SaveInform save_inform{};
+
 	Cell selected_cell = NULL_CELL;
 	WinnerData winner_data {};
 	PlayerMark who_won{};
@@ -54,20 +71,30 @@ struct MainGameUIState {
 	bool should_reset_turn_timer = false;
 };
 
-void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+void initTTF(MainGameUIState& ui_state);
+void destroyTTF(MainGameUIState& ui_state);
 
+void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 void initMainGameUIState(const Window& window, MainGameUIState& ui_state);
 void drawDimmingLayer(const Window& window);
+
 void drawTable3x3(const Window& window, MainGameUIState& ui_state);
 void drawTable12x12(const Window& window, MainGameUIState& ui_state);
+
 void drawButton(const Window& window, MainGameUIState& ui_state);
+
 void drawSymbol3x3(const Window& window, const GameState& game_state);
 void drawSymbol12x12(const Window& window, const GameState& game_state);
+
 void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state);
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
+
+void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y);
 void drawScreen(const Window& window, MainGameUIState& ui_state);
+void getSaveInform(MainGameUIState& ui_state, int idx);
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, SDL_Rect SlotRect);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);

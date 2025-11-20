@@ -167,7 +167,7 @@ LoadedFileContent Load(const std::string& filename) {
     result.bot_marker = static_cast<PlayerMark>(bot_marker_int);
 
     infile.close();
-    std::cout << "Game loaded successfully from: " << filename << '\n';
+    //std::cout << "Game loaded successfully from: " << filename << '\n';
 
     result.success = true;
     return result;

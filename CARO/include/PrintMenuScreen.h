@@ -135,6 +135,6 @@ void drawChooseFileLoad(Window& window, MenuState& menu_state);
 //void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
 
 
-void buildMenuImages(MenuState& menu_state, Window& window);
+void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_state);
 
 #endif // !PRINT_MENU_SCREEN_H

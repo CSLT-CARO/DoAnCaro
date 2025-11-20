@@ -1,8 +1,44 @@
 #include "MainGameUI.h"
 #include "MenuController.h"
 #include "Save.h"
+#include <SDL_ttf.h>
 
 std::unordered_map< int, Button> Saving_Slot;
+
+void initTTF(MainGameUIState& ui_state)
+{
+	if (TTF_Init() == -1)
+	{
+		std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << '\n';
+		return;
+	}
+	std::string font_name = "Jersey10-Regular.ttf";
+	std::string font_path = "./font/" + font_name;
+	ui_state.font_small = TTF_OpenFont(font_path.c_str(), 18);
+	ui_state.font = TTF_OpenFont(font_path.c_str(), 32);
+	ui_state.font_big = TTF_OpenFont(font_path.c_str(), 30);
+	ui_state.font_large = TTF_OpenFont(font_path.c_str(), 50);
+
+	if (ui_state.font == nullptr || ui_state.font_small == nullptr)
+	{
+		std::cout << "Failed to load font! Error: " << TTF_GetError() << std::endl;
+	}
+}
+
+void destroyTTF(MainGameUIState& ui_state)
+{
+	if (ui_state.font != nullptr)
+	{
+		TTF_CloseFont(ui_state.font);
+		ui_state.font = nullptr;
+	}
+	if (ui_state.font_small != nullptr)
+	{
+		TTF_CloseFont(ui_state.font_small);
+		ui_state.font_small = nullptr;
+	}
+	TTF_Quit();
+}
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
@@ -240,7 +276,6 @@ void drawSelectingCell(const Window& window, const GameState& game_state, const 
 	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
-
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
@@ -394,6 +429,29 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
+void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y)
+{
+	if (text.empty() || font == nullptr) return;
+	SDL_Surface* text_surface = TTF_RenderText_Blended(font, text.c_str(), { 0, 0, 0, 255 });
+	if (text_surface == nullptr)
+	{
+		std::cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << std::endl;
+		return;
+	}
+	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(window.renderer_ptr, text_surface);
+	if (text_texture == nullptr)
+	{
+		std::cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << std::endl;
+		SDL_FreeSurface(text_surface);
+		return;
+	}
+
+
+	drawTexture(window.renderer_ptr, text_texture, {x,y, text_surface -> w, text_surface -> h});
+	SDL_FreeSurface(text_surface);
+	SDL_DestroyTexture(text_texture);
+}
+
 void drawScreen(const Window& window, MainGameUIState& ui_state)
 {
 	int x, y, imgW, imgH;
@@ -432,6 +490,7 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 			std::string fileName = getSaveFileName(ui_state.save_path, i);
 			if (!isFileEmpty(fileName))
 			{
+
 				if (checkButton({ x, y, imgW, imgH }, mouseX, mouseY))
 				{
 
@@ -439,12 +498,72 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 				}
 				else
 					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, imgW, imgH });
+				getSaveInform(ui_state, i);
+				//drawText(window, ui_state.save_inform.title, ui_state.font_small, { 558 + 102, 600, 0, 0 });
+				drawSaveInform(window, ui_state, Saving_Slot[i].rect);
+				
 			}
 			//std::cout << isFileExist(fileName) << ' ';
 
 		}
 		return;
 	}
+}
+
+void getSaveInform(MainGameUIState& ui_state,int idx)
+{
+	if (idx < 1 || idx > 5) return;
+	std::string fileName = getSaveFileName(ui_state.save_path, idx);
+	if (isFileEmpty(fileName)) return;
+	LoadedFileContent load = Load(fileName);
+	ui_state.save_inform.title = "SAVE "+ std::to_string(idx);
+	ui_state.save_inform.date = "DATE: " + std::to_string(load.date_day) + "/" + std::to_string(load.date_month) + "/" + std::to_string(load.date_year)
+		+ "   " + std::to_string(load.date_hour) + ":" + std::to_string(load.date_min) + ":" + std::to_string(load.date_sec);
+	std::string board_type = (load.board_type == Classic ? "3x3" : "12x12");
+	std::string mode = (load.mode == PVP ? "PVP" : "PVE");
+	ui_state.save_inform.board_type = "BOARD TYPE: " + board_type;
+	ui_state.save_inform.mode = "MODE: " +mode;
+
+	if (load.mode == PVE)
+	{
+		std::string difficulty;
+		switch (load.difficulty)
+		{
+		case Easy:
+			difficulty = "EASY";
+			break;
+		case Normal:
+			difficulty = "NORMAL";
+			break;
+		case Hard:
+			difficulty = "HARD";
+			break;
+		default:
+			difficulty = "NULL";
+			break;
+		}
+		ui_state.save_inform.mode += " - DIFFICULTY: " + difficulty;
+	}
+
+
+}
+
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state,SDL_Rect SlotRect)
+{
+	int leftX = SlotRect.x + 20 + 102;
+	int rightX = SlotRect.x + 270 + 60;
+	int topY = SlotRect.y + 25;
+	int bottomY = SlotRect.y + 65;
+
+	drawText(window, ui_state.save_inform.title, ui_state.font, leftX, topY);
+
+	drawText(window, ui_state.save_inform.date, ui_state.font_small, leftX, bottomY);
+
+	drawText(window, ui_state.save_inform.mode, ui_state.font_small, rightX, topY + 5);
+
+	drawText(window, ui_state.save_inform.board_type, ui_state.font_small, rightX, bottomY);
+
+
 }
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {

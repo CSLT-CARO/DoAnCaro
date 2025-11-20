@@ -504,7 +504,7 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Ga
 		}
 	}
 }
-void processMenuScreen(Window& window, MenuState& menu_state)
+void processMenuScreen(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
 {
-	buildMenuImages(menu_state, window);
+	buildMenuImages(menu_state, window, ui_state);
 }

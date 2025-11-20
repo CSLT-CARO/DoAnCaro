@@ -4,6 +4,7 @@
 #include <string>
 #include <math.h>
 #include <vector>
+#include <SDL_ttf.h>
 
 #include "PrintMenuScreen.h"
 #include "MenuController.h"
@@ -353,7 +354,25 @@ void drawChangeSettings(Window& window, MenuState menu_state)
 	}
 }
 
-void drawRemoveFileSave(Window& window, MenuState& menu_state)
+void drawLoadInform(const Window& window, const MainGameUIState& ui_state, SDL_Rect SlotRect)
+{
+	int leftX = SlotRect.x + 50 + 173;
+	int rightX = SlotRect.x + 650 + 60;
+	int topY = SlotRect.y + 30;
+	int bottomY = SlotRect.y + 100;
+
+	drawText(window, ui_state.save_inform.title, ui_state.font_large, leftX, topY);
+
+	drawText(window, ui_state.save_inform.date, ui_state.font_big, leftX, bottomY);
+
+	drawText(window, ui_state.save_inform.mode, ui_state.font_big, rightX, topY + 15);
+
+	drawText(window, ui_state.save_inform.board_type, ui_state.font_big, rightX, bottomY);
+
+
+}
+
+void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
 {
 	int imgH = 173 / 2;
 	int imgW = imgH;
@@ -374,11 +393,12 @@ void drawRemoveFileSave(Window& window, MenuState& menu_state)
 			}
 			else
 				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { pos_x, pos_y, imgW, imgH });
+			getSaveInform(ui_state, i);
+			drawLoadInform(window, ui_state, Loading_Slot[i].rect);
 		}
-		//std::cout << isFileExist(fileName) << ' ';
+		
 		
 	}
-	//std::cout << '\n';
 
 }
 
@@ -416,7 +436,7 @@ void drawTableTest(Window window)
 	SDL_RenderDrawLine(window.renderer_ptr, 0, y, window.width, y);
 }
 
-void buildMenuImages(MenuState& menu_state, Window& window)
+void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_state)
 {
 	MenuButton menu_button;
 	CaroTextPosition caro_text_position;
@@ -461,7 +481,7 @@ void buildMenuImages(MenuState& menu_state, Window& window)
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
 		drawChooseFileLoad(window, menu_state);
-		drawRemoveFileSave(window, menu_state);
+		drawLoadFileSave(window, menu_state, ui_state);
 		//drawTableTest(window);
 		//std::cout << window.width << " " << window.height << std::endl;
 	}
