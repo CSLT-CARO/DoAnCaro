@@ -412,8 +412,9 @@ void drawChooseFileLoad(Window& window, MenuState& menu_state)
 	int imgW = 173;
 	int imgH = imgW;
 	int pos_y = Loading_Slot[idx].rect.y ;
-
-	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
+	std::string file_name = getSaveFileName(menu_state.save_path, idx);
+	if (!isFileEmpty(file_name))
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
 
 
 

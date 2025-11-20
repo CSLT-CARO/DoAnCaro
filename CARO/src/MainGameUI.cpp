@@ -517,8 +517,21 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	if (isFileEmpty(fileName)) return;
 	LoadedFileContent load = Load(fileName);
 	ui_state.save_inform.title = "SAVE "+ std::to_string(idx);
-	ui_state.save_inform.date = "DATE: " + std::to_string(load.date_day) + "/" + std::to_string(load.date_month) + "/" + std::to_string(load.date_year)
-		+ "   " + std::to_string(load.date_hour) + ":" + std::to_string(load.date_min) + ":" + std::to_string(load.date_sec);
+	std::string date = "DATE: ";
+	if (load.date_day < 10) date += '0';
+	date += std::to_string(load.date_day) + '/';
+	if (load.date_month < 10) date += '0';
+	date += std::to_string(load.date_month) + '/';
+	date += std::to_string(load.date_day) + "  ";
+
+	if (load.date_hour < 10) date += '0';
+	date += std::to_string(load.date_hour) + ':';
+	if (load.date_min < 10) date += '0';
+	date += std::to_string(load.date_min) + ':';
+	if (load.date_sec < 10) date += '0';
+	date += std::to_string(load.date_sec);
+
+	ui_state.save_inform.date = date;
 	std::string board_type = (load.board_type == Classic ? "3x3" : "12x12");
 	std::string mode = (load.mode == PVP ? "PVP" : "PVE");
 	ui_state.save_inform.board_type = "BOARD TYPE: " + board_type;
