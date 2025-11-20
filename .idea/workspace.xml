@@ -29,6 +29,8 @@
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/CARO.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/CARO.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.vcxproj.filters" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,10 +72,15 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "khang__merge",
-    "last_opened_file_path": "/home/bennett/DoAnCaro",
+    "last_opened_file_path": "/media/linux-storage/DoAnCaro/CARO/include/SDL2",
     "settings.editor.selected.configurable": "CMakeSettings"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CARO/include/SDL2" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="CARO" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CARO" TARGET_NAME="CARO" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CARO" RUN_TARGET_NAME="CARO">
       <method v="2">

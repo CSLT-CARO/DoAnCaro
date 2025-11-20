@@ -12,6 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 set(SOURCE_FILES)
 set(MAIN_SOURCE_FILES CARO.cpp)
@@ -33,7 +34,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 endif()
 
 if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux"))
-    target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2 SDL2_ttf::SDL2_ttf)
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2 SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)
 endif()
 
 add_custom_command(

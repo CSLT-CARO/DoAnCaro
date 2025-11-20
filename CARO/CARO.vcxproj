@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\CaroEnum.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Save.h" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CARO.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\Save.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -156,7 +158,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;./lib/SDL2_mixer.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -173,7 +175,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;./lib/SDL2_mixer.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
