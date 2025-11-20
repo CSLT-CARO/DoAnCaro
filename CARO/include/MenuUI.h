@@ -35,6 +35,7 @@ struct MenuState
 	bool menu_music_started = false;
 	int transform_idx = 1;
 	int trans_display = _MainMenu;
+	int notice = 0;
 
 	std::string save_path = "./saves";
 };

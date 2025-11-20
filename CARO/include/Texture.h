@@ -113,6 +113,7 @@ enum MainGameTexturesEnum {
 	TEXTURE_SAVE_SCREEN,
 	TEXURE_IMPORT_BUTTON,
 	
+	TEXTURE_NOTICE_BOARD,
 };
 
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;

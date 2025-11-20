@@ -45,6 +45,11 @@ int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuSt
 }
 void turnBack(MenuState& menu_state, GameState game_state)
 {
+	if (menu_state.notice)
+	{
+		menu_state.notice = 0;
+		return;
+	}
 	switch (menu_state.trans_display)
 	{
 		case _MainMenu:
@@ -80,7 +85,6 @@ void turnBack(MenuState& menu_state, GameState game_state)
 			break;
 
 
-
 	}
 }
 bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y) {
@@ -113,6 +117,7 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 
 void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state)
 {
+
 	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
@@ -144,6 +149,19 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		return;
 	}
 
+	if (menu_state.notice)
+	{
+		int imgW = 603;
+		int imgH = 243;
+		int pos_x = window.width / 2 - imgW / 2;
+		int pos_y = window.height / 2 - imgH / 2;
+		if (checkButton({ pos_x + imgW - imgH / 4 - 2, pos_y + 2, imgH / 4, imgH / 4, }, mouseX, mouseY))
+		{
+			turnBack(menu_state, game_state);
+		}
+		return;
+	}
+
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
 		int load_idx = mouseInLoadOrSave("load"); // get the index of the load slot
@@ -169,14 +187,19 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 				game_state.bot_marker = loaded_content.bot_marker;
 				game_state.game_is_run = true;
 				game_state.is_init = true;
+			}
+			else
+			{
+				menu_state.notice = load_idx;
 				return;
 			}
-			else std::cout << "Failed to load the game from " << filename << '\n';
 
 			
 		}
 		return;
 	}
+
+
 
 	if (menu_state.trans_display == _ChooseTypePlayer)
 	{

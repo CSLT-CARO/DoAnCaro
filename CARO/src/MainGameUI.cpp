@@ -6,7 +6,7 @@
 
 std::unordered_map< int, Button> Saving_Slot;
 
-void initTTF(MainGameUIState& ui_state)
+void initTTF(Window& window)
 {
 	if (TTF_Init() == -1)
 	{
@@ -15,28 +15,29 @@ void initTTF(MainGameUIState& ui_state)
 	}
 	std::string font_name = "Jersey10-Regular.ttf";
 	std::string font_path = "./assets/font/" + font_name;
-	ui_state.font_small = TTF_OpenFont(font_path.c_str(), 18);
-	ui_state.font = TTF_OpenFont(font_path.c_str(), 32);
-	ui_state.font_big = TTF_OpenFont(font_path.c_str(), 30);
-	ui_state.font_large = TTF_OpenFont(font_path.c_str(), 50);
+	window.font_path = font_path;
+	window.font_small = TTF_OpenFont(font_path.c_str(), 18);
+	window.font = TTF_OpenFont(font_path.c_str(), 32);
+	window.font_big = TTF_OpenFont(font_path.c_str(), 30);
+	window.font_large = TTF_OpenFont(font_path.c_str(), 50);
 
-	if (ui_state.font == nullptr || ui_state.font_small == nullptr)
+	if (window.font == nullptr || window.font_small == nullptr)
 	{
 		std::cout << "Failed to load font! Error: " << TTF_GetError() << std::endl;
 	}
 }
 
-void destroyTTF(MainGameUIState& ui_state)
+void destroyTTF(Window& window)
 {
-	if (ui_state.font != nullptr)
+	if (window.font != nullptr)
 	{
-		TTF_CloseFont(ui_state.font);
-		ui_state.font = nullptr;
+		TTF_CloseFont(window.font);
+		window.font = nullptr;
 	}
-	if (ui_state.font_small != nullptr)
+	if (window.font_small != nullptr)
 	{
-		TTF_CloseFont(ui_state.font_small);
-		ui_state.font_small = nullptr;
+		TTF_CloseFont(window.font_small);
+		window.font_small = nullptr;
 	}
 	TTF_Quit();
 }
@@ -569,13 +570,13 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state,SDL_Re
 	int topY = SlotRect.y + 25;
 	int bottomY = SlotRect.y + 65;
 
-	drawText(window, ui_state.save_inform.title, ui_state.font, leftX, topY);
+	drawText(window, ui_state.save_inform.title, window.font, leftX, topY);
 
-	drawText(window, ui_state.save_inform.date, ui_state.font_small, leftX, bottomY);
+	drawText(window, ui_state.save_inform.date, window.font_small, leftX, bottomY);
 
-	drawText(window, ui_state.save_inform.mode, ui_state.font_small, rightX, topY + 5);
+	drawText(window, ui_state.save_inform.mode, window.font_small, rightX, topY + 5);
 
-	drawText(window, ui_state.save_inform.board_type, ui_state.font_small, rightX, bottomY);
+	drawText(window, ui_state.save_inform.board_type, window.font_small, rightX, bottomY);
 
 
 }

@@ -104,6 +104,7 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 	{ "SAVE_BUTTON_HOVERED", TEXTURE_SAVE_BUTTON_HOVERED},
 	{ "SAVE_SCREEN", TEXTURE_SAVE_SCREEN},
 	{ "IMPORT", TEXURE_IMPORT_BUTTON},
+	{ "notice_board", TEXTURE_NOTICE_BOARD},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

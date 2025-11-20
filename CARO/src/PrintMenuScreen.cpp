@@ -239,16 +239,6 @@ void drawMenuGame(Window& window, MenuState& menu_state)
 	else
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXIT_BUTTON), MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON]);
 
-	/*int sz = menu_button.MenuButtonEnums.size();
-	for (int i = 0; i < sz; i++)
-	{
-		MenuTexturesEnum menu_enums_button_hovered = menu_button.MenuButtonHoveredEnums[i];
-		MenuTexturesEnum menu_enums_button = menu_button.MenuButtonEnums[i];
-		if (menu_enums_button == menu_state.transform_idx)
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button_hovered), MenuButtonPosition[_MainMenu][menu_enums_button]);
-		else
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(menu_enums_button), MenuButtonPosition[_MainMenu][menu_enums_button]);
-	}*/
 }
 
 void drawTurnBackButton(Window& window, MenuState &menu_state)
@@ -273,18 +263,6 @@ void drawChooseTypePlayer(Window& window, MenuState& menu_state)
 	else
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_PVE_BUTTON), MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVE_BUTTON]);
 
-	/*int sz = choose_type_player_change.ChoosePlayerButtonEnums.size();
-	for (int i = 0; i < sz; i++)
-	{
-		MenuTexturesEnum enums_button_hovered = choose_type_player_change.ChoosePlayerButtonHoveredEnums[i];
-		MenuTexturesEnum enums_button = choose_type_player_change.ChoosePlayerButtonEnums[i];
-		if (enums_button == menu_state.transform_idx)
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button_hovered), MenuButtonPosition[_ChooseTypePlayer][enums_button]);
-		else
-		{
-			drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_ChooseTypePlayer][enums_button]);
-		}
-	}*/
 }
 
 void drawChooseTypeGame(Window& window, MenuState& menu_state)
@@ -362,15 +340,66 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, SDL_R
 	int topY = SlotRect.y + 30;
 	int bottomY = SlotRect.y + 100;
 
-	drawText(window, ui_state.save_inform.title, ui_state.font_large, leftX, topY);
+	drawText(window, ui_state.save_inform.title, window.font_large, leftX, topY);
 
-	drawText(window, ui_state.save_inform.date, ui_state.font_big, leftX, bottomY);
+	drawText(window, ui_state.save_inform.date, window.font_big, leftX, bottomY);
 
-	drawText(window, ui_state.save_inform.mode, ui_state.font_big, rightX, topY + 15);
+	drawText(window, ui_state.save_inform.mode, window.font_big, rightX, topY + 15);
 
-	drawText(window, ui_state.save_inform.board_type, ui_state.font_big, rightX, bottomY);
+	drawText(window, ui_state.save_inform.board_type, window.font_big, rightX, bottomY);
 
 
+}
+
+void drawNoticeBoard(const Window& window, std::string msg, TTF_Font* font)
+{
+	int imgW = 603;
+	int imgH = 243;
+	int pos_x = window.width / 2 - imgW / 2;
+	int pos_y = window.height / 2 - imgH / 2;
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	SDL_Rect notice_board = {
+		pos_x,
+		pos_y,
+		imgW,
+		imgH
+	};
+	SDL_Rect Close =
+	{
+		pos_x + imgW - imgH / 4 - 2,
+		pos_y + 2,
+		imgH / 4,
+		imgH / 4,
+	};
+
+	drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NOTICE_BOARD), notice_board);
+
+	if (checkButton(Close, mouseX, mouseY))
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), Close);
+	else drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), Close);
+
+
+	int textW = 0;
+	int textH = 0;
+
+	TTF_SizeText(font, msg.c_str(), &textW, &textH);
+
+	int drawX = pos_x + (imgW - textW) / 2;
+	int drawY = pos_y + (imgH - textH) / 2;
+
+	drawText(window, msg, font, drawX, drawY);
+
+}
+
+void drawErrorLoadFile(const Window& window, int idx)
+{
+	std::string msg = "Can not load file \"Save " + std::to_string(idx) + '\"' +" !!!";
+	TTF_Font* font = window.font_large;
+
+	drawNoticeBoard(window, msg, font);
+
+	
 }
 
 void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
@@ -406,7 +435,6 @@ void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui
 void drawChooseFileLoad(Window& window, MenuState& menu_state)
 {
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_SCREEN), MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN]);
-	
 	int idx = mouseInLoadOrSave("load");
 	if (idx == -1) return;
 	int pos_x = 254 + 25;
@@ -484,6 +512,9 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 	{
 		drawChooseFileLoad(window, menu_state);
 		drawLoadFileSave(window, menu_state, ui_state);
+		if (menu_state.notice)
+			drawErrorLoadFile(window, menu_state.notice);
+		
 		//drawTableTest(window);
 		//std::cout << window.width << " " << window.height << std::endl;
 	}

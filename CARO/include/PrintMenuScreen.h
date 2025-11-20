@@ -126,6 +126,8 @@ void drawTurnBackButton(Window& window, MenuState& menu_state);
 void drawChooseTypePlayer(Window& window, MenuState& menu_state);
 void drawChooseTypeGame(Window& window, MenuState& menu_state);
 void drawChangeSettings(Window& window, MenuState menu_state);
+void drawNoticeBoard(const Window& window, std::string msg, TTF_Font* font);
+void drawErrorLoadFile(const Window& window, int idx);
 void drawChooseFileLoad(Window& window, MenuState& menu_state);
 
 //void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);

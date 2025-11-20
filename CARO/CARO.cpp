@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);
-	initTTF(main_game_ui_state);
+	initTTF(window);
 	Audio_Init();
 	initSavesFolder(menu_state.save_path);
 	loadMenuTextures(window.renderer_ptr);
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	Audio_Quit();
-	destroyTTF(main_game_ui_state);
+	destroyTTF(window);
 	destroyVideo(window);
 	return 0;
 }

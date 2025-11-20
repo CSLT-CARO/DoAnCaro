@@ -16,6 +16,14 @@ struct Button {
 	bool state;
 };
 
+struct Notice_msg
+{
+	Button notice_board;
+	Button close;
+	Button yes_button;
+	Button no_button;
+};
+
 extern std::unordered_map< int, Button> Saving_Slot;
 
 struct GameOverButton
@@ -35,10 +43,7 @@ struct SaveInform
 };
 
 struct MainGameUIState {
-	TTF_Font* font_small = nullptr;
-	TTF_Font* font = nullptr;       
-	TTF_Font* font_big = nullptr;
-	TTF_Font* font_large = nullptr;
+
 
 	Button player_x{};
 	Button player_o{};
@@ -59,6 +64,7 @@ struct MainGameUIState {
 
 	SaveInform save_inform{};
 
+
 	Cell selected_cell = NULL_CELL;
 	WinnerData winner_data {};
 	PlayerMark who_won{};
@@ -71,8 +77,8 @@ struct MainGameUIState {
 	bool game_music_started = false;
 };
 
-void initTTF(MainGameUIState& ui_state);
-void destroyTTF(MainGameUIState& ui_state);
+void initTTF(Window& window);
+void destroyTTF(Window& window);
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 void initMainGameUIState(const Window& window, MainGameUIState& ui_state);
