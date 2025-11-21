@@ -234,15 +234,20 @@ bool Toggle_Music() {
     bool now = !is_music_muted.load();
     is_music_muted.store(now);
     if (now) {
-        // Tắt music
-        Mix_HaltMusic();
+        // Tắt music - TẠM DỪNG thay vì dừng hoàn toàn
+        Mix_PauseMusic();
         Mix_VolumeMusic(0);
     }
     else {
-        // Bật music
+        // Bật music - TIẾP TỤC phát từ vị trí đã dừng
         Mix_VolumeMusic(saved_music_volume);
         if (bgm_music) {
-            if (Mix_PlayingMusic() == 0) {
+            if (Mix_PausedMusic()) {
+                // Nếu đang bị pause thì resume
+                Mix_ResumeMusic();
+            }
+            else if (Mix_PlayingMusic() == 0) {
+                // Nếu chưa phát thì phát mới
                 Mix_PlayMusic(bgm_music, -1);
             }
         }
