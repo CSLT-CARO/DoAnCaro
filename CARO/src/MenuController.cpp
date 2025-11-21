@@ -140,6 +140,10 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_SETTINGS_BUTTON], mouseX, mouseY))
 		{
 			menu_state.trans_display = _ChangeSettings;
+			if (menu_state.turn_music)
+				menu_state.transform_idx = TEXTURE_MUSIC_ON_BUTTON;
+			else
+				menu_state.transform_idx = TEXTURE_MUSIC_OFF_BUTTON;
 		}
 		if (MousePositionState == TEXTURE_LOAD_BUTTON
 			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON], mouseX, mouseY))
@@ -467,7 +471,7 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 			if (menu_state.transform_idx == TEXTURE_SFX_ON_BUTTON
 				|| menu_state.transform_idx == TEXTURE_SFX_OFF_BUTTON)
 			{
-				if (menu_state.turn_sfx == true)
+				if (menu_state.turn_music == true)
 					menu_state.transform_idx = TEXTURE_MUSIC_ON_BUTTON;
 				else
 					menu_state.transform_idx = TEXTURE_MUSIC_OFF_BUTTON;
@@ -544,5 +548,6 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Ga
 }
 void processMenuScreen(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
 {
+
 	buildMenuImages(menu_state, window, ui_state);
 }
