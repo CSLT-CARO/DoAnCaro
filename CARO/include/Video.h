@@ -6,6 +6,9 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+const SDL_Color COLOR_BLACK = { 0, 0, 0, 255 };
+const SDL_Color COLOR_RED = { 255, 0, 0, 255 };
+
 struct Window {
 	int width{}, height{};
 

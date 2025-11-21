@@ -333,20 +333,28 @@ void drawChangeSettings(Window& window, MenuState menu_state)
 	}
 }
 
-void drawLoadInform(const Window& window, const MainGameUIState& ui_state, SDL_Rect SlotRect)
+void drawLoadInform(const Window& window, const MainGameUIState& ui_state, Button Loading_Slot)
 {
+	SDL_Rect SlotRect = Loading_Slot.rect;
 	int leftX = SlotRect.x + 50 + 173;
 	int rightX = SlotRect.x + 650 + 60;
 	int topY = SlotRect.y + 30;
 	int bottomY = SlotRect.y + 100;
 
-	drawText(window, ui_state.save_inform.title, window.font_large, leftX, topY);
+	if (Loading_Slot.state == true)
+	{
+		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 50);
+		SDL_Color color = { 255, 0, 0, 255 };
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 173, 173 });
+		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 173/2 - 25, COLOR_RED);
+		return;
+	}
+	
 
-	drawText(window, ui_state.save_inform.date, window.font_big, leftX, bottomY);
-
-	drawText(window, ui_state.save_inform.mode, window.font_big, rightX, topY + 15);
-
-	drawText(window, ui_state.save_inform.board_type, window.font_big, rightX, bottomY);
+	drawText(window, ui_state.save_inform.title, window.font_large, leftX, topY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.date, window.font_big, leftX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.mode, window.font_big, rightX, topY + 15, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
 
 
 }
@@ -388,7 +396,7 @@ void drawNoticeBoard(const Window& window, std::string msg, TTF_Font* font)
 	int drawX = pos_x + (imgW - textW) / 2;
 	int drawY = pos_y + (imgH - textH) / 2;
 
-	drawText(window, msg, font, drawX, drawY);
+	drawText(window, msg, font, drawX, drawY, COLOR_BLACK);
 
 }
 
@@ -423,8 +431,9 @@ void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui
 			}
 			else
 				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { pos_x, pos_y, imgW, imgH });
+
 			getSaveInform(ui_state, i);
-			drawLoadInform(window, ui_state, Loading_Slot[i].rect);
+			drawLoadInform(window, ui_state, Loading_Slot[i]);
 		}
 		
 		
@@ -442,7 +451,7 @@ void drawChooseFileLoad(Window& window, MenuState& menu_state)
 	int imgH = imgW;
 	int pos_y = Loading_Slot[idx].rect.y ;
 	std::string file_name = getSaveFileName(menu_state.save_path, idx);
-	if (!isFileEmpty(file_name))
+	if (!isFileEmpty(file_name) && !Loading_Slot[idx].state)
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
 
 

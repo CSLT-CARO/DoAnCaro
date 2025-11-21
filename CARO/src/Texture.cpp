@@ -60,6 +60,8 @@ const std::vector<std::pair<std::string, MenuTexturesEnum>> MENU_IMAGE_LOAD_ENTR
 	{ "HARD_BUTTON", TEXTURE_HARD_BUTTON},
 	{ "HARD_BUTTON_HOVERED", TEXTURE_HARD_BUTTON_HOVERED},
 
+	{ "ERROR", TEXTURE_ERROR},
+
 };
 
 const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_LOAD_ENTRIES{

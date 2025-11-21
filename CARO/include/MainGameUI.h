@@ -97,10 +97,10 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
 
-void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y);
+void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color);
 void drawScreen(const Window& window, MainGameUIState& ui_state);
 void getSaveInform(MainGameUIState& ui_state, int idx);
-void drawSaveInform(const Window& window, const MainGameUIState& ui_state, SDL_Rect SlotRect);
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Button SlotRect);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);

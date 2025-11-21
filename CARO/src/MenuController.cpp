@@ -170,6 +170,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 			if (menu_state.transform_idx == TEXTURE_ERASE_BUTTON)
 			{
 				std::string filename = getSaveFileName(menu_state.save_path, load_idx);
+				Loading_Slot[load_idx].state = false;
 				eraseData(filename);
 			}
 			std::string filename = getSaveFileName(menu_state.save_path, load_idx);
@@ -187,10 +188,12 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 				game_state.bot_marker = loaded_content.bot_marker;
 				game_state.game_is_run = true;
 				game_state.is_init = true;
+				Loading_Slot[load_idx].state = false;
 			}
 			else
 			{
 				menu_state.notice = load_idx;
+				Loading_Slot[load_idx].state = true;
 				return;
 			}
 

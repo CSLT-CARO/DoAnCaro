@@ -431,10 +431,10 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
-void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y)
+void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color)
 {
 	if (text.empty() || font == nullptr) return;
-	SDL_Surface* text_surface = TTF_RenderText_Blended(font, text.c_str(), { 0, 0, 0, 255 });
+	SDL_Surface* text_surface = TTF_RenderText_Blended(font, text.c_str(), color);
 	if (text_surface == nullptr)
 	{
 		std::cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << std::endl;
@@ -479,7 +479,8 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 			x = Saving_Slot[idex].rect.x;
 			y = Saving_Slot[idex].rect.y;
 			imgW = imgH = 102;
-			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, imgW, imgH });
+			if(!Saving_Slot[idex].state)
+				drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, imgW, imgH });
 		}
 		
 
@@ -489,6 +490,7 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 		for (int i = 1; i <= 5; i++)
 		{
 			y = Saving_Slot[i].rect.y;
+			Saving_Slot[i].state = Loading_Slot[i].state;
 			std::string fileName = getSaveFileName(ui_state.save_path, i);
 			if (!isFileEmpty(fileName))
 			{
@@ -502,7 +504,7 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, imgW, imgH });
 				getSaveInform(ui_state, i);
 				//drawText(window, ui_state.save_inform.title, ui_state.font_small, { 558 + 102, 600, 0, 0 });
-				drawSaveInform(window, ui_state, Saving_Slot[i].rect);
+				drawSaveInform(window, ui_state, Saving_Slot[i]);
 				
 			}
 			//std::cout << isFileExist(fileName) << ' ';
@@ -563,20 +565,30 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 
 }
 
-void drawSaveInform(const Window& window, const MainGameUIState& ui_state,SDL_Rect SlotRect)
-{
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Button Saving_Slot)
+{	
+	SDL_Rect SlotRect = Saving_Slot.rect;
 	int leftX = SlotRect.x + 20 + 102;
 	int rightX = SlotRect.x + 270 + 60;
 	int topY = SlotRect.y + 25;
 	int bottomY = SlotRect.y + 65;
 
-	drawText(window, ui_state.save_inform.title, window.font, leftX, topY);
+	if (Saving_Slot.state == true)
+	{
+		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 30);
+		SDL_Color color = { 255, 0, 0, 255 };
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 102, 102 });
+		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 102 / 2 - 15, COLOR_RED);
+		return;
+	}
 
-	drawText(window, ui_state.save_inform.date, window.font_small, leftX, bottomY);
+	drawText(window, ui_state.save_inform.title, window.font, leftX, topY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.mode, window.font_small, rightX, topY + 5);
+	drawText(window, ui_state.save_inform.date, window.font_small, leftX, bottomY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.board_type, window.font_small, rightX, bottomY);
+	drawText(window, ui_state.save_inform.mode, window.font_small, rightX, topY + 5, COLOR_BLACK);
+
+	drawText(window, ui_state.save_inform.board_type, window.font_small, rightX, bottomY, COLOR_BLACK);
 
 
 }
@@ -930,6 +942,8 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 			std::string file_name = getSaveFileName(ui_state.save_path, idex);
 			if (!isFileEmpty(file_name))
 			{
+				Saving_Slot[idex].state = false;
+				Loading_Slot[idex].state = false;
 				eraseData(file_name);
 			}
 			return;
