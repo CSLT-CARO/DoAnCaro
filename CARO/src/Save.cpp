@@ -1,7 +1,4 @@
 #include "Save.h"
-#include "GameState.h"
-#include <fstream>
-#include <iostream>
 
 bool isFileEmpty(const std::string& filename) {
     std::ifstream file(filename);
@@ -48,6 +45,55 @@ void initSavesFolder(const std::string &folderPath) {
         outfile.close();
     }
 }
+
+void initGameSettings(const std::string &filename) {
+    if (isFileExist(filename)) {
+        return;
+    }
+
+    std::ofstream outfile(filename);
+    if (!outfile.is_open()) {
+        std::cerr << "ERROR: Could not init settings file: " << filename << '\n';
+    }
+
+    outfile.close();
+}
+
+void writeSettings(const std::string &filename, const MenuState& menu_state) {
+    if (!isFileExist(filename)) {
+        initGameSettings(filename);
+        return;
+    }
+
+    std::ofstream outfile(filename);
+    if (!outfile.is_open()) {
+        std::cerr << "ERROR: Could not init settings file: " << filename << '\n';
+    }
+
+    outfile << menu_state.turn_sfx << '\n';
+    outfile << menu_state.turn_music;
+
+    outfile.close();
+}
+
+LoadedGameSettings loadSettings(const std::string &filename) {
+    LoadedGameSettings result {};
+
+    if (!isFileExist(filename)) {
+        initGameSettings(filename);
+        return result;
+    }
+
+    // if file is corrupted then erase the data completely and replace it with default values
+    std::ifstream infile(filename);
+    if (!(infile >> result.enable_sfx) || !(infile >> result.enable_music)) {
+        eraseData(filename);
+        return LoadedGameSettings();
+    }
+
+    return result;
+}
+
 
 std::string getSaveFileName(const std::string& folderPath, int slot) {
     return folderPath + "/save_" + std::to_string(slot) + ".txt";

@@ -28,12 +28,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/MainGameUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/MainGameUI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/CARO.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/include/MenuUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/MenuUI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/include/Save.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/Save.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/MenuController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MenuController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/Save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Save.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,12 +91,12 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="CARO" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CARO" TARGET_NAME="CARO" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CARO" RUN_TARGET_NAME="CARO">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CARO" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CARO" TARGET_NAME="CARO" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CARO" RUN_TARGET_NAME="CARO">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -109,7 +111,8 @@
       <updated>1763616132878</updated>
       <workItem from="1763616134344" duration="692000" />
       <workItem from="1763636931029" duration="146000" />
-      <workItem from="1763644608893" duration="618000" />
+      <workItem from="1763644608893" duration="1587000" />
+      <workItem from="1763731607967" duration="3510000" />
     </task>
     <servers />
   </component>

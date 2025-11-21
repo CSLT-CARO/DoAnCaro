@@ -421,7 +421,7 @@ void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui
 	for (int i = 1; i <= 5; i++)
 	{
 		pos_y = Loading_Slot[i].rect.y;
-		std::string fileName = getSaveFileName(menu_state.save_path,i);
+		std::string fileName = getSaveFileName(menu_state.SAVE_PATH,i);
 		if (!isFileEmpty(fileName))
 		{
 			if (checkButton({ pos_x, pos_y, imgW, imgH }, mouseX, mouseY))
@@ -450,7 +450,7 @@ void drawChooseFileLoad(Window& window, MenuState& menu_state)
 	int imgW = 173;
 	int imgH = imgW;
 	int pos_y = Loading_Slot[idx].rect.y ;
-	std::string file_name = getSaveFileName(menu_state.save_path, idx);
+	std::string file_name = getSaveFileName(menu_state.SAVE_PATH, idx);
 	if (!isFileEmpty(file_name) && !Loading_Slot[idx].state)
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
 

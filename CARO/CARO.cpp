@@ -23,10 +23,16 @@ int main(int argc, char* argv[]) {
 	initVideo(window);
 	initTTF(window);
 	Audio_Init();
-	initSavesFolder(menu_state.save_path);
+	initSavesFolder(menu_state.SAVE_PATH);
+	initGameSettings(menu_state.GAME_SETTINGS_FILE_PATH);
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
 	loadMainGameTextures(window.renderer_ptr);
+
+	const auto [ENABLE_SFX,
+				ENABLE_MUSIC] = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
+	menu_state.turn_sfx = ENABLE_SFX;
+	menu_state.turn_music = ENABLE_MUSIC;
 
 	GameState game_state{};
 
@@ -38,7 +44,6 @@ int main(int argc, char* argv[]) {
 			if (event.type == SDL_QUIT) {
 				menu_state.menu_is_run = false;
 			}
-
 
 			if (game_state.game_is_run == true)
 				handleMainGameInput(event, main_game_ui_state, window, game_state, menu_state);
@@ -53,6 +58,8 @@ int main(int argc, char* argv[]) {
 		}
 		SDL_RenderPresent(window.renderer_ptr);
 	}
+
+	writeSettings(menu_state.GAME_SETTINGS_FILE_PATH, menu_state);
 
 	Audio_Quit();
 	destroyTTF(window);

@@ -37,7 +37,8 @@ struct MenuState
 	int trans_display = _MainMenu;
 	int notice = 0;
 
-	std::string save_path = "./saves";
+	const std::string SAVE_PATH = "./saves";
+	const std::string GAME_SETTINGS_FILE_PATH = "./settings.txt";
 };
 
 #endif // MENU_UI_H
