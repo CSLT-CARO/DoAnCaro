@@ -347,6 +347,7 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, Butto
 		SDL_Color color = { 255, 0, 0, 255 };
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 173, 173 });
 		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 173/2 - 25, COLOR_RED);
+		TTF_CloseFont(font);
 		return;
 	}
 	

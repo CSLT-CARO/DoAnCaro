@@ -16,6 +16,7 @@ struct Window {
 	SDL_Renderer* renderer_ptr = nullptr;
 	SDL_Texture* texture_ptr = nullptr;
 	SDL_Surface* image_ptr = nullptr;
+
 	TTF_Font* font_small = nullptr;
 	TTF_Font* font = nullptr;
 	TTF_Font* font_big = nullptr;

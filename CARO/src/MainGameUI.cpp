@@ -39,6 +39,16 @@ void destroyTTF(Window& window)
 		TTF_CloseFont(window.font_small);
 		window.font_small = nullptr;
 	}
+	if (window.font_big != nullptr)
+	{
+		TTF_CloseFont(window.font_big);
+		window.font_big = nullptr;
+	}
+	if (window.font_large != nullptr)
+	{
+		TTF_CloseFont(window.font_large);
+		window.font_large = nullptr;
+	}
 	TTF_Quit();
 }
 
@@ -579,6 +589,7 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Butto
 		SDL_Color color = { 255, 0, 0, 255 };
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 102, 102 });
 		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 102 / 2 - 15, COLOR_RED);
+		TTF_CloseFont(font);
 		return;
 	}
 
