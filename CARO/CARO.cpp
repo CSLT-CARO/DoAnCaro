@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 
 	initVideo(window);
 	initTTF(window);
+	initMainGameUIState(window, main_game_ui_state);
 	Audio_Init();
 	initSavesFolder(menu_state.SAVE_PATH);
 	initGameSettings(menu_state.GAME_SETTINGS_FILE_PATH);

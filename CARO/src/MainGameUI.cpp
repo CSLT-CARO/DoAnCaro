@@ -57,7 +57,6 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 	
-	initMainGameUIState(window, ui_state);
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
@@ -109,6 +108,8 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 		cell_width * 3 / 2,
 		cell_height * 3 / 2
 	};
+
+	ui_state.turn_back_button[1] = { 558, 54, 80, 80 };
 
 	ui_state.player_x.rect = {
 		cell_width / 2  ,
@@ -472,9 +473,7 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 		drawDimmingLayer(window);
 		drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_SCREEN), ui_state.save_sreen.rect);
 
-		x = 558, y = 54;
-		imgH = imgW = 80;
-		ui_state.turn_back_button[1] = { x, y, imgW, imgH };
+		
 
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
@@ -685,14 +684,14 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 
 }
 
-void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y)
+void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y)
 {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 	x = (col * 2 + 6) * cell_width;
 	y = (row * 2 + 2) * cell_height;
 }
-void convertRowColToXY_12x12(const Window window, int row, int col, int& x, int& y)
+void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y)
 {
 	int cell_width = window.width / 32;
 	int cell_height = cell_width;
@@ -835,6 +834,7 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 	if (input == SDL_SCANCODE_ESCAPE)
 	{
 		Back(ui_state, game_state, menu_state);
+		return;
 	}
 
 	if (ui_state.is_game_over)
