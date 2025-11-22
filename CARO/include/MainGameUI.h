@@ -36,10 +36,10 @@ struct GameOverButton
 
 struct SaveInform
 {
-	std::string title[6];
-	std::string date[6];
-	std::string mode[6];
-	std::string board_type[6];
+	std::string title;
+	std::string date;
+	std::string mode;
+	std::string board_type;
 };
 
 struct MainGameUIState {
@@ -62,7 +62,7 @@ struct MainGameUIState {
 
 	Second stopped_at_moment {};
 
-	SaveInform save_inform{};
+	SaveInform save_inform[6]{};
 
 
 	Cell selected_cell = NULL_CELL;

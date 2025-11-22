@@ -532,7 +532,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	std::string fileName = getSaveFileName(ui_state.save_path, idx);
 	if (isFileEmpty(fileName)) return;
 	LoadedFileContent load = Load(fileName);
-	ui_state.save_inform.title[idx] = "SAVE " + std::to_string(idx);
+	ui_state.save_inform[idx].title = "SAVE " + std::to_string(idx);
 	std::string date = "DATE: ";
 	if (load.date_day < 10) date += '0';
 	date += std::to_string(load.date_day) + '/';
@@ -547,11 +547,11 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	if (load.date_sec < 10) date += '0';
 	date += std::to_string(load.date_sec);
 
-	ui_state.save_inform.date[idx] = date;
+	ui_state.save_inform[idx].date = date;
 	std::string board_type = (load.board_type == Classic ? "3x3" : "12x12");
 	std::string mode = (load.mode == PVP ? "PVP" : "PVE");
-	ui_state.save_inform.board_type[idx] = "BOARD TYPE: " + board_type;
-	ui_state.save_inform.mode[idx] = "MODE: " +mode;
+	ui_state.save_inform[idx].board_type = "BOARD TYPE: " + board_type;
+	ui_state.save_inform[idx].mode = "MODE: " +mode;
 
 	if (load.mode == PVE)
 	{
@@ -571,7 +571,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 			difficulty = "NULL";
 			break;
 		}
-		ui_state.save_inform.mode[idx] += " - DIFFICULTY: " + difficulty;
+		ui_state.save_inform[idx].mode += " - DIFFICULTY: " + difficulty;
 	}
 
 
@@ -596,13 +596,13 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int i
 		return;
 	}
 
-	drawText(window, ui_state.save_inform.title[idx], window.font, leftX, topY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].title, window.font, leftX, topY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.date[idx], window.font_small, leftX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].date, window.font_small, leftX, bottomY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.mode[idx], window.font_small, rightX, topY + 5, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].mode, window.font_small, rightX, topY + 5, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.board_type[idx], window.font_small, rightX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].board_type, window.font_small, rightX, bottomY, COLOR_BLACK);
 
 
 }

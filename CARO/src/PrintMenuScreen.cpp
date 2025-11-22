@@ -352,10 +352,10 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, int i
 	}
 	
 
-	drawText(window, ui_state.save_inform.title[idx], window.font_large, leftX, topY, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.date[idx], window.font_big, leftX, bottomY, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.mode[idx], window.font_big, rightX, topY + 15, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.board_type[idx], window.font_big, rightX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].title, window.font_large, leftX, topY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].date, window.font_big, leftX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].mode, window.font_big, rightX, topY + 15, COLOR_BLACK);
+	drawText(window, ui_state.save_inform[idx].board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
 
 
 }
