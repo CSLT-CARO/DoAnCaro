@@ -2,7 +2,7 @@
 #include <iostream>
 
 // only uncomment when debugging memory leak issues
-//#define ENABLE_MEMORY_ALLOCATION_TRACKER
+// #define ENABLE_MEMORY_ALLOCATION_TRACKER
 #ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
 static int allocation_count = 0;
 

@@ -28,12 +28,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/CARO.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/MainGameLogic.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/MainGameLogic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Save.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -2385,6 +2381,31 @@
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/CARO.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/include/Audio.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/include/Audio.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/include/Audio.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/include/MainGameLogic.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/include/MainGameLogic.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MainGameController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MainGameController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MainGameLogic.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MainGameLogic.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/PrintMenuScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/Save.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/Save.cpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -2441,7 +2462,7 @@
       <workItem from="1763636931029" duration="146000" />
       <workItem from="1763644608893" duration="1587000" />
       <workItem from="1763731607967" duration="5211000" />
-      <workItem from="1763809818656" duration="13715000" />
+      <workItem from="1763809818656" duration="17841000" />
     </task>
     <servers />
   </component>
