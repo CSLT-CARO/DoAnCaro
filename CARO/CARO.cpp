@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 #include <iostream>
 
 // only uncomment when debugging memory leak issues
@@ -62,6 +62,10 @@ int main(int argc, char* argv[]) {
 	menu_state.turn_music = ENABLE_MUSIC;
 
 	GameState game_state{};
+
+	LoadedGameSettings settings = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
+	
+
 
 	SDL_Event event;
 	menu_state.menu_is_run = true;

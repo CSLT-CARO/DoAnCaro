@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <SDL.h>
 #include <SDL_test.h>
 #include <string>
@@ -533,7 +533,11 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 		drawTurnBackButton(window, menu_state);
 
 	if (!menu_state.menu_music_started) {
-		if (menu_state.turn_music == true) Play_BGM_Menu();
+		Play_BGM_Menu();  // Luôn phát nhạc trước
 		menu_state.menu_music_started = true;
+
+		// SAU ĐÓ apply state từ settings
+		Apply_Music_State(!menu_state.turn_music);  // turn_music=true nghĩa là bật, nên muted=false
+		Apply_SFX_State(!menu_state.turn_sfx);
 	}
 }
