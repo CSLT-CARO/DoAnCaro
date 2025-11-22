@@ -115,7 +115,7 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 	menu_state.transform_idx = MousePositionState;
 }
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state)
+void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
 {
 
 	if (menu_state.turn_sfx == true) Play_SFX_Click();
@@ -147,7 +147,9 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		}
 		if (MousePositionState == TEXTURE_LOAD_BUTTON
 			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_LOAD_BUTTON], mouseX, mouseY))
+		{
 			menu_state.trans_display = _ChooseLoadFile;
+		}
 		if (MousePositionState == TEXTURE_EXIT_BUTTON)
 			menu_state.menu_is_run = false;
 		return;
@@ -176,6 +178,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 				std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
 				Loading_Slot[load_idx].state = false;
 				eraseData(filename);
+				getSaveInform(ui_state, load_idx);
 			}
 			std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
 			if (isFileEmpty(filename))
@@ -529,7 +532,7 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 	}
 }
 
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state)
+void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
 {
 	switch (event.type)
 	{
@@ -545,7 +548,7 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Ga
 		}
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			checkMouseButtonDown(window, menu_state, game_state);
+			checkMouseButtonDown(window, menu_state, game_state, ui_state);
 			break;
 		}
 	}

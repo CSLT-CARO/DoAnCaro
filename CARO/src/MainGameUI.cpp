@@ -163,6 +163,10 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 		};
 		y += imgH + 5;
 	}
+	for (int i = 1; i <= 5; i++)
+	{
+		getSaveInform(ui_state, i);
+	}
 
 }
 
@@ -511,9 +515,8 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 				}
 				else
 					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, imgW, imgH });
-				getSaveInform(ui_state, i);
 				//drawText(window, ui_state.save_inform.title, ui_state.font_small, { 558 + 102, 600, 0, 0 });
-				drawSaveInform(window, ui_state, Saving_Slot[i]);
+				drawSaveInform(window, ui_state, i);
 				
 			}
 			//std::cout << isFileExist(fileName) << ' ';
@@ -529,7 +532,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	std::string fileName = getSaveFileName(ui_state.save_path, idx);
 	if (isFileEmpty(fileName)) return;
 	LoadedFileContent load = Load(fileName);
-	ui_state.save_inform.title = "SAVE "+ std::to_string(idx);
+	ui_state.save_inform.title[idx] = "SAVE " + std::to_string(idx);
 	std::string date = "DATE: ";
 	if (load.date_day < 10) date += '0';
 	date += std::to_string(load.date_day) + '/';
@@ -544,11 +547,11 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	if (load.date_sec < 10) date += '0';
 	date += std::to_string(load.date_sec);
 
-	ui_state.save_inform.date = date;
+	ui_state.save_inform.date[idx] = date;
 	std::string board_type = (load.board_type == Classic ? "3x3" : "12x12");
 	std::string mode = (load.mode == PVP ? "PVP" : "PVE");
-	ui_state.save_inform.board_type = "BOARD TYPE: " + board_type;
-	ui_state.save_inform.mode = "MODE: " +mode;
+	ui_state.save_inform.board_type[idx] = "BOARD TYPE: " + board_type;
+	ui_state.save_inform.mode[idx] = "MODE: " +mode;
 
 	if (load.mode == PVE)
 	{
@@ -568,21 +571,22 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 			difficulty = "NULL";
 			break;
 		}
-		ui_state.save_inform.mode += " - DIFFICULTY: " + difficulty;
+		ui_state.save_inform.mode[idx] += " - DIFFICULTY: " + difficulty;
 	}
 
 
 }
 
-void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Button Saving_Slot)
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int idx)
 {	
-	SDL_Rect SlotRect = Saving_Slot.rect;
+	if (idx < 1 || idx > 5) return;
+	SDL_Rect SlotRect = Saving_Slot[idx].rect;
 	int leftX = SlotRect.x + 20 + 102;
 	int rightX = SlotRect.x + 270 + 60;
 	int topY = SlotRect.y + 25;
 	int bottomY = SlotRect.y + 65;
 
-	if (Saving_Slot.state == true)
+	if (Saving_Slot[idx].state == true)
 	{
 		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 30);
 		SDL_Color color = { 255, 0, 0, 255 };
@@ -592,13 +596,13 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Butto
 		return;
 	}
 
-	drawText(window, ui_state.save_inform.title, window.font, leftX, topY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.title[idx], window.font, leftX, topY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.date, window.font_small, leftX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.date[idx], window.font_small, leftX, bottomY, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.mode, window.font_small, rightX, topY + 5, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.mode[idx], window.font_small, rightX, topY + 5, COLOR_BLACK);
 
-	drawText(window, ui_state.save_inform.board_type, window.font_small, rightX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.board_type[idx], window.font_small, rightX, bottomY, COLOR_BLACK);
 
 
 }
@@ -956,6 +960,7 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 				Saving_Slot[idex].state = false;
 				Loading_Slot[idex].state = false;
 				eraseData(file_name);
+				getSaveInform(ui_state, idex);
 			}
 			return;
 		}
@@ -963,7 +968,7 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 			return;
 		std::string file_name = getSaveFileName(ui_state.save_path, idex);
 		Save(game_state, file_name);
-		
+		getSaveInform(ui_state, idex);
 		break;
 	}
 	}

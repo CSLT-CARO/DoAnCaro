@@ -333,15 +333,15 @@ void drawChangeSettings(Window& window, MenuState menu_state)
 	}
 }
 
-void drawLoadInform(const Window& window, const MainGameUIState& ui_state, Button Loading_Slot)
+void drawLoadInform(const Window& window, const MainGameUIState& ui_state, int idx)
 {
-	SDL_Rect SlotRect = Loading_Slot.rect;
+	SDL_Rect SlotRect = Loading_Slot[idx].rect;
 	int leftX = SlotRect.x + 50 + 173;
 	int rightX = SlotRect.x + 650 + 60;
 	int topY = SlotRect.y + 30;
 	int bottomY = SlotRect.y + 100;
 
-	if (Loading_Slot.state == true)
+	if (Loading_Slot[idx].state == true)
 	{
 		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 50);
 		SDL_Color color = { 255, 0, 0, 255 };
@@ -352,10 +352,10 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, Butto
 	}
 	
 
-	drawText(window, ui_state.save_inform.title, window.font_large, leftX, topY, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.date, window.font_big, leftX, bottomY, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.mode, window.font_big, rightX, topY + 15, COLOR_BLACK);
-	drawText(window, ui_state.save_inform.board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.title[idx], window.font_large, leftX, topY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.date[idx], window.font_big, leftX, bottomY, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.mode[idx], window.font_big, rightX, topY + 15, COLOR_BLACK);
+	drawText(window, ui_state.save_inform.board_type[idx], window.font_big, rightX, bottomY, COLOR_BLACK);
 
 
 }
@@ -418,6 +418,7 @@ void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui
 	int pos_x = 254 + 1459 - imgW;
 	int pos_y;
 	int mouseX, mouseY;
+
 	SDL_GetMouseState(&mouseX, &mouseY);
 	for (int i = 1; i <= 5; i++)
 	{
@@ -433,8 +434,7 @@ void drawLoadFileSave(Window& window, MenuState& menu_state, MainGameUIState &ui
 			else
 				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { pos_x, pos_y, imgW, imgH });
 
-			getSaveInform(ui_state, i);
-			drawLoadInform(window, ui_state, Loading_Slot[i]);
+			drawLoadInform(window, ui_state, i);
 		}
 		
 		

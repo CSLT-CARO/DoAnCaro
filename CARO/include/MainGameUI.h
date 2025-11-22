@@ -36,10 +36,10 @@ struct GameOverButton
 
 struct SaveInform
 {
-	std::string title;
-	std::string date;
-	std::string mode;
-	std::string board_type;
+	std::string title[6];
+	std::string date[6];
+	std::string mode[6];
+	std::string board_type[6];
 };
 
 struct MainGameUIState {
@@ -100,7 +100,7 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
 void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color);
 void drawScreen(const Window& window, MainGameUIState& ui_state);
 void getSaveInform(MainGameUIState& ui_state, int idx);
-void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Button SlotRect);
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int idx);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
