@@ -90,8 +90,8 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			else
 				Stop_All_SFX();
 				Play_SFX_Click();
-				handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 		}
+			handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 
 	}
 }
