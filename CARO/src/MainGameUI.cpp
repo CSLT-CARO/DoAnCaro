@@ -526,7 +526,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	date += std::to_string(load.date_day) + '/';
 	if (load.date_month < 10) date += '0';
 	date += std::to_string(load.date_month) + '/';
-	date += std::to_string(load.date_day) + "  ";
+	date += std::to_string(load.date_year) + "  ";
 
 	if (load.date_hour < 10) date += '0';
 	date += std::to_string(load.date_hour) + ':';
