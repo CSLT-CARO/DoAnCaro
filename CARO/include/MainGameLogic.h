@@ -5,6 +5,6 @@
 #include "MainGameUI.h"
 #include "Video.h"
 
-void initGame(const Window window, GameState& game_state, MainGameUIState& ui_state);
+void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state);
 
 #endif
