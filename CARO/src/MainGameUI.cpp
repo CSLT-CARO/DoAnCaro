@@ -752,17 +752,17 @@ void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
 	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
 }
 
-void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
 {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
 	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
 
-	if (input == SDL_SCANCODE_A) col -= 1;
-	if (input == SDL_SCANCODE_D) col += 1;
-	if (input == SDL_SCANCODE_W) row -= 1;
-	if (input == SDL_SCANCODE_S) row += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 2 || col > 2) return;
 	int x, y;
@@ -772,16 +772,16 @@ void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_
 	ui_state.hover_cell.y = y - cell_width * 9 / 10;
 }
 
-void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
 {
 	int cell_width = window.width / 32;
 	int cell_height = cell_width;
 	int row = (ui_state.hover_cell.y / cell_height) - 3; // from mouse pos to row, col of board
 	int col = (ui_state.hover_cell.x / cell_width) - 10;
-	if (input == SDL_SCANCODE_A) col -= 1;
-	if (input == SDL_SCANCODE_D) col += 1;
-	if (input == SDL_SCANCODE_W) row -= 1;
-	if (input == SDL_SCANCODE_S) row += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 11 || col > 11) return;
 	int x, y;
