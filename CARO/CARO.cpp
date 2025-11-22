@@ -2,7 +2,7 @@
 #include <iostream>
 
 // only uncomment when debugging memory leak issues
-// #define ENABLE_MEMORY_ALLOCATION_TRACKER
+//#define ENABLE_MEMORY_ALLOCATION_TRACKER
 #ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
 static int allocation_count = 0;
 
@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
 	initVideo(window);
 	initTTF(window);
 	initMainGameUIState(window, main_game_ui_state);
+	initMenuResources(window);
 	Audio_Init();
 	initSavesFolder(menu_state.SAVE_PATH);
 	initGameSettings(menu_state.GAME_SETTINGS_FILE_PATH);

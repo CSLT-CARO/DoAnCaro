@@ -475,8 +475,7 @@ void drawTableTest(Window window)
 	int y = 276;
 	SDL_RenderDrawLine(window.renderer_ptr, 0, y, window.width, y);
 }
-
-void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_state)
+void initMenuResources(Window &window)
 {
 	MenuButton menu_button;
 	CaroTextPosition caro_text_position;
@@ -486,7 +485,6 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 	SettingsButton settings;
 	TurnBackButton turn_back_button;
 	DifficultyButton diff;
-
 	InitTurnBackButton(window, turn_back_button);
 	InitMenuButton(window, menu_button);
 	InitCaroButton(window, caro_text_position);
@@ -495,11 +493,14 @@ void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_
 	InitSettings(window, settings);
 	InitLoadFile(window, load_file);
 	InitChooseDifficulty(window, diff);
+}
+
+void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_state)
+{
 
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });
 	if (menu_state.trans_display != _ChooseLoadFile)
-		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), caro_text_position.caro_button.rect);
-	
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), { window.width / 2 - 300, (int)(window.width / 10 * 0.1) - 75, 600, 600 });
 	if (menu_state.trans_display == _MainMenu)
 	{
 		drawMenuGame(window, menu_state);

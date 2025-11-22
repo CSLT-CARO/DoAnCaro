@@ -119,6 +119,7 @@ void InitChooseDifficulty(Window& window, DifficultyButton& diff);
 void InitChooseTypeGame(Window& window, ChooseTypeGame& choose_type_game);
 void InitSettings(Window& window, SettingsButton& settings_button);
 void InitLoadFile(Window& window, FileSave& load_file);
+void initMenuResources(Window& window);
 
 void drawChooseDifficulty(Window& window, MenuState& menu_state);
 void drawMenuGame(Window& window, MenuState& menu_state);
