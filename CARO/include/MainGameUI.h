@@ -106,8 +106,8 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
 void checkMouseHoverButton(MainGameUIState& ui_state);
 
-void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y);
-void convertRowColToXY_12x12(const Window window, int row, int col, int& x, int& y);
+void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y);
+void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y);
 
 Cell handleMouseClick3x3(const Window& window, MainGameUIState& context, const GameState& game_state, int mouseX, int mouseY);
 Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY);
@@ -115,8 +115,8 @@ Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, cons
 void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state);
 void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state);
 
-void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_Scancode input);
-void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SDL_Scancode input);
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
 
 Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state);

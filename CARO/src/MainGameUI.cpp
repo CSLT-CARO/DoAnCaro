@@ -39,6 +39,16 @@ void destroyTTF(Window& window)
 		TTF_CloseFont(window.font_small);
 		window.font_small = nullptr;
 	}
+	if (window.font_big != nullptr)
+	{
+		TTF_CloseFont(window.font_big);
+		window.font_big = nullptr;
+	}
+	if (window.font_large != nullptr)
+	{
+		TTF_CloseFont(window.font_large);
+		window.font_large = nullptr;
+	}
 	TTF_Quit();
 }
 
@@ -47,7 +57,6 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
 	SDL_RenderClear(window.renderer_ptr);
 	
-	initMainGameUIState(window, ui_state);
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
@@ -99,6 +108,8 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 		cell_width * 3 / 2,
 		cell_height * 3 / 2
 	};
+
+	ui_state.turn_back_button[1] = { 558, 54, 80, 80 };
 
 	ui_state.player_x.rect = {
 		cell_width / 2  ,
@@ -462,9 +473,7 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 		drawDimmingLayer(window);
 		drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_SCREEN), ui_state.save_sreen.rect);
 
-		x = 558, y = 54;
-		imgH = imgW = 80;
-		ui_state.turn_back_button[1] = { x, y, imgW, imgH };
+		
 
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
@@ -526,7 +535,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	date += std::to_string(load.date_day) + '/';
 	if (load.date_month < 10) date += '0';
 	date += std::to_string(load.date_month) + '/';
-	date += std::to_string(load.date_day) + "  ";
+	date += std::to_string(load.date_year) + "  ";
 
 	if (load.date_hour < 10) date += '0';
 	date += std::to_string(load.date_hour) + ':';
@@ -579,6 +588,7 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, Butto
 		SDL_Color color = { 255, 0, 0, 255 };
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 102, 102 });
 		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 102 / 2 - 15, COLOR_RED);
+		TTF_CloseFont(font);
 		return;
 	}
 
@@ -674,14 +684,14 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 
 }
 
-void convertRowColToXY_3x3(const Window window, int row, int col, int& x, int& y)
+void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y)
 {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 	x = (col * 2 + 6) * cell_width;
 	y = (row * 2 + 2) * cell_height;
 }
-void convertRowColToXY_12x12(const Window window, int row, int col, int& x, int& y)
+void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y)
 {
 	int cell_width = window.width / 32;
 	int cell_height = cell_width;
@@ -752,17 +762,17 @@ void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
 	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
 }
 
-void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
 {
 	int cell_width = window.width / 16;
 	int cell_height = cell_width;
 	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
 	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
 
-	if (input == SDL_SCANCODE_A) col -= 1;
-	if (input == SDL_SCANCODE_D) col += 1;
-	if (input == SDL_SCANCODE_W) row -= 1;
-	if (input == SDL_SCANCODE_S) row += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 2 || col > 2) return;
 	int x, y;
@@ -772,16 +782,16 @@ void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, SDL_
 	ui_state.hover_cell.y = y - cell_width * 9 / 10;
 }
 
-void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, SDL_Scancode input)
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
 {
 	int cell_width = window.width / 32;
 	int cell_height = cell_width;
 	int row = (ui_state.hover_cell.y / cell_height) - 3; // from mouse pos to row, col of board
 	int col = (ui_state.hover_cell.x / cell_width) - 10;
-	if (input == SDL_SCANCODE_A) col -= 1;
-	if (input == SDL_SCANCODE_D) col += 1;
-	if (input == SDL_SCANCODE_W) row -= 1;
-	if (input == SDL_SCANCODE_S) row += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
+	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 11 || col > 11) return;
 	int x, y;
@@ -824,6 +834,7 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 	if (input == SDL_SCANCODE_ESCAPE)
 	{
 		Back(ui_state, game_state, menu_state);
+		return;
 	}
 
 	if (ui_state.is_game_over)

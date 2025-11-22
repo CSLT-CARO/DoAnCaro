@@ -1,5 +1,26 @@
-#include <fstream>
+﻿#include <fstream>
 #include <iostream>
+
+// only uncomment when debugging memory leak issues
+// #define ENABLE_MEMORY_ALLOCATION_TRACKER
+#ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
+static int allocation_count = 0;
+
+void* operator new(size_t size) {
+	void* memory = malloc(size);
+	printf("Allocation count %d\n", allocation_count);
+	printf("Allocated: %lu bytes\n", size);
+	printf("Address: %p\n\n", memory);
+	allocation_count++;
+	return memory;
+}
+
+void operator delete(void* memory) {
+	allocation_count--;
+	printf("Freed memory: %p\n\n", memory);
+	free(memory);
+}
+#endif
 
 #include "Video.h"
 #include "Texture.h"
@@ -10,6 +31,10 @@
 #include "Audio.h"
 
 int main(int argc, char* argv[]) {
+	#ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
+	freopen("allocation.log", "w", stdout);
+    #endif
+
 	Window window{};
 	MainGameUIState main_game_ui_state{};
 	MenuState menu_state;
@@ -22,6 +47,7 @@ int main(int argc, char* argv[]) {
 
 	initVideo(window);
 	initTTF(window);
+	initMainGameUIState(window, main_game_ui_state);
 	Audio_Init();
 	initSavesFolder(menu_state.SAVE_PATH);
 	initGameSettings(menu_state.GAME_SETTINGS_FILE_PATH);
@@ -35,6 +61,10 @@ int main(int argc, char* argv[]) {
 	menu_state.turn_music = ENABLE_MUSIC;
 
 	GameState game_state{};
+
+	LoadedGameSettings settings = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
+	
+
 
 	SDL_Event event;
 	menu_state.menu_is_run = true;

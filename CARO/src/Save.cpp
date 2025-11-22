@@ -62,7 +62,6 @@ void initGameSettings(const std::string &filename) {
 void writeSettings(const std::string &filename, const MenuState& menu_state) {
     if (!isFileExist(filename)) {
         initGameSettings(filename);
-        return;
     }
 
     std::ofstream outfile(filename);

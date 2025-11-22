@@ -2,7 +2,7 @@
 #include "MainGameUI.h"
 #include "Video.h"
 
-void initGame(const Window window, GameState& game_state, MainGameUIState& ui_state) {
+void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state) {
 	if (game_state.is_init) return;
 
 	game_state.whose_turn = pickRandomPlayer();

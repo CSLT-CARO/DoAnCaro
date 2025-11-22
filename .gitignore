@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 ./CARO/saves
 ./CARO/settings.txt
+./CARO/allocation.log

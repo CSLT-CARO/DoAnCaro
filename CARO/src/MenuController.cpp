@@ -373,18 +373,22 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 			case TEXTURE_MUSIC_ON_BUTTON:
 				menu_state.turn_music = false;
 				menu_state.transform_idx = TEXTURE_MUSIC_OFF_BUTTON;
+				Toggle_Music();
 				return;
 			case TEXTURE_MUSIC_OFF_BUTTON:
 				menu_state.turn_music = true;
 				menu_state.transform_idx = TEXTURE_MUSIC_ON_BUTTON;
+				Toggle_Music();
 				return;
 			case TEXTURE_SFX_ON_BUTTON:
 				menu_state.turn_sfx = false;
 				menu_state.transform_idx = TEXTURE_SFX_OFF_BUTTON;
+				Toggle_SFX();
 				return;
 			case TEXTURE_SFX_OFF_BUTTON:
 				menu_state.turn_sfx = true;
 				menu_state.transform_idx = TEXTURE_SFX_ON_BUTTON;
+				Toggle_SFX();
 				return;
 		}
 	}
@@ -548,6 +552,5 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Ga
 }
 void processMenuScreen(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
 {
-
 	buildMenuImages(menu_state, window, ui_state);
 }

@@ -74,14 +74,14 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			{
 				if (game_state.board_type == Classic)
 				{
-					handleKeyboardMove3x3(window, ui_state, event.key.keysym.scancode);
+					handleKeyboardMove3x3(window, ui_state, event);
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn3x3(window, ui_state, game_state);
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
 				}
 				else
 				{
-					handleKeyboardMove12x12(window, ui_state, event.key.keysym.scancode);
+					handleKeyboardMove12x12(window, ui_state, event);
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn12x12(window, ui_state, game_state);
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
@@ -90,8 +90,8 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			else
 				Stop_All_SFX();
 				Play_SFX_Click();
-				handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 		}
+			handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 
 	}
 }

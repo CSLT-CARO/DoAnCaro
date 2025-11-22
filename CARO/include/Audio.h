@@ -46,4 +46,6 @@ bool Is_Muted();
 bool Is_Music_Muted();
 bool Is_SFX_Muted();
 
+void Apply_Music_State(bool is_muted);
+void Apply_SFX_State(bool is_muted);
 #endif // AUDIO_H
