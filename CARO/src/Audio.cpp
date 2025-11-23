@@ -1,13 +1,5 @@
 #include "Audio.h"
 
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <stdio.h>
-
-#include <thread>
-#include <atomic>
-#include <chrono>
-
 // --- Config: asset paths ---
 static const char* PATH_BGM_MENU = "assets/Audio/Background_menu.mp3";
 static const char* PATH_BGM_GAME = "assets/Audio/Background_music.mp3";

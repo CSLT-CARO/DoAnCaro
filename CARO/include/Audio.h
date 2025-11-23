@@ -1,7 +1,14 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#include <stdio.h>
 #include <stdbool.h>
+#include <thread>
+#include <atomic>
+#include <chrono>
+
+#include <SDL.h>
+#include <SDL_mixer.h>
 
 // Initialize audio subsystem. Call once at program start.
 // Returns true on success, false on failure.

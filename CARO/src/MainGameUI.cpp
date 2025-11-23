@@ -2,7 +2,6 @@
 #include "MenuController.h"
 #include "Audio.h"
 #include "Save.h"
-#include <SDL_ttf.h>
 
 std::unordered_map< int, Button> Saving_Slot;
 

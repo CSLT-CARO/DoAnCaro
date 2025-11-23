@@ -10,13 +10,11 @@
 #include <SDL_mixer.h>
 
 
-int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuState& menu_state)
+int checkMousePosition(Window& window, int mouseX, int mouseY, int state, const MenuState& menu_state)
 {
 	int enums_return = menu_state.transform_idx;
-	for (auto& it : MenuButtonPosition[state])
+	for (auto& [menu_enum, button] : MenuButtonPosition[state])
 	{
-		int menu_enum = it.first;
-		SDL_Rect button = it.second;
 		if (button.x <= mouseX && mouseX <= button.x + button.w && button.y <= mouseY && mouseY <= button.y + button.h)
 		{
 			if (menu_state.turn_music == true && menu_enum == TEXTURE_MUSIC_OFF_BUTTON)
@@ -33,17 +31,15 @@ int checkMousePosition(Window& window, int mouseX, int mouseY, int state, MenuSt
 	}
 	if (menu_state.trans_display != _MainMenu && menu_state.menu_is_run)
 	{
-		for (auto& it : MenuButtonPosition[_TurnBackButton])
+		for (auto& [menu_enum, button] : MenuButtonPosition[_TurnBackButton])
 		{
-			int menu_enum = it.first;
-			SDL_Rect button = it.second;
 			if (button.x <= mouseX && mouseX <= button.x + button.w && button.y <= mouseY && mouseY <= button.y + button.h)
 					enums_return = menu_enum;
 		}
 	}
 	return enums_return;
 }
-void turnBack(MenuState& menu_state, GameState game_state)
+void turnBack(MenuState& menu_state, const GameState &game_state)
 {
 	if (menu_state.notice)
 	{

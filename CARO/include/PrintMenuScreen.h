@@ -4,8 +4,9 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_test.h>
+#include <SDL_ttf.h>
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <unordered_map>
 
@@ -14,6 +15,9 @@
 #include "MenuUI.h"
 #include "Texture.h"
 #include "Save.h"
+#include "Audio.h"
+#include "MenuController.h"
+#include "MainGameUI.h"
 
 extern std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
 extern std::unordered_map< int, Button> Loading_Slot;
@@ -111,25 +115,25 @@ struct FileSave
 };
 
 
-void InitCaroButton(Window& window, CaroTextPosition& caro_text_position);
-void InitTurnBackButton(Window& window, TurnBackButton& turn_back_button);
-void InitMenuButton(Window& window, MenuButton& menu_button);
-void InitChooseTypePlayer(Window& window, ChooseTypePlayer& choose_type_player);
-void InitChooseDifficulty(Window& window, DifficultyButton& diff);
-void InitChooseTypeGame(Window& window, ChooseTypeGame& choose_type_game);
-void InitSettings(Window& window, SettingsButton& settings_button);
-void InitLoadFile(Window& window, FileSave& load_file);
+void InitCaroButton(const Window& window, CaroTextPosition& caro_text_position);
+void InitTurnBackButton(const Window& window, TurnBackButton& turn_back_button);
+void InitMenuButton(const Window& window, MenuButton& menu_button);
+void InitChooseTypePlayer(const Window& window, ChooseTypePlayer& choose_type_player);
+void InitChooseDifficulty(const Window& window, DifficultyButton& diff);
+void InitChooseTypeGame(const Window& window, ChooseTypeGame& choose_type_game);
+void InitSettings(const Window& window, SettingsButton& settings_button);
+void InitLoadFile(const Window& window, FileSave& load_file);
 void initMenuResources(Window& window);
 
-void drawChooseDifficulty(Window& window, MenuState& menu_state);
-void drawMenuGame(Window& window, MenuState& menu_state);
-void drawTurnBackButton(Window& window, MenuState& menu_state);
-void drawChooseTypePlayer(Window& window, MenuState& menu_state);
-void drawChooseTypeGame(Window& window, MenuState& menu_state);
-void drawChangeSettings(Window& window, MenuState menu_state);
-void drawNoticeBoard(const Window& window, std::string msg, TTF_Font* font);
+void drawChooseDifficulty(const Window& window, const MenuState& menu_state);
+void drawMenuGame(const Window& window, const MenuState& menu_state);
+void drawTurnBackButton(const Window& window, const MenuState& menu_state);
+void drawChooseTypePlayer(const Window& window, const MenuState& menu_state);
+void drawChooseTypeGame(const Window& window, const MenuState& menu_state);
+void drawChangeSettings(const Window& window, const MenuState& menu_state);
+void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font);
 void drawErrorLoadFile(const Window& window, int idx);
-void drawChooseFileLoad(Window& window, MenuState& menu_state);
+void drawChooseFileLoad(const Window& window, const MenuState& menu_state);
 
 //void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
 //void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
@@ -138,6 +142,6 @@ void drawChooseFileLoad(Window& window, MenuState& menu_state);
 //void drawChangeSettings(Window& window, SettingsButton& settings, MenuState menu_state);
 
 
-void buildMenuImages(MenuState& menu_state, Window& window, MainGameUIState& ui_state);
+void buildMenuImages(MenuState& menu_state, Window& window, const MainGameUIState& ui_state);
 
 #endif // !PRINT_MENU_SCREEN_H

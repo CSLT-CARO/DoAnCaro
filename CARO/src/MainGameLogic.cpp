@@ -1,6 +1,4 @@
 #include "MainGameLogic.h"
-#include "MainGameUI.h"
-#include "Video.h"
 
 void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state) {
 	if (game_state.is_init) return;
