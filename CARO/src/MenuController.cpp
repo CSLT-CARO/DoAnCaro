@@ -146,7 +146,8 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		{
 			menu_state.trans_display = _ChooseLoadFile;
 		}
-		if (MousePositionState == TEXTURE_EXIT_BUTTON)
+		if (MousePositionState == TEXTURE_EXIT_BUTTON
+			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_EXIT_BUTTON], mouseX, mouseY))
 			menu_state.menu_is_run = false;
 		return;
 	}
