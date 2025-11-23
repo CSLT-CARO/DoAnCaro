@@ -119,7 +119,8 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	int MousePositionState = checkMousePosition(mouseX, mouseY, _TurnBackButton, menu_state);
-	if (MousePositionState == TEXTURE_TURN_BACK_BUTTON && menu_state.trans_display != _MainMenu)
+	if (MousePositionState == TEXTURE_TURN_BACK_BUTTON && menu_state.trans_display != _MainMenu
+		&& checkButton(MenuButtonPosition[_TurnBackButton][TEXTURE_TURN_BACK_BUTTON], mouseX, mouseY))
 	{
 		turnBack(menu_state, game_state);
 		return;
