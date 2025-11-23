@@ -18,9 +18,9 @@ bool isFolderExist(const std::string &folderPath) {
     return stat(folderPath.c_str(), &sb) == 0;
 }
 
-bool isFileExist(const std::string &fileName) {
+bool isFileExist(const std::string &filename) {
     struct stat sb;
-    return stat(fileName.c_str(), &sb) == 0 && !(sb.st_mode & S_IFDIR);
+    return stat(filename.c_str(), &sb) == 0 && !(sb.st_mode & S_IFDIR);
 }
 
 void initSavesFolder(const std::string &folderPath) {
@@ -30,7 +30,6 @@ void initSavesFolder(const std::string &folderPath) {
 
     std::string save_name = "save_";
 
-    struct stat sb;
     for (int i = 1; i <= 5; i++) {
         std::string fileName = folderPath + "/" + save_name + std::to_string(i) + ".txt";
         if (isFileExist(fileName)) {
@@ -94,7 +93,7 @@ LoadedGameSettings loadSettings(const std::string &filename) {
 }
 
 
-std::string getSaveFileName(const std::string& folderPath, int slot) {
+std::string getSaveFileName(const std::string& folderPath, const int slot) {
     return folderPath + "/save_" + std::to_string(slot) + ".txt";
 }
 

@@ -10,7 +10,7 @@
 #include <SDL_mixer.h>
 
 
-int checkMousePosition(Window& window, int mouseX, int mouseY, int state, const MenuState& menu_state)
+int checkMousePosition(const int mouseX, const int mouseY, const int state, const MenuState &menu_state)
 {
 	int enums_return = menu_state.transform_idx;
 	for (auto& [menu_enum, button] : MenuButtonPosition[state])
@@ -39,6 +39,7 @@ int checkMousePosition(Window& window, int mouseX, int mouseY, int state, const 
 	}
 	return enums_return;
 }
+
 void turnBack(MenuState& menu_state, const GameState &game_state)
 {
 	if (menu_state.notice)
@@ -79,14 +80,14 @@ void turnBack(MenuState& menu_state, const GameState &game_state)
 			menu_state.trans_display = _ChooseTypePlayer;
 			menu_state.transform_idx = TEXTURE_PVP_BUTTON;
 			break;
-
-
 	}
 }
-bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y) {
+
+bool checkButton(const SDL_Rect& button, const int mouse_x, const int mouse_y) {
 	return (mouse_x >= button.x && mouse_x <= (button.x + button.w) &&
 		mouse_y >= button.y && mouse_y <= (button.y + button.h));
 }
+
 void checkMouseMotion(Window& window, MenuState& menu_state)
 {
 	int mouseX, mouseY;
@@ -94,30 +95,30 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 	int MousePositionState = menu_state.transform_idx;
 	
 	if (menu_state.trans_display == _ChangeSettings)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _ChangeSettings, menu_state);
 	if (menu_state.trans_display == _MainMenu)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _MainMenu, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _MainMenu, menu_state);
 	if (menu_state.trans_display == _ChooseTypePlayer)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypePlayer, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypePlayer, menu_state);
 	if (menu_state.trans_display == _ChooseTypeGame)
 	{
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypeGame, menu_state);
 		
 	}
 	if (menu_state.trans_display == _ChooseDifficulty)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseDifficulty, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseDifficulty, menu_state);
 	if(menu_state.trans_display == _ChooseLoadFile)
-		MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseLoadFile, menu_state);
+		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseLoadFile, menu_state);
 	menu_state.transform_idx = MousePositionState;
 }
 
-void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
+void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
 {
 
 	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	int MousePositionState = checkMousePosition(window, mouseX, mouseY, _TurnBackButton, menu_state);
+	int MousePositionState = checkMousePosition(mouseX, mouseY, _TurnBackButton, menu_state);
 	if (MousePositionState == TEXTURE_TURN_BACK_BUTTON && menu_state.trans_display != _MainMenu)
 	{
 		turnBack(menu_state, game_state);
@@ -125,7 +126,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 	}
 	if (menu_state.trans_display == _MainMenu)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _MainMenu, menu_state);
+		int MousePositionState = checkMousePosition(mouseX, mouseY, _MainMenu, menu_state);
 		if (MousePositionState == TEXTURE_PLAY_BUTTON
 			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_PLAY_BUTTON], mouseX, mouseY))
 		{
@@ -154,14 +155,16 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 
 	if (menu_state.notice)
 	{
-		int imgW = 603;
-		int imgH = 243;
-		int pos_x = window.width / 2 - imgW / 2;
-		int pos_y = window.height / 2 - imgH / 2;
-		if (checkButton({ pos_x + imgW - imgH / 4 - 2, pos_y + 2, imgH / 4, imgH / 4, }, mouseX, mouseY))
+		constexpr int IMG_WIDTH = 603;
+		constexpr int IMG_HEIGHT = 243;
+		const int POS_X = window.width / 2 - IMG_WIDTH / 2;
+		const int POS_Y = window.height / 2 - IMG_HEIGHT / 2;
+
+		if (checkButton({ POS_X + IMG_WIDTH - IMG_HEIGHT / 4 - 2, POS_Y + 2, IMG_HEIGHT / 4, IMG_HEIGHT / 4, }, mouseX, mouseY))
 		{
 			turnBack(menu_state, game_state);
 		}
+
 		return;
 	}
 
@@ -177,9 +180,11 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 				eraseData(filename);
 				getSaveInform(ui_state, load_idx);
 			}
+
 			std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
 			if (isFileEmpty(filename))
 				return;
+
 			LoadedFileContent loaded_content = Load(filename);
 			if (loaded_content.success)
 			{
@@ -200,17 +205,13 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 				Loading_Slot[load_idx].state = true;
 				return;
 			}
-
-			
 		}
 		return;
 	}
 
-
-
 	if (menu_state.trans_display == _ChooseTypePlayer)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypePlayer, menu_state);
+		int MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypePlayer, menu_state);
 		if (MousePositionState == TEXTURE_PVP_BUTTON
 			&& checkButton(MenuButtonPosition[_ChooseTypePlayer][TEXTURE_PVP_BUTTON], mouseX, mouseY))
 		{
@@ -252,7 +253,7 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 
 	if (menu_state.trans_display == _ChangeSettings)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChangeSettings, menu_state);
+		int MousePositionState = checkMousePosition(mouseX, mouseY, _ChangeSettings, menu_state);
 		if (MousePositionState == TEXTURE_MUSIC_ON_BUTTON
 			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_ON_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_music = false;
@@ -275,9 +276,10 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 		}
 		return;
 	}
+
 	if (menu_state.trans_display == _ChooseTypeGame)
 	{
-		int MousePositionState = checkMousePosition(window, mouseX, mouseY, _ChooseTypeGame, menu_state);
+		int MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypeGame, menu_state);
 		
 		if (MousePositionState == TEXTURE_CLASSIC_BOARD_BUTTON)
 		{
@@ -290,17 +292,16 @@ void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game
 			game_state.game_is_run = true;
 			game_state.board_type = Ultimate;
 		}
-
 	}
 }
 
-void checkInRange(int &idx, int lelf, int right)
+void checkInRange(int &idx, const int left, const int right)
 {
-	if (idx < lelf) idx = lelf;
+	if (idx < left) idx = left;
 	if (idx > right) idx = right;
 }
 
-int mouseInLoadOrSave(std::string type)
+int mouseInLoadOrSave(const std::string &type)
 {
 	if(type != "load" && type != "save")
 		return -1;
@@ -310,11 +311,10 @@ int mouseInLoadOrSave(std::string type)
 	{
 		if (mouseX < 254 || mouseX > 1713 || mouseY < 103 || mouseY > 103 + 5 * 173 + 4 * 8)
 			return -1;
-		SDL_Rect tmp;
 		for (int i = 1; i <= 5; i++)
 		{
-			tmp = Loading_Slot[i].rect;
-			if (checkButton({tmp.x, tmp.y, tmp.w, tmp.h + 8}, mouseX, mouseY))
+			const auto [x, y, w, h] = Loading_Slot[i].rect;
+			if (checkButton({x, y, w, h + 8}, mouseX, mouseY))
 				return i;
 		}
 		return -1;
@@ -323,11 +323,10 @@ int mouseInLoadOrSave(std::string type)
 	{
 		if (mouseX < 668 || mouseX > 1271 || mouseY < 224 || mouseY > 754)
 			return -1;
-		SDL_Rect tmp;
 		for (int i = 1; i <= 5; i++)
 		{
-			tmp = Saving_Slot[i].rect;
-			if (checkButton({ tmp.x, tmp.y, tmp.w, tmp.h + 5 }, mouseX, mouseY))
+			const auto [x, y, w, h] = Saving_Slot[i].rect;
+			if (checkButton({ x, y, w, h + 5 }, mouseX, mouseY))
 				return i;
 		}
 		return -1;
@@ -368,7 +367,7 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 
 	if (menu_state.trans_display == _ChangeSettings)
 	{
-		switch(menu_state.transform_idx)
+		switch (menu_state.transform_idx)
 		{
 			case TEXTURE_MUSIC_ON_BUTTON:
 				menu_state.turn_music = false;
@@ -447,7 +446,7 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 	}
 }
 
-void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state)
+void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameState &game_state)
 {
 	if (event.key.keysym.sym == SDLK_ESCAPE)
 	{
@@ -529,13 +528,13 @@ void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state
 	}
 }
 
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
+void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
 {
 	switch (event.type)
 	{
 		case SDL_KEYDOWN:
 		{
-			handleKeyboardInput(event, window, menu_state, game_state);
+			handleKeyboardInput(event, menu_state, game_state);
 			break;
 		}
 		case SDL_MOUSEMOTION:
@@ -550,7 +549,7 @@ void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Ga
 		}
 	}
 }
-void processMenuScreen(Window& window, MenuState& menu_state, MainGameUIState &ui_state)
+void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)
 {
 	buildMenuImages(menu_state, window, ui_state);
 }

@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-void setTimeout(Timer& timer, Millisecond timeout) {
+void setTimeout(Timer& timer, const Millisecond timeout) {
 	timer.timeout = timeout;
 }
 

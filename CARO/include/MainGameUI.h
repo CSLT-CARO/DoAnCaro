@@ -98,7 +98,7 @@ void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
 
 void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color);
-void drawScreen(const Window& window, MainGameUIState& ui_state);
+void drawScreen(const Window& window, const MainGameUIState& ui_state);
 void getSaveInform(MainGameUIState& ui_state, int idx);
 void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int idx);
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
@@ -109,8 +109,8 @@ void checkMouseHoverButton(MainGameUIState& ui_state);
 void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y);
 void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y);
 
-Cell handleMouseClick3x3(const Window& window, MainGameUIState& context, const GameState& game_state, int mouseX, int mouseY);
-Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY);
+Cell handleMouseClick3x3(const Window &window, const GameState &game_state, int mouseX, int mouseY);
+Cell handleMouseClick12x12(const Window &window, const GameState &game_state, int mouseX, int mouseY);
 
 void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state);
 void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state);
@@ -118,8 +118,8 @@ void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state);
 void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
 void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
 
-Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
-Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+Cell handleKeyboardMakeTurn3x3(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
+Cell handleKeyboardMakeTurn12x12(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
 void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
 
 void handelKeyBoardButton(const Window& window, MenuState & menu_state, GameState &game_state, MainGameUIState& ui_state, SDL_Scancode input);

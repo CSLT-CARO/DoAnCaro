@@ -27,7 +27,7 @@ void initVideo(Window& window) {
 		SDL_WINDOW_BORDERLESS
 	);
 
-	if (NULL == window.window_ptr) {
+	if (nullptr == window.window_ptr) {
 		std::cerr << "Failed to create window: " << SDL_GetError();
 		exit(1);
 	}
@@ -36,7 +36,7 @@ void initVideo(Window& window) {
 
 	window.renderer_ptr = SDL_CreateRenderer(window.window_ptr, -1, SDL_RENDERER_ACCELERATED);
 
-	if (NULL == window.renderer_ptr) {
+	if (nullptr == window.renderer_ptr) {
 		std::cerr << "Failed to create renderer: " << SDL_GetError();
 		SDL_DestroyWindow(window.window_ptr);
 		SDL_Quit();
@@ -44,7 +44,7 @@ void initVideo(Window& window) {
 	}
 }
 
-void destroyVideo(Window& window) {
+void destroyVideo(const Window& window) {
 	if (nullptr != window.texture_ptr) {
 		SDL_DestroyTexture(window.texture_ptr);
 	}
@@ -56,7 +56,6 @@ void destroyVideo(Window& window) {
 	if (nullptr != window.window_ptr) {
 		SDL_DestroyWindow(window.window_ptr);
 	}
-
 
 	SDL_Quit();
 }

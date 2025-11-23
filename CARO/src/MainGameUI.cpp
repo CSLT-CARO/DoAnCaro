@@ -12,8 +12,8 @@ void initTTF(Window& window)
 		std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << '\n';
 		return;
 	}
-	std::string font_name = "Jersey10-Regular.ttf";
-	std::string font_path = "./assets/font/" + font_name;
+	const std::string font_name = "Jersey10-Regular.ttf";
+	const std::string font_path = "./assets/font/" + font_name;
 	window.font_path = font_path;
 	window.font_small = TTF_OpenFont(font_path.c_str(), 18);
 	window.font = TTF_OpenFont(font_path.c_str(), 32);
@@ -53,8 +53,8 @@ void destroyTTF(Window& window)
 
 void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	auto renderer = window.renderer_ptr;
-	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 255, 255, 255);
-	SDL_RenderClear(window.renderer_ptr);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderClear(renderer);
 	
 	if (game_state.board_type == Classic)
 	{
@@ -95,11 +95,11 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 
 void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
 
-	int imgW = cell_width * 4;
-	int imgH = cell_height;
+	int IMG_WIDTH = cell_width * 4;
+	int IMG_HEIGHT = cell_height;
 
 	ui_state.turn_back_button[0] = {
 		cell_width / 4,
@@ -113,15 +113,15 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 	ui_state.player_x.rect = {
 		cell_width / 2  ,
 		cell_height * 5 / 2,
-		imgW,
-		imgH
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 
 	ui_state.player_o.rect = {
 		cell_width / 2 ,
 		cell_height * 9 / 2,
-		imgW,
-		imgH
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 
 	ui_state.timer_button.rect = {
@@ -139,28 +139,28 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 	};
 	int x = window.width / 2;
 	int y = window.height / 2;
-	imgW = 804;
-	imgH = 972;
+	IMG_WIDTH = 804;
+	IMG_HEIGHT = 972;
 	ui_state.save_sreen.rect =
 	{
-		x - imgW / 2,
-		y - imgH / 2,
-		imgW,
-		imgH
+		x - IMG_WIDTH / 2,
+		y - IMG_HEIGHT / 2,
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 
 	x = 668, y = 224;
-	imgW = 603, imgH = 102;
+	IMG_WIDTH = 603, IMG_HEIGHT = 102;
 
 	for (int i = 1; i<= 5; i++)
 	{
 		Saving_Slot[i].rect = {
 			x,
 			y,
-			imgW,
-			imgH
+			IMG_WIDTH,
+			IMG_HEIGHT
 		};
-		y += imgH + 5;
+		y += IMG_HEIGHT + 5;
 	}
 	for (int i = 1; i <= 5; i++)
 	{
@@ -169,7 +169,7 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 
 }
 
-void drawTurnBackButton(const Window& window, MainGameUIState& ui_state, int idx)
+void drawTurnBackButton(const Window& window, const MainGameUIState& ui_state, const int idx)
 {
 	SDL_Texture* turn_back_button = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON);
 	int mouseX, mouseY;
@@ -184,14 +184,14 @@ void drawDimmingLayer(const Window& window)
 {
 	SDL_SetRenderDrawBlendMode(window.renderer_ptr, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 100);
-	SDL_Rect dimming_rect = { 0,0,window.width, window.height };
+	const SDL_Rect dimming_rect = { 0,0,window.width, window.height };
 	SDL_RenderFillRect(window.renderer_ptr, &dimming_rect);
 	SDL_SetRenderDrawBlendMode(window.renderer_ptr, SDL_BLENDMODE_NONE);
 }
 
 void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
 
 	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
 	for (int i = 5; i <= 11; i += 2)
@@ -199,14 +199,12 @@ void drawTable3x3(const Window& window, MainGameUIState& ui_state) {
 
 	for (int i = 1; i <= 7; i += 2)
 		SDL_RenderDrawLine(window.renderer_ptr, 5 * cell_width, i * cell_height, 11 * cell_height, i * cell_height); // row
-	
-	
 }
 
 void drawTable12x12(const Window& window, MainGameUIState& ui_state)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
 
 	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
 	SDL_SetRenderDrawColor(window.renderer_ptr, 0, 0, 0, 255);
@@ -230,8 +228,8 @@ void drawButton(const Window& window, MainGameUIState& ui_state)
 }
 
 void drawSymbol3x3(const Window& window, const GameState& game_state) {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
+	const int CELL_WIDTH = window.width / 16;
+	const int CELL_HEIGHT = CELL_WIDTH;
 
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0, 0, 255);
 	for (int row = 0; row < 3; row++) {
@@ -243,14 +241,13 @@ void drawSymbol3x3(const Window& window, const GameState& game_state) {
 			convertRowColToXY_3x3(window, row, column, x, y);
 
 			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board3x3, cell);
-			const char* symbol{};
 			SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_X_PLAYER);
 
 			if (CURRENT_CELL_MARK == O) {
 				mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_O_PLAYER);
 			}
 
-			SDL_Rect rect = { x - cell_width / 2, y - cell_height / 2, cell_width, cell_height };
+			SDL_Rect rect = { x - CELL_WIDTH / 2, y - CELL_HEIGHT / 2, CELL_WIDTH, CELL_WIDTH };
 			drawTexture(window.renderer_ptr, mark_texture, rect);
 		}
 	}
@@ -258,8 +255,8 @@ void drawSymbol3x3(const Window& window, const GameState& game_state) {
 
 void drawSymbol12x12(const Window& window, const GameState& game_state)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
 
 	SDL_SetRenderDrawColor(window.renderer_ptr, 255, 0, 0, 255);
 	for (int row = 0; row < 12; row++) {
@@ -271,7 +268,6 @@ void drawSymbol12x12(const Window& window, const GameState& game_state)
 			convertRowColToXY_12x12(window, row, column, x, y);
 
 			const PlayerMark CURRENT_CELL_MARK = getMark(game_state.board12x12, cell);
-			const char* symbol{};
 			SDL_Texture* mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_X_PLAYER);
 
 			if (CURRENT_CELL_MARK == O) {
@@ -293,7 +289,7 @@ void drawSelectingCell(const Window& window, const GameState& game_state, const 
 }
 
 void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
-	auto renderer = window.renderer_ptr;
+	const auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 	SDL_Texture* restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART);
 	SDL_Texture* new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME);
@@ -341,17 +337,19 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
 {
-	Cell start = winner_data.start_coordinates;
-	Cell end = winner_data.end_coordinates;
+	auto [start_row, start_column] = winner_data.start_coordinates;
+	auto [end_row, end_column] = winner_data.end_coordinates;
+
 	SDL_Rect tmp_rect;
 	SDL_Texture* mark_texture = nullptr;
 	int x, y;
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
-	convertRowColToXY_3x3(window, start.row, start.column, x, y);
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
+
+	convertRowColToXY_3x3(window, start_row, start_column, x, y);
 	x -= cell_width;
 	y -= cell_height;
-	if(start.row == end.row)
+	if(start_row == end_row)
 	{
 		tmp_rect = { x, y, 6 * cell_width, 2 * cell_height };
 		if(winner_data.mark == X)
@@ -360,7 +358,7 @@ void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_O);
 		
 	}
-	else if (start.column == end.column)
+	else if (start_column == end_column)
 	{
 		tmp_rect = { x, y, 2 * cell_width, 6 * cell_height };
 		if (winner_data.mark == X)
@@ -369,7 +367,7 @@ void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_O);
 
 	}
-	else if (start.column < end.column && start.row < end.row)
+	else if (start_column < end_column && start_row < end_row)
 	{
 		convertRowColToXY_3x3(window, 0, 0, x, y);
 		x -= cell_width;
@@ -396,37 +394,37 @@ void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
 
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 {
-	Cell start = winner_data.start_coordinates;
-	Cell end = winner_data.end_coordinates;
+	auto [start_row, start_column] = winner_data.start_coordinates;
+	auto [end_row, end_column] = winner_data.end_coordinates;
 	SDL_Rect tmp_rect;
 	SDL_Texture* mark_texture = nullptr;
 	int x, y;
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
-	convertRowColToXY_12x12(window, start.row, start.column, x, y);
-	x -= cell_width / 2;
-	y -= cell_height / 2;
-	if (start.row == end.row)
+	const int CELL_WIDTH = window.width / 32;
+	const int CELL_HEIGHT = CELL_WIDTH;
+	convertRowColToXY_12x12(window, start_row, start_column, x, y);
+	x -= CELL_WIDTH / 2;
+	y -= CELL_HEIGHT / 2;
+	if (start_row == end_row)
 	{
-		tmp_rect = { x, y, 5 * cell_width, cell_height };
+		tmp_rect = { x, y, 5 * CELL_WIDTH, CELL_HEIGHT };
 		if (winner_data.mark == X)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_X);
 		else
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_O);
 
 	}
-	else if (start.column == end.column)
+	else if (start_column == end_column)
 	{
-		tmp_rect = { x, y, cell_width, 5 * cell_height };
+		tmp_rect = { x, y, CELL_WIDTH, 5 * CELL_HEIGHT };
 		if (winner_data.mark == X)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_X);
 		else
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_COLUMN_LINE_O);
 
 	}
-	else if (start.column < end.column && start.row < end.row)
+	else if (start_column < end_column && start_row < end_row)
 	{
-		tmp_rect = { x, y, 5 * cell_width, 5 * cell_height };
+		tmp_rect = { x, y, 5 * CELL_WIDTH, 5 * CELL_HEIGHT };
 		if (winner_data.mark == X)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_DIAGONAL_LINE_X);
 		else
@@ -434,8 +432,8 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	}
 	else
 	{
-		x -= 4 * cell_width;
-		tmp_rect = { x, y, 5 * cell_width, 5 * cell_height };
+		x -= 4 * CELL_WIDTH;
+		tmp_rect = { x, y, 5 * CELL_WIDTH, 5 * CELL_HEIGHT };
 		if (winner_data.mark == X)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ANTI_DIAGONAL_LINE_X);
 		else
@@ -445,7 +443,7 @@ void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data)
 	drawTexture(window.renderer_ptr, mark_texture, tmp_rect);
 }
 
-void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color)
+void drawText(const Window& window, const std::string& text, TTF_Font* font, const int x, const int y, const SDL_Color color)
 {
 	if (text.empty() || font == nullptr) return;
 	SDL_Surface* text_surface = TTF_RenderText_Blended(font, text.c_str(), color);
@@ -468,15 +466,13 @@ void drawText(const Window& window, const std::string& text, TTF_Font* font,int 
 	SDL_DestroyTexture(text_texture);
 }
 
-void drawScreen(const Window& window, MainGameUIState& ui_state)
+void drawScreen(const Window& window, const MainGameUIState& ui_state)
 {
-	int x, y, imgW, imgH;
 	if (ui_state.screen == TEXTURE_SAVE_SCREEN)
 	{
+		int x, y, IMG_WIDTH, IMG_HEIGHT;
 		drawDimmingLayer(window);
 		drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_SCREEN), ui_state.save_sreen.rect);
-
-		
 
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
@@ -485,19 +481,18 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 			tmp = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED);
 		drawTexture(window.renderer_ptr, tmp, ui_state.turn_back_button[1]);
 
-		int idex = mouseInLoadOrSave("save");
-		if (idex != -1)
+		int index = mouseInLoadOrSave("save");
+		if (index != -1)
 		{
-			x = Saving_Slot[idex].rect.x;
-			y = Saving_Slot[idex].rect.y;
-			imgW = imgH = 102;
-			if(!Saving_Slot[idex].state)
-				drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, imgW, imgH });
+			x = Saving_Slot[index].rect.x;
+			y = Saving_Slot[index].rect.y;
+			IMG_WIDTH = IMG_HEIGHT = 102;
+			if(!Saving_Slot[index].state)
+				drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, IMG_WIDTH, IMG_HEIGHT });
 		}
-		
 
-		imgH = imgW = 102 / 2;
-		x = 1271 - imgW;
+		IMG_HEIGHT = IMG_WIDTH = 102 / 2;
+		x = 1271 - IMG_WIDTH;
 		SDL_GetMouseState(&mouseX, &mouseY);
 		for (int i = 1; i <= 5; i++)
 		{
@@ -506,22 +501,17 @@ void drawScreen(const Window& window, MainGameUIState& ui_state)
 			std::string fileName = getSaveFileName(ui_state.save_path, i);
 			if (!isFileEmpty(fileName))
 			{
-
-				if (checkButton({ x, y, imgW, imgH }, mouseX, mouseY))
+				if (checkButton({ x, y, IMG_WIDTH, IMG_HEIGHT }, mouseX, mouseY))
 				{
-
-					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { x, y, imgW, imgH });
+					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { x, y, IMG_WIDTH, IMG_HEIGHT });
 				}
 				else
-					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, imgW, imgH });
+					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { x, y, IMG_WIDTH, IMG_HEIGHT });
 				//drawText(window, ui_state.save_inform.title, ui_state.font_small, { 558 + 102, 600, 0, 0 });
 				drawSaveInform(window, ui_state, i);
-				
 			}
 			//std::cout << isFileExist(fileName) << ' ';
-
 		}
-		return;
 	}
 }
 
@@ -572,23 +562,20 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 		}
 		ui_state.save_inform[idx].mode += " - DIFFICULTY: " + difficulty;
 	}
-
-
 }
 
-void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int idx)
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, const int idx)
 {	
 	if (idx < 1 || idx > 5) return;
-	SDL_Rect SlotRect = Saving_Slot[idx].rect;
-	int leftX = SlotRect.x + 20 + 102;
-	int rightX = SlotRect.x + 270 + 60;
-	int topY = SlotRect.y + 25;
-	int bottomY = SlotRect.y + 65;
+	const SDL_Rect SlotRect = Saving_Slot[idx].rect;
+	const int leftX = SlotRect.x + 20 + 102;
+	const int rightX = SlotRect.x + 270 + 60;
+	const int topY = SlotRect.y + 25;
+	const int bottomY = SlotRect.y + 65;
 
 	if (Saving_Slot[idx].state == true)
 	{
 		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 30);
-		SDL_Color color = { 255, 0, 0, 255 };
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 102, 102 });
 		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 102 / 2 - 15, COLOR_RED);
 		TTF_CloseFont(font);
@@ -602,16 +589,14 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int i
 	drawText(window, ui_state.save_inform[idx].mode, window.font_small, rightX, topY + 5, COLOR_BLACK);
 
 	drawText(window, ui_state.save_inform[idx].board_type, window.font_small, rightX, bottomY, COLOR_BLACK);
-
-
 }
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	if (ui_state.is_set_up_game_over_screen) return;
 
 	ui_state.end_game_button.index = TEXTURE_RESTART_ON;
-	int x = window.width / 2; // x pos
-	int y = window.height / 2; // y pos
+	const int x = window.width / 2; // x pos
+	const int y = window.height / 2; // y pos
 
 	auto texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 
@@ -624,25 +609,25 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	int picW = 0;
 	int picH = 0;
 
-	if (SDL_QueryTexture(texture, NULL, NULL, &picW, &picH) != 0)
+	if (SDL_QueryTexture(texture, nullptr, nullptr, &picW, &picH) != 0)
 	{
 		std::cout << "Query Error Texture: " << SDL_GetError() << std::endl;
 		return;
 	}
 
-	int imgW = (picW)*window.height / (picH)-window.width / 32;
-	int imgH = window.height * 9 / 10;
+	const int IMG_WIDTH = (picW)*window.height / (picH)-window.width / 32;
+	const int IMG_HEIGHT = window.height * 9 / 10;
 	ui_state.winner.rect = {
-		x - imgW / 2,
-		y - imgH / 2,
-		imgW,
-		imgH
+		x - IMG_WIDTH / 2,
+		y - IMG_HEIGHT / 2,
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 
-	int buttonW = imgW * 2 / 5;
-	int buttonH = buttonW / 4;
-	int pos_x_button = x - buttonW / 2 + x / 128;
-	int pos_y_button = y - buttonH / 2 + y / 7;
+	const int buttonW = IMG_WIDTH * 2 / 5;
+	const int buttonH = buttonW / 4;
+	const int pos_x_button = x - buttonW / 2 + x / 128;
+	const int pos_y_button = y - buttonH / 2 + y / 7;
 
 	ui_state.end_game_button.Restart.rect =
 	{
@@ -669,9 +654,9 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	ui_state.is_set_up_game_over_screen = true;
 }
 
-bool checkMouseInButton(const SDL_Rect& button, int mouse_x, int mouse_y) {
-	return (mouse_x >= button.x && mouse_x <= (button.x + button.w) &&
-		mouse_y >= button.y && mouse_y <= (button.y + button.h));
+bool checkMouseInButton(const SDL_Rect& button, const int x, const int y) {
+	return (x >= button.x && x <= (button.x + button.w) &&
+		y >= button.y && y <= (button.y + button.h));
 }
 
 void checkMouseHoverButton(MainGameUIState& ui_state)
@@ -687,43 +672,43 @@ void checkMouseHoverButton(MainGameUIState& ui_state)
 
 }
 
-void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y)
+void convertRowColToXY_3x3(const Window& window, const int row, const int col, int& x, int& y)
 {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
 	x = (col * 2 + 6) * cell_width;
 	y = (row * 2 + 2) * cell_height;
 }
-void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y)
+
+void convertRowColToXY_12x12(const Window& window, const int row, const int col, int& x, int& y)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
 	x = (col + 10) * cell_height + cell_height / 2;
 	y = (row + 3) * cell_width + cell_width / 2;
 }
 
-Cell handleMouseClick3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY) {
-	int cellW = window.width / 16;
-	int cellH = cellW;
-	int col = (mouseX / cellW) / 2 + (mouseX / cellW) % 2 - 3;
-	int row = (mouseY / cellH) / 2 + (mouseY / cellH) % 2 - 1; // from mouse pos to row, col of board
+Cell handleMouseClick3x3(const Window &window, const GameState &game_state, const int mouseX, const int mouseY) {
+	const int cellW = window.width / 16;
+	const int cellH = cellW;
+	const int col = (mouseX / cellW) / 2 + (mouseX / cellW) % 2 - 3;
+	const int row = (mouseY / cellH) / 2 + (mouseY / cellH) % 2 - 1; // from mouse pos to row, col of board
 
-	Cell cell{ row, col };
+	const Cell cell{ row, col };
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NULL_CELL;
 
 	return cell;
 }
 
-Cell handleMouseClick12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state, int mouseX, int mouseY)
+Cell handleMouseClick12x12(const Window &window, const GameState &game_state, const int mouseX, const int mouseY)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
-	int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
-	int col = (mouseX / cell_width) - 10;
-	Cell cell{ row, col };
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
+	const int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
+	const int col = (mouseX / cell_width) - 10;
+	const Cell cell{ row, col };
 
 	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NULL_CELL;
-
 	return cell;
 }
 
@@ -731,18 +716,15 @@ void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
-	int col = (mouseX / cell_width) / 2 + (mouseX / cell_width) % 2 - 3;
-	int row = (mouseY / cell_height) / 2 + (mouseY / cell_height) % 2 - 1;
-	/*if (col > 2) col = 2;
-	if (row > 2) row = 2;
-	if (col < 0) col = 0;
-	if (row < 0) row = 0;*/
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
+	const int col = (mouseX / cell_width) / 2 + (mouseX / cell_width) % 2 - 3;
+	const int row = (mouseY / cell_height) / 2 + (mouseY / cell_height) % 2 - 1;
+
 	if (row < 0 || col < 0 || row > 2 || col > 2) return;
 	int x, y;
 	convertRowColToXY_3x3(window, row, col, x, y);
-	int width = 2 * cell_width * 90 / 100;
+	const int width = 2 * cell_width * 90 / 100;
 	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
 }
 
@@ -750,32 +732,29 @@ void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
-	int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
-	int col = (mouseX / cell_width) - 10;
-	/*if (row < 0) row = 0;
-	if (col < 0) col = 0;
-	if (row > 11) row = 11;
-	if (col > 11) col = 11;*/
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
+	const int row = (mouseY / cell_height) - 3; // from mouse pos to row, col of board
+	const int col = (mouseX / cell_width) - 10;
+
 	if (row < 0 || col < 0 || row > 11 || col > 11) return;
 	int x, y;
 	convertRowColToXY_12x12(window, row, col, x, y);
-	int width = cell_width * 90 / 100;
+	const int width = cell_width * 90 / 100;
 	ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
 }
 
-void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& event)
 {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
 	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
 	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
 
-	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_A || event.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_D || event.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_W || event.key.keysym.sym == SDLK_UP) row -= 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_S || event.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 2 || col > 2) return;
 	int x, y;
@@ -785,54 +764,52 @@ void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, cons
 	ui_state.hover_cell.y = y - cell_width * 9 / 10;
 }
 
-void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& input)
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& event)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
-	int row = (ui_state.hover_cell.y / cell_height) - 3; // from mouse pos to row, col of board
-	int col = (ui_state.hover_cell.x / cell_width) - 10;
-	if (input.key.keysym.scancode == SDL_SCANCODE_A || input.key.keysym.sym == SDLK_LEFT) col -= 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_D || input.key.keysym.sym == SDLK_RIGHT) col += 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_W || input.key.keysym.sym == SDLK_UP) row -= 1;
-	if (input.key.keysym.scancode == SDL_SCANCODE_S || input.key.keysym.sym == SDLK_DOWN) row += 1;
+	const int CELL_WIDTH = window.width / 32;
+	const int CELL_HEIGHT = CELL_WIDTH;
+	int row = (ui_state.hover_cell.y / CELL_HEIGHT) - 3; // from mouse pos to row, col of board
+	int col = (ui_state.hover_cell.x / CELL_WIDTH) - 10;
+	if (event.key.keysym.scancode == SDL_SCANCODE_A || event.key.keysym.sym == SDLK_LEFT) col -= 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_D || event.key.keysym.sym == SDLK_RIGHT) col += 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_W || event.key.keysym.sym == SDLK_UP) row -= 1;
+	if (event.key.keysym.scancode == SDL_SCANCODE_S || event.key.keysym.sym == SDLK_DOWN) row += 1;
 
 	if (row < 0 || col < 0 || row > 11 || col > 11) return;
 	int x, y;
 	convertRowColToXY_12x12(window, row, col, x, y);
 
-	ui_state.hover_cell.x = x - cell_width * 9 / 20;
-	ui_state.hover_cell.y = y - cell_width * 9 / 20;
+	ui_state.hover_cell.x = x - CELL_WIDTH * 9 / 20;
+	ui_state.hover_cell.y = y - CELL_WIDTH * 9 / 20;
 }
 
-Cell handleKeyboardMakeTurn3x3(const Window& window, MainGameUIState& ui_state, const GameState& game_state)
+Cell handleKeyboardMakeTurn3x3(const Window& window, const MainGameUIState& ui_state, const GameState& game_state)
 {
-	int cell_width = window.width / 16;
-	int cell_height = cell_width;
-	int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
-	int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
+	const int cell_width = window.width / 16;
+	const int cell_height = cell_width;
+	const int col = (ui_state.hover_cell.x / cell_width) / 2 + (ui_state.hover_cell.x / cell_width) % 2 - 3;
+	const int row = (ui_state.hover_cell.y / cell_height) / 2 + (ui_state.hover_cell.y / cell_height) % 2 - 1;
 
-	Cell cell{ row, col };
-
+	const Cell cell{ row, col };
 	if (isCellOutOfBound3x3(cell) or not isCellEmpty(game_state.board3x3, cell)) return NULL_CELL;
 
 	return cell;
 }
 
-Cell handleKeyboardMakeTurn12x12(const Window& window, MainGameUIState& ui_state, const GameState& game_state)
+Cell handleKeyboardMakeTurn12x12(const Window& window, const MainGameUIState& ui_state, const GameState& game_state)
 {
-	int cell_width = window.width / 32;
-	int cell_height = cell_width;
-	int row = (ui_state.hover_cell.y / cell_height) - 3;
-	int col = (ui_state.hover_cell.x / cell_width) - 10;
+	const int cell_width = window.width / 32;
+	const int cell_height = cell_width;
+	const int row = (ui_state.hover_cell.y / cell_height) - 3;
+	const int col = (ui_state.hover_cell.x / cell_width) - 10;
 
-	Cell cell{ row, col };
-
+	const Cell cell{ row, col };
 	if (isCellOutOfBound12x12(cell) or not isCellEmpty(game_state.board12x12, cell)) return NULL_CELL;
 
 	return cell;
 }
 
-void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, SDL_Scancode input)
+void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, const SDL_Scancode input)
 {
 	if (input == SDL_SCANCODE_ESCAPE)
 	{
@@ -842,11 +819,9 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 
 	if (ui_state.is_game_over)
 	{
-
 		if (input == SDL_SCANCODE_RETURN)
 		{
-		
-			switch(ui_state.end_game_button.index)
+			switch (ui_state.end_game_button.index)
 			{
 				case TEXTURE_RESTART_ON:
 					game_state.game_is_run = true;
@@ -871,8 +846,8 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 					break;
 			}
 			ui_state.end_game_button.index = TEXTURE_RESTART_ON;
-
 		}
+
 		if (input == SDL_SCANCODE_W || input == SDL_SCANCODE_UP)
 		{
 			ui_state.end_game_button.index -= 1;
@@ -886,7 +861,6 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 			return;
 		}
 	}
-
 }
 
 void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
@@ -897,7 +871,6 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 			ui_state.screen = 0;
 			break;
 		case 0:
-		{
 			game_state.game_is_run = false;
 			ui_state.is_game_over = false;
 			game_state.is_init = false;
@@ -912,15 +885,13 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 			// Trở về menu - phát nhạc menu
 			Play_BGM_Menu();
 			break;
-		}
 		default:
 			break;
 	}
 }
 
-void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, int mouseX, int mouseY)
+void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, const int mouseX, const int mouseY)
 {
-	
 	if (ui_state.save_button.state) 
 	{ 
 		ui_state.screen = TEXTURE_SAVE_SCREEN;
@@ -930,47 +901,41 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 	switch (ui_state.screen)
 	{
 	case 0:
-	{
 		if (checkMouseInButton(ui_state.turn_back_button[0], mouseX, mouseY))
 		{
 			Back(ui_state, game_state, menu_state);
 			return;
 		}
 		if (game_state.board_type == Classic)
-			ui_state.selected_cell = handleMouseClick3x3(window, ui_state, game_state, mouseX, mouseY);
-		else ui_state.selected_cell = handleMouseClick12x12(window, ui_state, game_state, mouseX, mouseY);
+			ui_state.selected_cell = handleMouseClick3x3(window, game_state, mouseX, mouseY);
+		else ui_state.selected_cell = handleMouseClick12x12(window, game_state, mouseX, mouseY);
 		break;
-	}
 	case TEXTURE_SAVE_SCREEN:
-	{
 		if (checkMouseInButton(ui_state.turn_back_button[1], mouseX, mouseY))
 		{
 			Back(ui_state, game_state, menu_state);
 			return;
 		}
 
-		int idex = mouseInLoadOrSave("save");
-		SDL_Rect tmp = Saving_Slot[idex].rect;
-		if (checkButton({ tmp.x + tmp.w - tmp.h / 2, tmp.y, tmp.h / 2, tmp.h / 2 }, mouseX, mouseY))
+		const int index = mouseInLoadOrSave("save");
+		auto [x, y, w, h] = Saving_Slot[index].rect;
+		if (checkButton({ x + w - h / 2, y, h / 2, h / 2 }, mouseX, mouseY))
 		{
-			std::string file_name = getSaveFileName(ui_state.save_path, idex);
+			std::string file_name = getSaveFileName(ui_state.save_path, index);
 			if (!isFileEmpty(file_name))
 			{
-				Saving_Slot[idex].state = false;
-				Loading_Slot[idex].state = false;
+				Saving_Slot[index].state = false;
+				Loading_Slot[index].state = false;
 				eraseData(file_name);
-				getSaveInform(ui_state, idex);
+				getSaveInform(ui_state, index);
 			}
 			return;
 		}
-		if (idex == -1)
+		if (index == -1)
 			return;
-		std::string file_name = getSaveFileName(ui_state.save_path, idex);
+		const std::string file_name = getSaveFileName(ui_state.save_path, index);
 		Save(game_state, file_name);
-		getSaveInform(ui_state, idex);
+		getSaveInform(ui_state, index);
 		break;
 	}
-	}
-
-
 }

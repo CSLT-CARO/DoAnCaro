@@ -131,18 +131,14 @@ SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) 
 }
 
 void loadMenuTextures(SDL_Renderer* renderer) {
-	for (auto const& entry : MENU_IMAGE_LOAD_ENTRIES) {
-		const auto& file_name = entry.first;
-		const auto& texture_enum = entry.second;
+	for (const auto&[file_name, texture_enum] : MENU_IMAGE_LOAD_ENTRIES) {
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/Images/" + file_name + ".bmp");
 		MENU_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
 }
 
 void loadMainGameTextures(SDL_Renderer* renderer) {
-	for (auto const& entry : MAIN_GAME_IMAGE_LOAD_ENTRIES) {
-		const auto& file_name = entry.first;
-		const auto& texture_enum = entry.second;
+	for (const auto&[file_name, texture_enum] : MAIN_GAME_IMAGE_LOAD_ENTRIES) {
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/RESOURCE/" + file_name + ".bmp");
 		MAIN_GAME_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
@@ -162,9 +158,9 @@ void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_Rect& d
 		exit(1);
 	}
 
-	SDL_RenderCopy(renderer, texture, NULL, &destination);
+	SDL_RenderCopy(renderer, texture, nullptr, &destination);
 }
 
-void drawTimer(SDL_Renderer* renderer, Second current_time, const SDL_Rect& destination) {
+void drawTimer(SDL_Renderer* renderer, const Second current_time, const SDL_Rect& destination) {
 	drawTexture(renderer, TIMER_TEXTURES.at(current_time), destination);
 }

@@ -1,19 +1,19 @@
 #include "Audio.h"
 
 // --- Config: asset paths ---
-static const char* PATH_BGM_MENU = "assets/Audio/Background_menu.mp3";
-static const char* PATH_BGM_GAME = "assets/Audio/Background_music.mp3";
-static const char* PATH_SFX_CLICK = "assets/Audio/Click_button.wav";
-static const char* PATH_SFX_MOVE = "assets/Audio/Move.wav";
-static const char* PATH_SFX_WIN = "assets/Audio/Game_win.wav";
-static const char* PATH_SFX_LOSE = "assets/Audio/Game_lose.wav";
-static const char* PATH_SFX_DRAW = "assets/Audio/Game_draw.wav";
+static constexpr auto PATH_BGM_MENU = "assets/Audio/Background_menu.mp3";
+static constexpr auto PATH_BGM_GAME = "assets/Audio/Background_music.mp3";
+static constexpr auto PATH_SFX_CLICK = "assets/Audio/Click_button.wav";
+static constexpr auto PATH_SFX_MOVE = "assets/Audio/Move.wav";
+static constexpr auto PATH_SFX_WIN = "assets/Audio/Game_win.wav";
+static constexpr auto PATH_SFX_LOSE = "assets/Audio/Game_lose.wav";
+static constexpr auto PATH_SFX_DRAW = "assets/Audio/Game_draw.wav";
 
 // --- Volume Configuration ---
-static const int MUSIC_VOLUME = 64;
-static const int SFX_VOLUME = 96;
-static const int DUCKING_VOLUME = 32;
-static const int DUCKING_DURATION = 400;
+static constexpr int MUSIC_VOLUME = 64;
+static constexpr int SFX_VOLUME = 96;
+static constexpr int DUCKING_VOLUME = 32;
+static constexpr int DUCKING_DURATION = 400;
 
 // --- Internal state ---
 static Mix_Music* bgm_music = nullptr;
@@ -57,7 +57,7 @@ static void duck_music_temporarily(int duck_ms = DUCKING_DURATION) {
     if (!bgm_music) return;
     if (is_music_muted.load()) return;  // Chỉ kiểm tra music muted
     int current = saved_music_volume;
-    int target = DUCKING_VOLUME;
+    constexpr int target = DUCKING_VOLUME;
     Mix_VolumeMusic(target);
     std::thread([current, duck_ms]() {
         std::this_thread::sleep_for(std::chrono::milliseconds(duck_ms));
@@ -223,7 +223,7 @@ void Stop_All_SFX() {
 
 
 bool Toggle_Music() {
-    bool now = !is_music_muted.load();
+    const bool now = !is_music_muted.load();
     is_music_muted.store(now);
     if (now) {
         // Tắt nhạc
@@ -246,7 +246,7 @@ bool Toggle_Music() {
 }
 
 bool Toggle_SFX() {
-    bool now = !is_sfx_muted.load();
+    const bool now = !is_sfx_muted.load();
     is_sfx_muted.store(now);
     if (now) {
         // Tắt SFX
@@ -269,7 +269,7 @@ bool Is_SFX_Muted() {
 }
 
 
-void Apply_Music_State(bool is_muted) {
+void Apply_Music_State(const bool is_muted) {
     is_music_muted.store(is_muted);
     if (is_muted) {
         Mix_VolumeMusic(0);
@@ -285,7 +285,7 @@ void Apply_Music_State(bool is_muted) {
     }
 }
 
-void Apply_SFX_State(bool is_muted) {
+void Apply_SFX_State(const bool is_muted) {
     is_sfx_muted.store(is_muted);
     if (is_muted) {
         Mix_Volume(-1, 0);

@@ -12,8 +12,8 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 		}
 		if (ui_state.is_game_over and not isTimerRunning(ui_state.before_game_end_timer))
 		{
-			int mouseX = event.button.x;
-			int mouseY = event.button.y;
+			const int mouseX = event.button.x;
+			const int mouseY = event.button.y;
 
 			ui_state.selected_cell = NULL_CELL;
 

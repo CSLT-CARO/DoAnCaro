@@ -25,6 +25,6 @@ struct Window {
 };
 
 void initVideo(Window& window);
-void destroyVideo(Window& window);
+void destroyVideo(const Window& window);
 
 #endif

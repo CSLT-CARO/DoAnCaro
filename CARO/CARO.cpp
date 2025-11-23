@@ -63,10 +63,6 @@ int main(int argc, char* argv[]) {
 
 	GameState game_state{};
 
-	LoadedGameSettings settings = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
-	
-
-
 	SDL_Event event;
 	menu_state.menu_is_run = true;
 

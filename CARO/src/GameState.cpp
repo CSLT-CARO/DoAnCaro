@@ -125,7 +125,7 @@ Cell getBotMoveHard(const GameState& game_state) {
             Cell cell{ row, column };
             if (not tryPlaceMark(copied_board, cell, maximizer)) continue;
 
-            int score = minimax(copied_board, 0, false, maximizer, minimizer, -1);
+            const int score = minimax(copied_board, 0, false, maximizer, minimizer, -1);
             trySetEmpty(copied_board, cell);
 
             if (score > best_value) {
@@ -138,7 +138,7 @@ Cell getBotMoveHard(const GameState& game_state) {
     return best_move;
 }
 
-int minimax(Board3x3& board, int depth, bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer, const int depth_threshold) {
+int minimax(Board3x3& board, const int depth, const bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer, const int depth_threshold) {
     if (isTerminated(board) or shouldAbortByDepth(depth, depth_threshold)) {
         const WinnerData winner = checkWinner(board);
         return evaluateScore(winner.mark, maximizer, minimizer);
@@ -152,7 +152,7 @@ int minimax(Board3x3& board, int depth, bool is_maximizer, const PlayerMark maxi
         best_value = 10000;
     }
 
-    PlayerMark current_player = is_maximizer ? maximizer : minimizer;
+    const PlayerMark current_player = is_maximizer ? maximizer : minimizer;
 
     for (int row = 0; row < 3; row++) {
         for (int column = 0; column < 3; column++) {

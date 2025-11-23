@@ -2,21 +2,18 @@
 
 std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
 std::unordered_map< int, Button> Loading_Slot;
+
 void InitCaroButton(const Window& window, CaroTextPosition& caro_text_position)
 {
-	int window_width = window.width;
-	int window_height = window.height;
 	caro_text_position.caro_button = {
-		window_width / 2 - 300,
-		(int)(window_height / 10 * 0.1) - 75,
+		window.width / 2 - 300,
+		static_cast<int>(window.height / 10 * 0.1) - 75,
 		600,
 		600
 	};
 }
 void InitTurnBackButton(const Window& window, TurnBackButton& turn_back_button)
 {
-	int window_width = window.width;
-	int window_height = window.height;
 	turn_back_button.turn_back_button = {
 		30,
 		30,
@@ -28,29 +25,27 @@ void InitTurnBackButton(const Window& window, TurnBackButton& turn_back_button)
 
 void InitMenuButton(const Window& window, MenuButton& menu_button)
 {
-	int window_width = window.width;
-	int window_height = window.height;
 	menu_button.play_button = {
-		window_width / 2 - 175,
-		window_height / 10 * 4,
+		window.width / 2 - 175,
+		window.height / 10 * 4,
 		350,
 		80
 	};
 	menu_button.load_button = {
-		window_width / 2 - 175,
-		(int)(window_height / 10 * 5.25),
+		window.width / 2 - 175,
+		static_cast<int>(window.height / 10 * 5.25),
 		350,
 		80
 	};
 	menu_button.settings_button.settings_button = {
-		window_width / 2 - 175,
-		(int)(window_height / 10 * 6.5),
+		window.width / 2 - 175,
+		static_cast<int>(window.height / 10 * 6.5),
 		350,
 		80
 	};
 	menu_button.exit_button = {
-		window_width / 2 - 175,
-		(int)(window_height / 10 * 7.75),
+		window.width / 2 - 175,
+		static_cast<int>(window.height / 10 * 7.75),
 		350,
 		80
 	};
@@ -62,17 +57,15 @@ void InitMenuButton(const Window& window, MenuButton& menu_button)
 
 void InitChooseTypePlayer(const Window& window, ChooseTypePlayer& choose_type_player)
 {
-	int window_width = window.width;
-	int window_height = window.height;
 	choose_type_player.pvp_button = {
-		window_width / 2 - 175,
-		window_height / 10 * 4,
+		window.width / 2 - 175,
+		window.height / 10 * 4,
 		350,
 		80
 	};
 	choose_type_player.pve_button = {
-		window_width / 2 - 175,
-		(int)(window_height / 10 * 5.25),
+		window.width / 2 - 175,
+		static_cast<int>(window.height / 10 * 5.25),
 		350,
 		80
 	};
@@ -82,17 +75,15 @@ void InitChooseTypePlayer(const Window& window, ChooseTypePlayer& choose_type_pl
 
 void InitChooseTypeGame(const Window& window, ChooseTypeGame& choose_type_game)
 {
-	int window_width = window.width;
-	int window_height = window.height;
 	choose_type_game._3x3_button = {
-		window_width / 2 - 175,
-		window_height / 10 * 4,
+		window.width / 2 - 175,
+		window.height / 10 * 4,
 		350,
 		80
 	};
 	choose_type_game._12x12_button = {
-		window_width / 2 - 175,
-		(int)(window_height / 10 * 5.25),
+		window.width / 2 - 175,
+		static_cast<int>(window.height / 10 * 5.25),
 		350,
 		80
 	};
@@ -102,31 +93,28 @@ void InitChooseTypeGame(const Window& window, ChooseTypeGame& choose_type_game)
 
 void InitSettings(const Window& window, SettingsButton& settings_button)
 {
-
-	int window_width = window.width;
-	int window_height = window.height;
 	settings_button.music_button = {
-		window_width / 2 - 230,
-		window_height / 10 * 4,
+		window.width / 2 - 230,
+		window.height / 10 * 4,
 		300,
 		80
 	};
 	settings_button.sfx_button = {
-		window_width / 2 - 230,
-		(int)(window_height / 10 * 5.25),
+		window.width / 2 - 230,
+		static_cast<int>(window.height / 10 * 5.25),
 		300,
 		80
 	};
 
 	settings_button.on_music_button = {
-		window_width / 2 + 100,
-		window_height / 10 * 4,
+		window.width / 2 + 100,
+		window.height / 10 * 4,
 		120,
 		80
 	};
 	settings_button.on_sfx_button = {
-		window_width / 2 + 100,
-		(int)(window_height / 10 * 5.25),
+		window.width / 2 + 100,
+		static_cast<int>(window.height / 10 * 5.25),
 		120,
 		80
 	};
@@ -142,32 +130,31 @@ void InitSettings(const Window& window, SettingsButton& settings_button)
 
 void InitChooseDifficulty(const Window& window, DifficultyButton& diff)
 {
-	int imgW = 350;
-	int imgH = 80;
-	int windowW = window.width;
-	int windowH = window.height;
+	constexpr int IMG_WIDTH = 350;
+	constexpr int IMG_HEIGHT = 80;
 
 	diff.easy.rect =
 	{
-		windowW / 2 - imgW / 2,
-		windowH / 2 - imgH / 2 - (int)(windowH * 1.25) / 10,
-		imgW,
-		imgH
+		window.width / 2 - IMG_WIDTH / 2,
+		window.height / 2 - IMG_HEIGHT / 2 - static_cast<int>(window.height * 1.25) / 10,
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 	diff.normal.rect =
 	{
-		windowW / 2 - imgW / 2,
-		windowH / 2 - imgH / 2,
-		imgW,
-		imgH
+		window.width / 2 - IMG_WIDTH / 2,
+		window.height / 2 - IMG_HEIGHT / 2,
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
 	diff.hard.rect =
 	{
-		windowW / 2 - imgW / 2,
-		windowH / 2 - imgH / 2 + (int)(windowH * 1.25) / 10,
-		imgW,
-		imgH
+		window.width / 2 - IMG_WIDTH / 2,
+		window.height / 2 - IMG_HEIGHT / 2 + static_cast<int>(window.height * 1.25) / 10,
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
+
 	MenuButtonPosition[_ChooseDifficulty][TEXTURE_EASY_BUTTON] = diff.easy.rect;
 	MenuButtonPosition[_ChooseDifficulty][TEXTURE_NORMAL_BUTTON] = diff.normal.rect;
 	MenuButtonPosition[_ChooseDifficulty][TEXTURE_HARD_BUTTON] = diff.hard.rect;
@@ -175,34 +162,30 @@ void InitChooseDifficulty(const Window& window, DifficultyButton& diff)
 
 void InitLoadFile(const Window& window, FileSave& load_file)
 {
-	int window_width = window.width ;
-	int window_height = window.height ;
-
-
 	load_file.load_screen = {
 		0,
 		0,
-		window_width ,
-		window_height 
-		
+		window.width ,
+		window.height
 	};
+
 	MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN] = load_file.load_screen.rect;
 	
-	int pos_x = 254, pos_y = 103;
-	int imgW = 1459, imgH = 173;
-	SDL_Rect tmp;
+	int pos_y = 103;
 	for (int i = 1; i <= 5; i++)
 	{
-		tmp =
-		{
-			pos_x, pos_y,
-			imgW,imgH
+		constexpr int IMG_HEIGHT = 173;
+		constexpr int IMG_WIDTH = 1459;
+		constexpr int POS_X = 254;
+
+		const SDL_Rect TMP_RECT = {
+			POS_X, pos_y,
+			IMG_WIDTH, IMG_HEIGHT
 		};
-		Loading_Slot[i].rect = tmp;
-		pos_y += 8 + imgH;
+
+		Loading_Slot[i].rect = TMP_RECT;
+		pos_y += 8 + IMG_HEIGHT;
 	}
-
-
 }
 
 void drawMenuGame(const Window& window, const MenuState& menu_state)
@@ -232,12 +215,10 @@ void drawMenuGame(const Window& window, const MenuState& menu_state)
 
 void drawTurnBackButton(const Window& window, const MenuState &menu_state)
 {
-	const MenuTexturesEnum enums_button_hovered = TEXTURE_TURN_BACK_BUTTON_HOVERED;
-	MenuTexturesEnum enums_button = TEXTURE_TURN_BACK_BUTTON;
-	if (menu_state.transform_idx == enums_button)
-		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button_hovered), MenuButtonPosition[_TurnBackButton][enums_button]);
+	if (menu_state.transform_idx == TEXTURE_TURN_BACK_BUTTON)
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED), MenuButtonPosition[_TurnBackButton][TEXTURE_TURN_BACK_BUTTON]);
 	else
-		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(enums_button), MenuButtonPosition[_TurnBackButton][enums_button]);
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON), MenuButtonPosition[_TurnBackButton][TEXTURE_TURN_BACK_BUTTON]);
 }
 
 void drawChooseTypePlayer(const Window& window, const MenuState& menu_state)
@@ -256,8 +237,6 @@ void drawChooseTypePlayer(const Window& window, const MenuState& menu_state)
 
 void drawChooseTypeGame(const Window& window, const MenuState& menu_state)
 {
-
-
 	if (menu_state.transform_idx == TEXTURE_CLASSIC_BOARD_BUTTON)
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CLASSIC_BOARD_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypeGame][TEXTURE_CLASSIC_BOARD_BUTTON]);
 	else
@@ -267,8 +246,6 @@ void drawChooseTypeGame(const Window& window, const MenuState& menu_state)
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ULTIMATE_BOARD_BUTTON_HOVERED), MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON]);
 	else
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ULTIMATE_BOARD_BUTTON), MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON]);
-
-
 }
 
 void drawChooseDifficulty(const Window& window, const MenuState& menu_state)
@@ -289,7 +266,6 @@ void drawChooseDifficulty(const Window& window, const MenuState& menu_state)
 
 void drawChangeSettings(const Window& window, const MenuState& menu_state)
 {
-
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_SFX_BUTTON), MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_BUTTON]);
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_MUSIC_BUTTON), MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_BUTTON]);
 	if (menu_state.turn_music == true)
@@ -324,51 +300,49 @@ void drawChangeSettings(const Window& window, const MenuState& menu_state)
 
 void drawLoadInform(const Window& window, const MainGameUIState& ui_state, const int idx)
 {
-	SDL_Rect SlotRect = Loading_Slot[idx].rect;
-	int leftX = SlotRect.x + 50 + 173;
-	int rightX = SlotRect.x + 650 + 60;
-	int topY = SlotRect.y + 30;
-	int bottomY = SlotRect.y + 100;
+	const SDL_Rect SlotRect = Loading_Slot[idx].rect;
+	const int leftX = SlotRect.x + 50 + 173;
+	const int rightX = SlotRect.x + 650 + 60;
+	const int topY = SlotRect.y + 30;
+	const int bottomY = SlotRect.y + 100;
 
 	if (Loading_Slot[idx].state == true)
 	{
 		TTF_Font* font = TTF_OpenFont(window.font_path.c_str(), 50);
-		SDL_Color color = { 255, 0, 0, 255 };
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERROR), { SlotRect.x + 20, SlotRect.y, 173, 173 });
 		drawText(window, "CORRUPTED FILE!!!", font, leftX, SlotRect.y + 173/2 - 25, COLOR_RED);
 		TTF_CloseFont(font);
 		return;
 	}
-	
 
 	drawText(window, ui_state.save_inform[idx].title, window.font_large, leftX, topY, COLOR_BLACK);
 	drawText(window, ui_state.save_inform[idx].date, window.font_big, leftX, bottomY, COLOR_BLACK);
 	drawText(window, ui_state.save_inform[idx].mode, window.font_big, rightX, topY + 15, COLOR_BLACK);
 	drawText(window, ui_state.save_inform[idx].board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
-
-
 }
 
 void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font)
 {
-	int imgW = 603;
-	int imgH = 243;
-	int pos_x = window.width / 2 - imgW / 2;
-	int pos_y = window.height / 2 - imgH / 2;
+	constexpr int IMG_WIDTH = 603;
+	constexpr int IMG_HEIGHT = 243;
+	const int pos_x = window.width / 2 - IMG_WIDTH / 2;
+	const int pos_y = window.height / 2 - IMG_HEIGHT / 2;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	SDL_Rect notice_board = {
+
+	const SDL_Rect notice_board = {
 		pos_x,
 		pos_y,
-		imgW,
-		imgH
+		IMG_WIDTH,
+		IMG_HEIGHT
 	};
-	SDL_Rect Close =
+
+	const SDL_Rect Close =
 	{
-		pos_x + imgW - imgH / 4 - 2,
+		pos_x + IMG_WIDTH - IMG_HEIGHT / 4 - 2,
 		pos_y + 2,
-		imgH / 4,
-		imgH / 4,
+		IMG_HEIGHT / 4,
+		IMG_HEIGHT / 4,
 	};
 
 	drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NOTICE_BOARD), notice_board);
@@ -383,69 +357,59 @@ void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* fon
 
 	TTF_SizeText(font, msg.c_str(), &textW, &textH);
 
-	int drawX = pos_x + (imgW - textW) / 2;
-	int drawY = pos_y + (imgH - textH) / 2;
+	const int drawX = pos_x + (IMG_WIDTH - textW) / 2;
+	const int drawY = pos_y + (IMG_HEIGHT - textH) / 2;
 
 	drawText(window, msg, font, drawX, drawY, COLOR_BLACK);
-
 }
 
 void drawErrorLoadFile(const Window& window, const int idx)
 {
-	std::string msg = "Can not load file \"Save " + std::to_string(idx) + '\"' +" !!!";
+	const std::string msg = "Can not load file \"Save " + std::to_string(idx) + '\"' +" !!!";
 	TTF_Font* font = window.font_large;
 
 	drawNoticeBoard(window, msg, font);
-
-	
 }
 
 void drawLoadFileSave(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)
 {
-	int imgH = 173 / 2;
-	int imgW = imgH;
-	int pos_x = 254 + 1459 - imgW;
-	int pos_y;
+	constexpr int IMG_HEIGHT = 173 / 2;
+	constexpr int IMG_WIDTH = IMG_HEIGHT;
+	constexpr int POS_X = 254 + 1459 - IMG_WIDTH;
 	int mouseX, mouseY;
 
 	SDL_GetMouseState(&mouseX, &mouseY);
 	for (int i = 1; i <= 5; i++)
 	{
-		pos_y = Loading_Slot[i].rect.y;
+		const int pos_y = Loading_Slot[i].rect.y;
 		std::string fileName = getSaveFileName(menu_state.SAVE_PATH,i);
 		if (!isFileEmpty(fileName))
 		{
-			if (checkButton({ pos_x, pos_y, imgW, imgH }, mouseX, mouseY))
+			if (checkButton({ POS_X, pos_y, IMG_WIDTH, IMG_HEIGHT }, mouseX, mouseY))
 			{
 				menu_state.transform_idx = TEXTURE_ERASE_BUTTON;
-				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { pos_x, pos_y, imgW, imgH });
+				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { POS_X, pos_y, IMG_WIDTH, IMG_HEIGHT });
 			}
 			else
-				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { pos_x, pos_y, imgW, imgH });
+				drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), { POS_X, pos_y, IMG_WIDTH, IMG_HEIGHT });
 
 			drawLoadInform(window, ui_state, i);
 		}
-		
-		
 	}
-
 }
 
 void drawChooseFileLoad(const Window& window, const MenuState& menu_state)
 {
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_LOAD_SCREEN), MenuButtonPosition[_ChooseLoadFile][TEXTURE_LOAD_SCREEN]);
-	int idx = mouseInLoadOrSave("load");
+	const int idx = mouseInLoadOrSave("load");
 	if (idx == -1) return;
-	int pos_x = 254 + 25;
-	int imgW = 173;
-	int imgH = imgW;
-	int pos_y = Loading_Slot[idx].rect.y ;
+	constexpr int POS_X = 254 + 25;
+	constexpr int IMG_WIDTH = 173;
+	constexpr int IMG_HEIGHT = IMG_WIDTH;
+	const int pos_y = Loading_Slot[idx].rect.y ;
 	std::string file_name = getSaveFileName(menu_state.SAVE_PATH, idx);
 	if (!isFileEmpty(file_name) && !Loading_Slot[idx].state)
-		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { pos_x, pos_y, imgW, imgH });
-
-
-
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_EXPORT_BUTTON), { POS_X, pos_y, IMG_WIDTH, IMG_HEIGHT });
 }
 
 void drawTableTest(const Window& window)
@@ -464,6 +428,7 @@ void drawTableTest(const Window& window)
 	int y = 276;
 	SDL_RenderDrawLine(window.renderer_ptr, 0, y, window.width, y);
 }
+
 void initMenuResources(Window &window)
 {
 	MenuButton menu_button;
@@ -484,12 +449,11 @@ void initMenuResources(Window &window)
 	InitChooseDifficulty(window, diff);
 }
 
-void buildMenuImages(MenuState& menu_state, Window& window, const MainGameUIState& ui_state)
+void buildMenuImages(MenuState& menu_state, const Window& window, const MainGameUIState& ui_state)
 {
-
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });
 	if (menu_state.trans_display != _ChooseLoadFile)
-		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), { window.width / 2 - 300, (int)(window.width / 10 * 0.1) - 75, 600, 600 });
+		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_CARO_TEXT), { window.width / 2 - 300, static_cast<int>(window.width / 10 * 0.1) - 75, 600, 600 });
 	if (menu_state.trans_display == _MainMenu)
 	{
 		drawMenuGame(window, menu_state);

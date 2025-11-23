@@ -10,17 +10,17 @@
 #include "Save.h"
 
 
-int checkMousePosition(Window& window, int mouseX, int mouseY, int state, const MenuState& menu_state);
+int checkMousePosition(int mouseX, int mouseY, int state, const MenuState &menu_state);
 void turnBack(MenuState& menu_state, const GameState &game_state);
 bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y);
 void chooseByKeyBoard(MenuState& menu_state, GameState& game_state);
 void checkMouseMotion(Window& window, MenuState& menu_state);
-int mouseInLoadOrSave(std::string type);
+int mouseInLoadOrSave(const std::string &type);
 
-void checkInRange(int& idx, int lelf, int right);
-void checkMouseButtonDown(Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
-void handleKeyboardInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state);
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
-void processMenuScreen(Window& window, MenuState& menu_state, MainGameUIState& ui_state);
+void checkInRange(int& idx, int left, int right);
+void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
+void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameState &game_state);
+void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
+void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState& ui_state);
 
 #endif // !MENU_CONTROLLER_H
