@@ -18,6 +18,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Audio.h" />
+    <ClInclude Include="include\CaroEnum.h" />
+    <ClInclude Include="include\GameState.h" />
+    <ClInclude Include="include\Save.h" />
+    <ClInclude Include="include\Texture.h" />
+    <ClInclude Include="include\MainGameController.h" />
+    <ClInclude Include="include\MainGameLogic.h" />
+    <ClInclude Include="include\MainGameUI.h" />
+    <ClInclude Include="include\MenuController.h" />
+    <ClInclude Include="include\MenuUI.h" />
+    <ClInclude Include="include\PrintMenuScreen.h" />
+    <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\utitlity.h" />
+    <ClInclude Include="include\Video.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CARO.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
+    <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\Save.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\MainGameController.cpp" />
+    <ClCompile Include="src\MainGameLogic.cpp" />
+    <ClCompile Include="src\MainGameUI.cpp" />
+    <ClCompile Include="src\MenuController.cpp" />
+    <ClCompile Include="src\PrintMenuScreen.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\Video.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -71,11 +101,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);./SDL2/</IncludePath>
+    <IncludePath>$(IncludePath);./include/SDL2/</IncludePath>
     <LibraryPath>./lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);./SDL2/</IncludePath>
+    <IncludePath>$(IncludePath);./include/SDL2/</IncludePath>
     <LibraryPath>./lib/;D:\Code\Project\DoAnCaro\CARO\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -91,6 +121,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,6 +138,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +150,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -126,7 +158,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;./lib/SDL2_mixer.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,49 +167,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);./lib/SDL2.lib;./lib/SDL2main.lib;./lib/SDL2_mixer.lib;lib/SDL2.lib;lib/SDL2main.lib;lib/SDL2test.lib;lib/SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="CARO.cpp" />
-    <ClCompile Include="MainGameController.cpp" />
-    <ClCompile Include="MainGameLogic.cpp" />
-    <ClCompile Include="MainGameUI.cpp" />
-    <ClCompile Include="MenuController.cpp" />
-    <ClCompile Include="PrintMenuScreen.cpp" />
-    <ClCompile Include="source_files\GameState.cpp" />
-    <ClCompile Include="Video.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\caro_enum.h" />
-    <ClInclude Include="include\ChooseTypeGame.h" />
-    <ClInclude Include="include\ChooseTypePlayer.h" />
-    <ClInclude Include="include\choose_board_screen.h" />
-    <ClInclude Include="include\choose_difficulty_screen.h" />
-    <ClInclude Include="include\choose_mode_screen.h" />
-    <ClInclude Include="include\game_state.h" />
-    <ClInclude Include="include\MainGameController.h" />
-    <ClInclude Include="include\MainGameLogic.h" />
-    <ClInclude Include="include\MainGameUI.h" />
-    <ClInclude Include="include\MenuScreen.h" />
-    <ClInclude Include="include\main_game_screen.h" />
-    <ClInclude Include="include\MenuController.h" />
-    <ClInclude Include="include\MenuUI.h" />
-    <ClInclude Include="include\play_again_screen.h" />
-    <ClInclude Include="include\PrintMenuScreen.h" />
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\start_screen.h" />
-    <ClInclude Include="include\TyLe.h" />
-    <ClInclude Include="include\utitlity.h" />
-    <ClInclude Include="include\video.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

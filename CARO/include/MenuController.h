@@ -2,23 +2,25 @@
 #define MENU_CONTROLLER_H
 
 #include <SDL.h>
-#include "video.h"
+#include "Video.h"
 #include "MenuUI.h"
 #include "PrintMenuScreen.h"
-#include "game_state.h"
-#include "TyLe.h"
+#include "GameState.h"
+#include "MainGameUI.h"
+#include "Save.h"
 
 
-int settingsCheckMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[], bool turn_music, bool turn_sfx, MenuState& menu_state, print_settings print_settings);
+int checkMousePosition(int mouseX, int mouseY, int state, const MenuState &menu_state);
+void turnBack(MenuState& menu_state, const GameState &game_state);
+bool checkButton(const SDL_Rect& button, int mouse_x, int mouse_y);
+void chooseByKeyBoard(MenuState& menu_state, GameState& game_state);
+void checkMouseMotion(Window& window, MenuState& menu_state);
+int mouseInLoadOrSave(const std::string &type);
 
-int checkMousePosition(Window& window, int mouseX, int mouseY, int sz, const double TYLEHIGH[]);
-void checkTabKey(SDL_Event& event, MenuState& menu_state);
-
-void checkMouseMotion(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings);
-
-void checkMouseButtonDown(Window& window, MenuState& menu_state, Images images_manager, print_settings& print_settings, GameState& game_state);
-
-void handleMenuInput(SDL_Event& event, Window& window, MenuState& menu_state, Images images_manager, print_settings print_settings, GameState& game_state);
-void processMenuScreen(Window& window, MenuState& menu_state, Images picture, print_settings print_settings);
+void checkInRange(int& idx, int left, int right);
+void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
+void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameState &game_state);
+void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
+void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState& ui_state);
 
 #endif // !MENU_CONTROLLER_H

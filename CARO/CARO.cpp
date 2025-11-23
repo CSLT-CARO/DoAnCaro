@@ -1,55 +1,95 @@
+﻿#include <fstream>
 #include <iostream>
 
-#include "video.h"
+// only uncomment when debugging memory leak issues
+// #define ENABLE_MEMORY_ALLOCATION_TRACKER
+#ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
+static int allocation_count = 0;
+
+void* operator new(size_t size) {
+	void* memory = malloc(size);
+	printf("Allocation count %d\n", allocation_count);
+	printf("Allocated: %lu bytes\n", size);
+	printf("Address: %p\n\n", memory);
+	allocation_count++;
+	return memory;
+}
+
+void operator delete(void* memory) {
+	allocation_count--;
+	printf("Freed memory: %p\n\n", memory);
+	free(memory);
+}
+#endif
+
+#include "Video.h"
+#include "Texture.h"
 #include "MainGameController.h"
 #include "MenuController.h"
 #include "MenuUI.h"
+#include "Save.h"
+#include "Audio.h"
 
 int main(int argc, char* argv[]) {
+	#ifdef ENABLE_MEMORY_ALLOCATION_TRACKER
+	freopen("allocation.log", "w", stdout);
+    #endif
+
 	Window window{};
-	MainGameUIState main_game_ui_state {};
-	Images picture;
+	MainGameUIState main_game_ui_state{};
 	MenuState menu_state;
 
-	print_settings print_settings;
+	setTimeout(main_game_ui_state.pve_turn_timer[Easy], 60999);
+	setTimeout(main_game_ui_state.pve_turn_timer[Normal], 30999);
+	setTimeout(main_game_ui_state.pve_turn_timer[Hard], 10999);
+	setTimeout(main_game_ui_state.pvp_turn_timer, 20999);
+	setTimeout(main_game_ui_state.before_game_end_timer, 1500);
 
 	initVideo(window);
-	initMainGameUI(window, main_game_ui_state, picture);
-	initMenuImages(window, menu_state, picture);
+	initTTF(window);
+	initMainGameUIState(window, main_game_ui_state);
+	initMenuResources(window);
+	Audio_Init();
+	initSavesFolder(menu_state.SAVE_PATH);
+	initGameSettings(menu_state.GAME_SETTINGS_FILE_PATH);
+	loadMenuTextures(window.renderer_ptr);
+	loadTimerTextures(window.renderer_ptr);
+	loadMainGameTextures(window.renderer_ptr);
+
+	const auto [ENABLE_SFX,
+				ENABLE_MUSIC] = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
+	menu_state.turn_sfx = ENABLE_SFX;
+	menu_state.turn_music = ENABLE_MUSIC;
 
 	GameState game_state{};
-	game_state.board_type = Classic;
-	game_state.mode = PVE;
 
 	SDL_Event event;
-	bool running = true;
-	bool a = false;
+	menu_state.menu_is_run = true;
 
-	while (running) {
+	while (menu_state.menu_is_run) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
-				running = false;
+				menu_state.menu_is_run = false;
 			}
 
-			if (event.type == SDL_KEYDOWN) {
-				if (event.key.keysym.sym == SDLK_ESCAPE) {
-					running = false;
-				}
-			}
 			if (game_state.game_is_run == true)
 				handleMainGameInput(event, main_game_ui_state, window, game_state, menu_state);
 			else
-				handleMenuInput(event, window, menu_state, picture, print_settings, game_state);
+				handleMenuInput(event, window, menu_state, game_state, main_game_ui_state);
 		}
 		if (game_state.game_is_run == true)
-			processMainGame(window, main_game_ui_state, picture, game_state);
+			processMainGame(window, main_game_ui_state, game_state);
 		else
 		{
-			processMenuScreen(window, menu_state, picture, print_settings);
+			processMenuScreen(window, menu_state, main_game_ui_state);
 		}
 		SDL_RenderPresent(window.renderer_ptr);
 	}
 
+	writeSettings(menu_state.GAME_SETTINGS_FILE_PATH, menu_state);
+
+	Audio_Quit();
+	destroyTTF(window);
 	destroyVideo(window);
 	return 0;
 }

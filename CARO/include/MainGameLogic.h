@@ -1,8 +1,10 @@
 #ifndef MAIN_GAME_LOGIC_H
 #define MAIN_GAME_LOGIC_H
 
-#include "game_state.h"
+#include "GameState.h"
+#include "MainGameUI.h"
+#include "Video.h"
 
-void initGame(GameState& game_state);
+void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state);
 
 #endif

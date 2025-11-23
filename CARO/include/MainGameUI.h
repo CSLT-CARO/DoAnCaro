@@ -1,127 +1,127 @@
 #ifndef MAIN_GAME_UI_H
 #define MAIN_GAME_UI_H
 
-#include "video.h"
-#include "game_state.h"
+#include "Video.h"
+#include "GameState.h"
 #include "MenuUI.h"
+#include "Texture.h"
+#include "Timer.h"
 
 #include <vector>
-#include <SDL_test_font.h>
 #include <string>
+#include <SDL_ttf.h>
 
 struct Button {
 	SDL_Rect rect{};
 	bool state;
 };
 
-struct Timer {
-	SDL_Rect rect{};
-	std::string image_path{};
-	int start_time{};
-	int time_left{};
-	int dis_time{};
-	int current_time{};
-	bool isRunning{};
+struct Notice_msg
+{
+	Button notice_board;
+	Button close;
+	Button yes_button;
+	Button no_button;
 };
+
+extern std::unordered_map< int, Button> Saving_Slot;
 
 struct GameOverButton
 {
 	Button New_game;
 	Button Restart;
 	Button Exit;
+	int index;
 };
 
-const Cell NOT_SELECTED = { -1, -1 };
+struct SaveInform
+{
+	std::string title;
+	std::string date;
+	std::string mode;
+	std::string board_type;
+};
 
 struct MainGameUIState {
-	Button player_x {};
-	Button player_o {};
-	Button winner {};
-	Timer timer_button {};
-	GameOverButton end_game_button;
 
-	Cell selected_cell = NOT_SELECTED;
+
+	Button player_x{};
+	Button player_o{};
+	Button winner{};
+	Button timer_button{};
+	Button save_button{};
+	Button save_sreen{};
+	
+	SDL_Rect hover_cell{};
+	SDL_Rect turn_back_button[2]{};
+	GameOverButton end_game_button;
+	Timer before_game_end_timer{};
+
+	Timer pvp_turn_timer{};
+	std::unordered_map<Difficulty, Timer> pve_turn_timer{};
+
+	Second stopped_at_moment {};
+
+	SaveInform save_inform[6]{};
+
+
+	Cell selected_cell = NULL_CELL;
+	WinnerData winner_data {};
+	PlayerMark who_won{};
+
+	std::string save_path = "./saves";
+	int screen = 0;
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
+	bool should_reset_turn_timer = false;
+	bool game_music_started = false;
 };
 
-struct Images
-{
-	//Load game resources
-	std::vector<std::string> player_XO_button_on = { "player_X_on", "player_O_on" };
-	std::vector<std::string> player_XO_button_off = { "player_X_off", "player_O_off" };
-	std::vector<std::string> game_over_screen = { "player_X_win", "player_O_win", "game_draw" };
-	std::vector<std::string> game_over_button = { "Restart", "Newgame", "Exit" };
-	std::vector<std::string> game_over_button_on = { "Restart_on", "Newgame_on", "Exit_on" };
-	std::vector<SDL_Texture*> player_XO_texture_on;
-	std::vector<SDL_Texture*> player_XO_texture_off;
-	std::vector<SDL_Texture*> game_over_screen_texture;
-	std::vector<SDL_Texture*> game_over_button_texture;
-	std::vector<SDL_Texture*> game_over_button_texture_on;
-	std::vector<SDL_Texture*> timer_texture;
+void initTTF(Window& window);
+void destroyTTF(Window& window);
 
-	//Load menu resources 
-	std::vector<std::string>arrBackground = { "Background" };
-	std::vector<std::string>arrMainMenu = { "PlayButton", "LoadButton", "SettingsButton", "ExitButton", "Caro_Text_White" };
-	std::vector<std::string> arrMainMenuTransform = { "PlayButtonTransform", "LoadButtonTransform", "SettingsButtonTransform", "ExitButtonTransform" };
-	std::vector<std::string>arrChooseTypePlayer = { "PvEButton", "PvPButton","Caro_Text_White" };
-	std::vector<std::string> arrChooseTypePlayerTransform = { "PvEButtonTransform", "PvPButtonTransform" };
-	std::vector<std::string>arrChooseTypeGame = { "3x3Button", "12x12Button","Caro_Text_White" };
-	std::vector<std::string> arrChooseTypeGameTransform = { "3x3ButtonTransform", "12x12ButtonTransform" };
-	std::vector<std::string>arrSettings = { "MusicButton", "SFXButton","OnMusicButton","OnSFXButton", "OffMusicButton","OffSFXButton", "Caro_Text_White" };
-	std::vector<std::string> arrSettingsTransform = { "MusicButtonTransform", "SFXButtonTransform", "OnMusicButtonTransform", "OnSFXButtonTransform", "OffMusicButtonTransform", "OffSFXButtonTransform" };
-	std::vector< SDL_Texture*> backgroundTexture;
-	std::vector< SDL_Texture*> mainMenuTexture;
-	std::vector< SDL_Texture*> mainMenuTextureTransform;
-	std::vector <SDL_Texture*> chooseTypePlayerTexture;
-	std::vector <SDL_Texture*> chooseTypePlayerTextureTransform;
-	std::vector <SDL_Texture*> chooseTypeGameTexture;
-	std::vector <SDL_Texture*> chooseTypeGameTextureTransform;
-	std::vector <SDL_Texture*> settingsTexture;
-	std::vector <SDL_Texture*> settingsTextureTransform;
+void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
+void initMainGameUIState(const Window& window, MainGameUIState& ui_state);
+void drawDimmingLayer(const Window& window);
 
-	enum eButton
-	{
-		RESTART,
-		NEWGAME,
-		EXIT
-	};
-	enum eGameOverScreen
-	{
-		PLAYER_X_WIN,
-		PLAYER_O_WIN,
-		GAMEDRAW
-	};
-	enum Player
-	{
-		IMG_X,
-		IMG_O
-	};
+void drawTable3x3(const Window& window, MainGameUIState& ui_state);
+void drawTable12x12(const Window& window, MainGameUIState& ui_state);
 
-};
+void drawButton(const Window& window, MainGameUIState& ui_state);
 
-void loadImage(Window& context, std::vector <std::string> name_game_over_button, std::vector <SDL_Texture*>& texture);
+void drawSymbol3x3(const Window& window, const GameState& game_state);
+void drawSymbol12x12(const Window& window, const GameState& game_state);
 
-std::vector <std::string> getTimerPath();
+void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state);
+void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
+void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
+void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
 
-void initMainGameUI(const Window& window, MainGameUIState& ui_state, Images& picture);
-
-
-void loadMenuImages(Window& window, std::vector<std::string> arrName, std::vector <SDL_Texture*>& texture);
-
-void initMenuImages(Window& window, MenuState& menu_state, Images &images_manager);
-
-void drawMainGame(const Window& window, MainGameUIState& ui_state, Images& picture, const GameState& game_state);
-
-
-
-void drawTable(const Window& window, MainGameUIState& ui_state);
-void drawSymbol(const Window& window, const GameState& game_state);
-void drawImage(const Window& window, const SDL_Rect& button, std::vector<SDL_Texture*> temp_texture, int idx);
-void drawGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won);
-void setupGameOverScreen(MainGameUIState& ui_state, const Window& window, Images& picture, const PlayerMark& who_won);
+void drawText(const Window& window, const std::string& text, TTF_Font* font,int x, int y, SDL_Color color);
+void drawScreen(const Window& window, const MainGameUIState& ui_state);
+void getSaveInform(MainGameUIState& ui_state, int idx);
+void drawSaveInform(const Window& window, const MainGameUIState& ui_state, int idx);
+void setupGameOverScreen(const Window& window, MainGameUIState& ui_state);
 
 bool checkMouseInButton(const SDL_Rect& button, int x, int y);
 void checkMouseHoverButton(MainGameUIState& ui_state);
-Cell handleMouseClick(MainGameUIState& context, const Window& window, const GameState& game_state, int mouseX, int mouseY);
+
+void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y);
+void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y);
+
+Cell handleMouseClick3x3(const Window &window, const GameState &game_state, int mouseX, int mouseY);
+Cell handleMouseClick12x12(const Window &window, const GameState &game_state, int mouseX, int mouseY);
+
+void selectCellByMouse3x3(const Window& window, MainGameUIState& ui_state);
+void selectCellByMouse12x12(const Window& window, MainGameUIState& ui_state);
+
+void handleKeyboardMove3x3(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
+void handleKeyboardMove12x12(const Window& window, MainGameUIState& ui_state, const SDL_Event& event);
+
+Cell handleKeyboardMakeTurn3x3(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
+Cell handleKeyboardMakeTurn12x12(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
+void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
+
+void handelKeyBoardButton(const Window& window, MenuState & menu_state, GameState &game_state, MainGameUIState& ui_state, SDL_Scancode input);
+void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, int mouseX, int mouseY);
 #endif
