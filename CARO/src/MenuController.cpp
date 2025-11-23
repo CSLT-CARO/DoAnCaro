@@ -133,7 +133,6 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		{
 			menu_state.trans_display = _ChooseTypePlayer;
 		}
-
 		if (MousePositionState == TEXTURE_SETTINGS_BUTTON
 			&& checkButton(MenuButtonPosition[_MainMenu][TEXTURE_SETTINGS_BUTTON], mouseX, mouseY))
 		{
@@ -250,6 +249,24 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 			game_state.difficulty = Hard;
 			menu_state.trans_display = _ChooseTypeGame;
 		}
+		return;
+	}
+
+	if (menu_state.trans_display == _ChooseTypeGame)
+	{
+		if (MousePositionState == TEXTURE_CLASSIC_BOARD_BUTTON
+			&& checkButton(MenuButtonPosition[_ChooseTypeGame][TEXTURE_CLASSIC_BOARD_BUTTON], mouseX, mouseY))
+		{
+			game_state.board_type = Classic;
+			game_state.game_is_run = true;
+		}
+		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON
+			&& checkButton(MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON], mouseX, mouseY))
+		{
+			game_state.board_type = Ultimate;
+			game_state.game_is_run = true;
+		}
+		return;
 	}
 
 	if (menu_state.trans_display == _ChangeSettings)
