@@ -164,8 +164,14 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	}
 
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
-		ui_state.selected_cell = botTurn(game_state);
-		ui_state.should_reset_turn_timer = true;
+		if (game_state.board_type == Classic) {
+			ui_state.selected_cell = botTurn(game_state);
+			ui_state.should_reset_turn_timer = true;
+		} else {
+			ui_state.selected_cell = botTurn12x12(game_state);
+			ui_state.should_reset_turn_timer = true;
+		}
+
 		alternateTurn(game_state.whose_turn);
 	} else {
 		if (ui_state.selected_cell == NULL_CELL) {

@@ -29,21 +29,12 @@
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/CARO.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/MainGameUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/MainGameUI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/MenuController.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/MenuController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/PrintMenuScreen.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/PrintMenuScreen.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/Video.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/Video.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Audio.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Audio.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/include/GameState.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/GameState.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/include/utitlity.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/utitlity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/GameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/GameState.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/MenuController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MenuController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/PrintMenuScreen.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Texture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Texture.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Timer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Timer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/src/Video.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/Video.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DoAnCaro" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,13 +44,31 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MenuController.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///media/linux-storage/DoAnCaro/CARO/src/MenuController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -88,7 +97,7 @@
     &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;khang__merge&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;alpha-beta&quot;,
     &quot;last_opened_file_path&quot;: &quot;/media/linux-storage/DoAnCaro/CARO/include/SDL2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;
   }
@@ -118,7 +127,15 @@
       <workItem from="1763731607967" duration="5211000" />
       <workItem from="1763809818656" duration="18587000" />
       <workItem from="1763881349666" duration="2758000" />
-      <workItem from="1763888006750" duration="10057000" />
+      <workItem from="1763888006750" duration="11041000" />
+      <workItem from="1763915880229" duration="994000" />
+      <workItem from="1763967832906" duration="1105000" />
+      <workItem from="1764038018990" duration="5000" />
+      <workItem from="1764154936006" duration="9120000" />
+      <workItem from="1764165079720" duration="293000" />
+      <workItem from="1764165438133" duration="1020000" />
+      <workItem from="1764209575470" duration="10973000" />
+      <workItem from="1764377746830" duration="10421000" />
     </task>
     <servers />
   </component>
@@ -137,19 +154,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/CARO/src/MainGameController.cpp</url>
-          <line>159</line>
-          <properties>
-            <option name="hitCountValue" value="1" />
-          </properties>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

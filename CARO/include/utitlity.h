@@ -2,7 +2,11 @@
 #define UTITLITY_H
 
 #include <random>
+#include <limits>
 #include "CaroEnum.h"
+
+constexpr int NEG_INFINITY = std::numeric_limits<int>::min();
+constexpr int POS_INFINITY = std::numeric_limits<int>::max();
 
 inline PlayerMark pickRandomPlayer() {
 	static thread_local std::mt19937 gen(std::random_device{}());
