@@ -62,6 +62,7 @@ int main(int argc, char* argv[]) {
 	menu_state.turn_music = ENABLE_MUSIC;
 
 	GameState game_state{};
+	game_state.marked_cells.reserve(144);
 
 	SDL_Event event;
 	menu_state.menu_is_run = true;

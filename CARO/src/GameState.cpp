@@ -1,11 +1,22 @@
 #include "GameState.h"
 
-bool operator==(const Cell& a, const Cell& b) {
-    return a.row == b.row and a.column == b.column;
+bool Cell::operator==(const Cell& cell) const {
+    return row == cell.row && column == cell.column;
 }
 
-bool operator!=(const Cell& a, const Cell& b) {
-    return not (a == b);
+bool Cell::operator!=(const Cell& cell) const {
+    return row != cell.row || column != cell.column;
+}
+
+size_t CellHash::operator()(const Cell &cell) const {
+    size_t id = 0;
+    id += static_cast<size_t>(cell.row);
+
+    if (cell.column > 9) {
+        return id * 100 + static_cast<size_t>(cell.column);
+    }
+
+    return id * 10 + static_cast<size_t>(cell.column);
 }
 
 void resetBoard(Board3x3& board) {
@@ -60,113 +71,107 @@ void printBoard(const Board12x12& board) {
     }
 }
 
-Cell botTurn(GameState& game_state) {
-    Cell bot_move{};
-
+Cell botTurn3x3(GameState& game_state) {
     if (game_state.difficulty == Easy) {
-        bot_move = getBotMoveEasy(game_state.board3x3);
-    } else if (game_state.difficulty == Normal) {
-        bot_move = getBotMoveNormal(game_state);
-    } else if (game_state.difficulty == Hard) {
-        bot_move = getBotMoveHard(game_state);
+        Cell cell{};
+
+        while (true) {
+            cell = { randomInt(0, 2), randomInt(0, 2) };
+            if (isCellEmpty(game_state.board3x3, cell)) break;
+        }
+
+        tryPlaceMark(game_state.board3x3, cell, game_state.bot_marker);
+        return cell;
     }
 
-    tryPlaceMark(game_state.board3x3, bot_move, game_state.bot_marker);
-    return bot_move;
-}
+    Cell best_move {};
+    int best_value = NEG_INFINITY;
 
-Cell getBotMoveEasy(const Board3x3& board) {
-    Cell cell{};
-
-    while (true) {
-        cell = { randomInt(0, 2), randomInt(0, 2) };
-        if (isCellEmpty(board, cell)) break;
-    }
-
-    return cell;
-}
-
-Cell getBotMoveNormal(const GameState& game_state) {
-    int best_value = -10000;
-
-    Cell best_move{};
+    NodeData3x3 root {};
     Board3x3 copied_board = game_state.board3x3;
-    PlayerMark maximizer = game_state.bot_marker;
-    PlayerMark minimizer = maximizer == X ? O : X;
+    root.CURRENT_DEPTH = -1;
+    root.IS_MAXIMIZER = true;
+    root.MAXIMIZER = game_state.bot_marker;
+    root.MINIMIZER = root.MAXIMIZER == X ? O : X;
+
+    if (game_state.difficulty == Normal) {
+        root.DEPTH_THRESHOLD = 1;
+    } else {
+        root.DEPTH_THRESHOLD = -1;
+    }
+
+    int alpha = NEG_INFINITY;
+    NodeData3x3 child = root;
+    child.IS_MAXIMIZER = false;
+    child.CURRENT_DEPTH++;
 
     for (int row = 0; row < 3; row++) {
         for (int column = 0; column < 3; column++) {
-            Cell cell{ row, column };
-            if (not tryPlaceMark(copied_board, cell, maximizer)) continue;
+            Cell cell { row, column };
+            if (not tryPlaceMark(copied_board, cell, child.MAXIMIZER)) continue;
 
-            int score = minimax(copied_board, 0, false, maximizer, minimizer, 1);
+            int score = minimax3x3(copied_board, child, alpha, POS_INFINITY);
             trySetEmpty(copied_board, cell);
 
             if (score > best_value) {
                 best_value = score;
                 best_move = cell;
             }
+
+            alpha = std::max(alpha, score);
         }
     }
 
+    tryPlaceMark(game_state.board3x3, best_move, game_state.bot_marker);
     return best_move;
 }
 
-Cell getBotMoveHard(const GameState& game_state) {
-    int best_value = -10000;
+int minimax3x3(Board3x3& board, const NodeData3x3& current_node, int alpha, int beta) {
+    const int CURRENT_DEPTH = current_node.CURRENT_DEPTH;
+    const int DEPTH_THRESHOLD = current_node.DEPTH_THRESHOLD;
+    const bool IS_MAXIMIZER = current_node.IS_MAXIMIZER;
+    const PlayerMark MAXIMIZER = current_node.MAXIMIZER;
+    const PlayerMark MINIMIZER = current_node.MINIMIZER;
 
-    Cell best_move{};
-    Board3x3 copied_board = game_state.board3x3;
-    PlayerMark maximizer = game_state.bot_marker;
-    PlayerMark minimizer = maximizer == X ? O : X;
-
-    for (int row = 0; row < 3; row++) {
-        for (int column = 0; column < 3; column++) {
-            Cell cell{ row, column };
-            if (not tryPlaceMark(copied_board, cell, maximizer)) continue;
-
-            const int score = minimax(copied_board, 0, false, maximizer, minimizer, -1);
-            trySetEmpty(copied_board, cell);
-
-            if (score > best_value) {
-                best_value = score;
-                best_move = cell;
-            }
-        }
-    }
-
-    return best_move;
-}
-
-int minimax(Board3x3& board, const int depth, const bool is_maximizer, const PlayerMark maximizer, const PlayerMark minimizer, const int depth_threshold) {
-    if (isTerminated(board) or shouldAbortByDepth(depth, depth_threshold)) {
-        const WinnerData winner = checkWinner(board);
-        return evaluateScore(winner.mark, maximizer, minimizer);
+    const WinnerData data = checkWinner(board);
+    if (data.mark != Empty or not isMovesLeft(board) or shouldAbortByDepth(CURRENT_DEPTH, DEPTH_THRESHOLD)) {
+        return evaluateScore3x3(data.mark, MAXIMIZER, MINIMIZER, CURRENT_DEPTH);
     }
 
     int best_value{};
-    if (is_maximizer) {
-        best_value = -10000;
+    if (IS_MAXIMIZER) {
+        best_value = NEG_INFINITY;
     }
     else {
-        best_value = 10000;
+        best_value = POS_INFINITY;
     }
 
-    const PlayerMark current_player = is_maximizer ? maximizer : minimizer;
+    const PlayerMark current_player = IS_MAXIMIZER ? MAXIMIZER : MINIMIZER;
+    bool should_stop = false;
 
-    for (int row = 0; row < 3; row++) {
+    NodeData3x3 child = current_node;
+    child.CURRENT_DEPTH++;
+    child.IS_MAXIMIZER = !current_node.IS_MAXIMIZER;
+
+    for (int row = 0; row < 3 and not should_stop; row++) {
         for (int column = 0; column < 3; column++) {
             Cell cell{ row, column };
 
             if (not tryPlaceMark(board, cell, current_player)) continue;
-            int score = minimax(board, depth + 1, !is_maximizer, maximizer, minimizer, depth_threshold);
+            int score = minimax3x3(board, child, alpha, beta);
             trySetEmpty(board, cell);
 
-            if (is_maximizer) {
+            if (IS_MAXIMIZER) {
+                alpha = std::max(alpha, score);
                 best_value = std::max(best_value, score);
-            }
-            else {
+            } else {
+                beta = std::min(beta, score);
                 best_value = std::min(best_value, score);
+            }
+
+            if (alpha >= beta) {
+                should_stop = true;
+                break;
             }
         }
     }
@@ -174,16 +179,264 @@ int minimax(Board3x3& board, const int depth, const bool is_maximizer, const Pla
     return best_value;
 }
 
-int evaluateScore(const PlayerMark who_won, const PlayerMark maximizer, const PlayerMark minimizer) {
+int evaluateScore3x3(const PlayerMark who_won, const PlayerMark maximizer, const PlayerMark minimizer, const int depth) {
     if (who_won == maximizer) {
-        return 10;
+        return 10 - depth;
     }
 
     if (who_won == minimizer) {
-        return -10;
+        return -10 + depth;
     }
 
     return 0;
+}
+
+Cell botTurn12x12(GameState &game_state) {
+    if (game_state.is_board_12x12_empty) {
+        // the player could've made a move so we're just making sure
+        game_state.is_board_12x12_empty = isBoard12x12Empty(game_state.board12x12);
+
+        if (game_state.is_board_12x12_empty) {
+            const Cell random_move { randomInt(3, 8), randomInt(3, 8) };
+            tryPlaceMark(game_state.board12x12, random_move , game_state.bot_marker);
+            game_state.is_board_12x12_empty = false;
+            return random_move;
+        }
+    }
+
+    Cell best_move{};
+    int best_value = NEG_INFINITY;
+
+    Board12x12 copied_board = game_state.board12x12;
+    CellSet copied_marked_cells = game_state.marked_cells;
+
+    NodeData12x12 root {};
+    root.CURRENT_DEPTH = -1;
+    root.IS_MAXIMIZER = true;
+    root.MAXIMIZER = game_state.bot_marker;
+    root.MINIMIZER = root.MAXIMIZER == X ? O : X;
+
+    if (game_state.difficulty == Easy) {
+        root.DEPTH_THRESHOLD = 1;
+    } else if (game_state.difficulty == Normal) {
+        root.DEPTH_THRESHOLD = 2;
+    } else if (game_state.difficulty == Hard) {
+        root.DEPTH_THRESHOLD = 3;
+    }
+
+    NodeData12x12 child = root;
+    child.CURRENT_DEPTH++;
+    child.IS_MAXIMIZER = false;
+
+    int alpha = NEG_INFINITY;
+    const auto&& EMPTY_CELLS = getEmptyCellsNeighboringMarkedCells(copied_board, copied_marked_cells);
+
+    for (auto const& cell : EMPTY_CELLS) {
+        if (not tryPlaceMark(copied_board, cell, child.MAXIMIZER)) continue;
+
+        child.LAST_CHOSEN_CELL = cell;
+        copied_marked_cells.insert(cell);
+        const int score = minimax12x12(copied_board, copied_marked_cells, child, alpha, POS_INFINITY);
+        trySetEmpty(copied_board, cell);
+        copied_marked_cells.erase(cell);
+
+        if (score > best_value) {
+            best_value = score;
+            best_move = cell;
+        }
+
+        alpha = std::max(alpha, score);
+    }
+
+    tryPlaceMark(game_state.board12x12, best_move, game_state.bot_marker);
+    return best_move;
+}
+
+int minimax12x12(Board12x12 &board, CellSet& marked_cells, const NodeData12x12& current_node, int alpha, int beta) {
+    const int CURRENT_DEPTH = current_node.CURRENT_DEPTH;
+    const int DEPTH_THRESHOLD = current_node.DEPTH_THRESHOLD;
+    const bool IS_MAXIMIZER = current_node.IS_MAXIMIZER;
+    const PlayerMark MAXIMIZER = current_node.MAXIMIZER;
+    const PlayerMark MINIMIZER = current_node.MINIMIZER;
+    const Cell LAST_CHOSEN_CELL = current_node.LAST_CHOSEN_CELL;
+
+    const WinnerData data = checkWinner(board, LAST_CHOSEN_CELL);
+    if (data.mark != Empty or not isMovesLeft(board)) {
+        if (data.mark == MAXIMIZER) {
+            return 10000000;
+        }
+
+        if (data.mark == MINIMIZER) {
+            return -10000000;
+        }
+
+        return 0;
+    }
+
+    if (shouldAbortByDepth(CURRENT_DEPTH, DEPTH_THRESHOLD)) {
+        return scoreDifferenceOfAIAndPlayer(board, MAXIMIZER, MINIMIZER);
+    }
+
+    int best_value {};
+    if (IS_MAXIMIZER) {
+        best_value = NEG_INFINITY;
+    } else {
+        best_value = POS_INFINITY;
+    }
+
+    NodeData12x12 child = current_node;
+    child.CURRENT_DEPTH = CURRENT_DEPTH+1;
+    child.IS_MAXIMIZER = !IS_MAXIMIZER;
+
+    const PlayerMark current_player = IS_MAXIMIZER ? MAXIMIZER : MINIMIZER;
+    const CellSet&& EMPTY_CELLS = getEmptyCellsNeighboringMarkedCells(board, marked_cells);
+
+    for (auto const& cell : EMPTY_CELLS) {
+        if (not tryPlaceMark(board, cell, current_player)) continue;
+
+        child.LAST_CHOSEN_CELL = cell;
+        marked_cells.insert(cell);
+        int score = minimax12x12(board, marked_cells, child, alpha, beta);
+        trySetEmpty(board, cell);
+        marked_cells.erase(cell);
+
+        if (IS_MAXIMIZER) {
+            best_value = std::max(best_value, score);
+            alpha = std::max(alpha, score);
+        } else {
+            best_value = std::min(best_value, score);
+            beta = std::min(beta, score);
+        }
+
+        if (alpha >= beta) {
+            break;
+        }
+    }
+
+    return best_value;
+}
+
+int scoreDifferenceOfAIAndPlayer(const Board12x12& board, const PlayerMark maximizer, const PlayerMark minimizer) {
+    int bot_score = 0;
+    int player_score = 0;
+    int maximizer_count = 0;
+    int minimizer_count = 0;
+    int empty_count = 0;
+
+    for (int r = 0; r < 12; r++) {
+        for (int c = 0; c < 8; c++) {
+            maximizer_count = minimizer_count = empty_count = 0;
+            for (int i = 0; i < 5; i++) {
+                const PlayerMark MARK = getMark(board, { r, c+i });
+                if (MARK == maximizer) maximizer_count++;
+                else if (MARK == minimizer) minimizer_count++;
+                else empty_count++;
+            }
+
+            bot_score += evaluateSubRegionForMaximizer(maximizer_count, minimizer_count, empty_count);
+            player_score += evaluateSubRegionForMinimizer(maximizer_count, minimizer_count, empty_count);
+        }
+    }
+
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 12; c++) {
+            maximizer_count = minimizer_count = empty_count = 0;
+            for (int i = 0; i < 5; i++) {
+                const PlayerMark MARK = getMark(board, { r+i, c });
+                if (MARK == maximizer) maximizer_count++;
+                else if (MARK == minimizer) minimizer_count++;
+                else empty_count++;
+            }
+
+            bot_score += evaluateSubRegionForMaximizer(maximizer_count, minimizer_count, empty_count);
+            player_score += evaluateSubRegionForMinimizer(maximizer_count, minimizer_count, empty_count);
+        }
+    }
+
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+            maximizer_count = minimizer_count = empty_count = 0;
+            for (int i = 0; i < 5; i++) {
+                const PlayerMark MARK = getMark(board, { r+i, c+i });
+                if (MARK == maximizer) maximizer_count++;
+                else if (MARK == minimizer) minimizer_count++;
+                else empty_count++;
+            }
+
+            bot_score += evaluateSubRegionForMaximizer(maximizer_count, minimizer_count, empty_count);
+            player_score += evaluateSubRegionForMinimizer(maximizer_count, minimizer_count, empty_count);
+
+            maximizer_count = minimizer_count = empty_count = 0;
+            for (int i = 0; i < 5; i++) {
+                const PlayerMark MARK = getMark(board, { r+i, c+4-i });
+                if (MARK == maximizer) maximizer_count++;
+                else if (MARK == minimizer) minimizer_count++;
+                else empty_count++;
+            }
+
+            bot_score += evaluateSubRegionForMaximizer(maximizer_count, minimizer_count, empty_count);
+            player_score += evaluateSubRegionForMinimizer(maximizer_count, minimizer_count, empty_count);
+        }
+    }
+
+    return bot_score - player_score;
+}
+
+int evaluateSubRegionForMaximizer(const int maximizer_count, const int minimizer_count, const int empty_count) {
+    int score = 0;
+
+    if (maximizer_count == 5) {
+        score += 100000;
+    } else if (maximizer_count == 4 and empty_count == 1) {
+        score += 5000;
+    } else if (maximizer_count == 3 and empty_count == 2) {
+        score += 200;
+    }
+
+    if (minimizer_count == 4 and empty_count == 1) {
+        score -= 4000;
+    } else if (minimizer_count == 3 and empty_count == 2) {
+        score -= 500;
+    }
+
+    return score;
+}
+
+int evaluateSubRegionForMinimizer(const int maximizer_count, const int minimizer_count, const int empty_count) {
+    int score = 0;
+
+    if (minimizer_count == 5) {
+        score += 100000;
+    } else if (minimizer_count == 4 and empty_count == 1) {
+        score += 5000;
+    } else if (minimizer_count == 3 and empty_count == 2) {
+        score += 200;
+    }
+
+    if (maximizer_count == 4 and empty_count == 1) {
+        score -= 4000;
+    } else if (maximizer_count == 3 and empty_count == 2) {
+        score -= 500;
+    }
+
+    return score;
+}
+
+CellSet getEmptyCellsNeighboringMarkedCells(const Board12x12 &board, const CellSet& marked_cells) {
+    CellSet empty_cells {};
+    empty_cells.reserve(144);
+
+    for (auto const& cell : marked_cells) {
+        for (auto const& direction : NEIGHBOR_DIRECTIONS) {
+            Cell neighbor_cell { cell.row + direction.row, cell.column + direction.column };
+
+            if (isCellOutOfBound12x12(neighbor_cell)) continue;
+            if (not isCellEmpty(board, neighbor_cell)) continue;
+            empty_cells.insert(neighbor_cell);
+        }
+    }
+
+    return empty_cells;
 }
 
 bool tryPlaceMark(Board3x3& board, const Cell& cell, const PlayerMark mark) {
@@ -216,11 +469,6 @@ bool trySetEmpty(Board12x12& board, const Cell& cell) {
     return true;
 }
 
-bool isTerminated(const Board3x3& board) {
-    const WinnerData winner = checkWinner(board);
-    return not isMovesLeft(board) or winner.mark == X or winner.mark == O;
-}
-
 bool shouldAbortByDepth(const int depth, const int depth_threshold) {
     return 0 <= depth_threshold and depth >= depth_threshold;
 }
@@ -229,35 +477,51 @@ WinnerData checkWinner(const Board3x3& board) {
     WinnerData data;
 
     for (int i = 0; i < 3; i++) {
-        if (board[i][0] == board[i][1] and board[i][1] == board[i][2] and board[i][0] != Empty) {
-            data.mark = board[i][0];
+        const PlayerMark c_mark_1 = getMark(board, { i, 0 });
+        const PlayerMark c_mark_2 = getMark(board, { i, 1 });
+        const PlayerMark c_mark_3 = getMark(board, { i, 2 });
+
+        const PlayerMark r_mark_1 = getMark(board, { 0, i });
+        const PlayerMark r_mark_2 = getMark(board, { 1, i });
+        const PlayerMark r_mark_3 = getMark(board, { 2, i });
+
+        if (c_mark_1 == c_mark_2 and c_mark_2 == c_mark_3 and c_mark_1 != Empty) {
+            data.mark = c_mark_1;
             data.start_coordinates = { i, 0 };
             data.end_coordinates = { i, 2 };
             return data;
         }
 
-        if (board[0][i] == board[1][i] and board[1][i] == board[2][i] and board[0][i] != Empty) {
-            data.mark = board[0][i];
+        if (r_mark_1 == r_mark_2 and r_mark_2 == r_mark_3 and r_mark_1 != Empty) {
+            data.mark = r_mark_1;
             data.start_coordinates = { 0, i };
             data.end_coordinates = { 2, i };
             return data;
         }
     }
 
-    if (board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[0][0] != Empty) {
-        data.mark = board[0][0];
+    const PlayerMark primary_diag_mark_1 = getMark(board, { 0, 0 });
+    const PlayerMark primary_diag_mark_2 = getMark(board, { 1, 1 });
+    const PlayerMark primary_diag_mark_3 = getMark(board, { 2, 2 });
+
+    const PlayerMark secondary_diag_mark_1 = getMark(board, { 2, 0 });
+    const PlayerMark secondary_diag_mark_2 = getMark(board, { 1, 1 });
+    const PlayerMark secondary_diag_mark_3 = getMark(board, { 0, 2 });
+
+    if (primary_diag_mark_1 == primary_diag_mark_2 and primary_diag_mark_2 == primary_diag_mark_3 and primary_diag_mark_1 != Empty) {
+        data.mark = primary_diag_mark_1;
         data.start_coordinates = { 0, 0 };
         data.end_coordinates = { 2, 2 };
         return data;
     }
 
-    if (board[2][0] == board[1][1] and board[1][1] == board[0][2] and board[2][0] != Empty) {
-        data.mark = board[2][0];
+    if (secondary_diag_mark_1 == secondary_diag_mark_2 and secondary_diag_mark_2 == secondary_diag_mark_3 and secondary_diag_mark_1 != Empty) {
+        data.mark = secondary_diag_mark_1;
         data.start_coordinates = { 0, 2 };
         data.end_coordinates = { 2, 0 };
         return data;
     }
- 
+
     return { Empty, NULL_CELL, NULL_CELL};
 }
 
@@ -401,6 +665,17 @@ WinnerData checkWinner(const Board12x12& board, const Cell& last_chosen_cell) {
     }
 
     return { Empty, NULL_CELL, NULL_CELL };
+}
+
+bool isBoard12x12Empty(const Board12x12& board) {
+    for (auto const& row : board) {
+        for (auto const& mark : row) {
+            if (mark == Empty) continue;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool isCellEmpty(const Board3x3& board, const Cell& cell) {
