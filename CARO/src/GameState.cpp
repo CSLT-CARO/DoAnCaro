@@ -133,9 +133,9 @@ int minimax3x3(Board3x3& board, const NodeData3x3& current_node, int alpha, int 
     const PlayerMark MAXIMIZER = current_node.MAXIMIZER;
     const PlayerMark MINIMIZER = current_node.MINIMIZER;
 
-    if (isTerminated(board) or shouldAbortByDepth(CURRENT_DEPTH, DEPTH_THRESHOLD)) {
-        const WinnerData winner = checkWinner(board);
-        return evaluateScore3x3(winner.mark, MAXIMIZER, MINIMIZER, CURRENT_DEPTH);
+    const WinnerData data = checkWinner(board);
+    if (data.mark != Empty or not isMovesLeft(board) or shouldAbortByDepth(CURRENT_DEPTH, DEPTH_THRESHOLD)) {
+        return evaluateScore3x3(data.mark, MAXIMIZER, MINIMIZER, CURRENT_DEPTH);
     }
 
     int best_value{};
@@ -469,11 +469,6 @@ bool trySetEmpty(Board12x12& board, const Cell& cell) {
     return true;
 }
 
-bool isTerminated(const Board3x3& board) {
-    const WinnerData winner = checkWinner(board);
-    return not isMovesLeft(board) or winner.mark == X or winner.mark == O;
-}
-
 bool shouldAbortByDepth(const int depth, const int depth_threshold) {
     return 0 <= depth_threshold and depth >= depth_threshold;
 }
@@ -482,30 +477,46 @@ WinnerData checkWinner(const Board3x3& board) {
     WinnerData data;
 
     for (int i = 0; i < 3; i++) {
-        if (board[i][0] == board[i][1] and board[i][1] == board[i][2] and board[i][0] != Empty) {
-            data.mark = board[i][0];
+        const PlayerMark c_mark_1 = getMark(board, { i, 0 });
+        const PlayerMark c_mark_2 = getMark(board, { i, 1 });
+        const PlayerMark c_mark_3 = getMark(board, { i, 2 });
+
+        const PlayerMark r_mark_1 = getMark(board, { 0, i });
+        const PlayerMark r_mark_2 = getMark(board, { 1, i });
+        const PlayerMark r_mark_3 = getMark(board, { 2, i });
+
+        if (c_mark_1 == c_mark_2 and c_mark_2 == c_mark_3 and c_mark_1 != Empty) {
+            data.mark = c_mark_1;
             data.start_coordinates = { i, 0 };
             data.end_coordinates = { i, 2 };
             return data;
         }
 
-        if (board[0][i] == board[1][i] and board[1][i] == board[2][i] and board[0][i] != Empty) {
-            data.mark = board[0][i];
+        if (r_mark_1 == r_mark_2 and r_mark_2 == r_mark_3 and r_mark_1 != Empty) {
+            data.mark = r_mark_1;
             data.start_coordinates = { 0, i };
             data.end_coordinates = { 2, i };
             return data;
         }
     }
 
-    if (board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[0][0] != Empty) {
-        data.mark = board[0][0];
+    const PlayerMark primary_diag_mark_1 = getMark(board, { 0, 0 });
+    const PlayerMark primary_diag_mark_2 = getMark(board, { 1, 1 });
+    const PlayerMark primary_diag_mark_3 = getMark(board, { 2, 2 });
+
+    const PlayerMark secondary_diag_mark_1 = getMark(board, { 2, 0 });
+    const PlayerMark secondary_diag_mark_2 = getMark(board, { 1, 1 });
+    const PlayerMark secondary_diag_mark_3 = getMark(board, { 0, 2 });
+
+    if (primary_diag_mark_1 == primary_diag_mark_2 and primary_diag_mark_2 == primary_diag_mark_3 and primary_diag_mark_1 != Empty) {
+        data.mark = primary_diag_mark_1;
         data.start_coordinates = { 0, 0 };
         data.end_coordinates = { 2, 2 };
         return data;
     }
 
-    if (board[2][0] == board[1][1] and board[1][1] == board[0][2] and board[2][0] != Empty) {
-        data.mark = board[2][0];
+    if (secondary_diag_mark_1 == secondary_diag_mark_2 and secondary_diag_mark_2 == secondary_diag_mark_3 and secondary_diag_mark_1 != Empty) {
+        data.mark = secondary_diag_mark_1;
         data.start_coordinates = { 0, 2 };
         data.end_coordinates = { 2, 0 };
         return data;
