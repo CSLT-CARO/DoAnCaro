@@ -29,12 +29,11 @@
   <component name="ChangeListManager">
     <list default="true" id="683c8deb-8ae2-4e81-bdac-a26b92b90cf0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CARO/CARO.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/CARO.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/include/GameState.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/GameState.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CARO/include/utitlity.h" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/include/utitlity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/GameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/GameState.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CARO/src/MainGameLogic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoAnCaro" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +134,8 @@
       <workItem from="1764165079720" duration="293000" />
       <workItem from="1764165438133" duration="1020000" />
       <workItem from="1764209575470" duration="10973000" />
-      <workItem from="1764377746830" duration="10421000" />
+      <workItem from="1764377746830" duration="17402000" />
+      <workItem from="1764405245858" duration="11169000" />
     </task>
     <servers />
   </component>

@@ -7,6 +7,7 @@ void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_s
 	game_state.bot_marker = pickRandomPlayer();
 	game_state.is_init = true;
 	game_state.is_board_12x12_empty = true;
+	game_state.marked_cells.clear();
 
 	ui_state.is_set_up_game_over_screen = false;
 	ui_state.winner_data = { Empty, NULL_CELL, NULL_CELL };
