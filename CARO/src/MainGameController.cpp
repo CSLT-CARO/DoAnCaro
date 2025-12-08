@@ -5,47 +5,14 @@
 
 void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, const Window& window, GameState& game_state, MenuState& menu_state) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		
+		
 		if (not ui_state.is_game_over)
 		{
 			Play_SFX_Move();
-			handleMouseButton(window, ui_state, game_state,menu_state, event.button.x, event.button.y);
 		}
-		if (ui_state.is_game_over and not isTimerRunning(ui_state.before_game_end_timer))
-		{
-			const int mouseX = event.button.x;
-			const int mouseY = event.button.y;
-
-			ui_state.selected_cell = NULL_CELL;
-
-			Stop_All_SFX();
-			Play_SFX_Click();
-
-			if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) // Restart
-			{
-				game_state.game_is_run = true;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				ui_state.winner_data.mark = Empty;
-			}
-			if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) // New Game
-			{
-				game_state.game_is_run = false;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				ui_state.winner_data.mark = Empty;
-				menu_state.trans_display = _ChooseTypePlayer;
-				Play_BGM_Menu();
-			}
-			if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) // Exit
-			{
-				game_state.game_is_run = false;
-				ui_state.is_game_over = false;
-				game_state.is_init = false;
-				ui_state.winner_data.mark = Empty;
-				menu_state.trans_display = _MainMenu;
-				Play_BGM_Menu();
-			}
-		}
+		handleMouseButton(window, ui_state, game_state,menu_state, event.button.x, event.button.y);
+		
 	}
 	if (event.type == SDL_MOUSEMOTION)
 	{
@@ -70,21 +37,19 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 			//	menu_state.trans_display = _MainMenu;
 			//	return;
 			//}
-			if (ui_state.screen == 0)
+			if (ui_state.screen == IN_GAME)
 			{
 				if (game_state.board_type == Classic)
 				{
 					handleKeyboardMove3x3(window, ui_state, event);
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn3x3(window, ui_state, game_state);
-					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
 				}
 				else
 				{
 					handleKeyboardMove12x12(window, ui_state, event);
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn12x12(window, ui_state, game_state);
-					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
 				}
 			}
 			else
@@ -96,7 +61,7 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 	}
 }
 
-void processMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state) {
+void processMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state) {
 	if (!ui_state.game_music_started && !ui_state.is_game_over) {
 		Stop_BGM();              // Dừng nhạc menu
 		Play_BGM_Game();         // Phát nhạc game
@@ -104,7 +69,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	}
 
 	if (ui_state.is_game_over) {
-		drawMainGame(window, ui_state, game_state);
+		drawMainGame(window, ui_state, game_state, menu_state);
 
 		if (ui_state.stopped_at_moment != -1) {
 			drawTimer(window.renderer_ptr, ui_state.stopped_at_moment, ui_state.timer_button.rect);
@@ -117,7 +82,7 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	}
 	
 	initGame(window, game_state, ui_state);
-	drawMainGame(window, ui_state, game_state);
+	drawMainGame(window, ui_state, game_state, menu_state);
 
 	Second time_remaining = -1;
 
@@ -243,6 +208,5 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 			}
 		}
 	}
-
 	ui_state.selected_cell = NULL_CELL;
 }

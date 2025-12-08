@@ -9,7 +9,7 @@ void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_s
 
 	ui_state.is_set_up_game_over_screen = false;
 	ui_state.winner_data = { Empty, NULL_CELL, NULL_CELL };
-
+	ui_state.screen = IN_GAME;
 	int x, y, w;
 
 	if(game_state.mode == PVP)
