@@ -131,6 +131,22 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	if (game_state.whose_turn == game_state.bot_marker and game_state.mode == Mode::PVE) {
 		ui_state.selected_cell = botTurn(game_state);
 		ui_state.should_reset_turn_timer = true;
+		/*int row = ui_state.selected_cell.row;
+		int col = ui_state.selected_cell.column;
+		int x, y;
+		if (game_state.board_type == Classic)
+		{
+			convertRowColToXY_3x3(window, row, col, x, y);
+			const int width = 2 * (window.width / 16) * 90 / 100;
+			ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
+		}
+		else if (game_state.board_type == Ultimate)
+		{
+			convertRowColToXY_12x12(window, row, col, x, y);
+			const int width = 2 * (window.width / 32) * 90 / 100;
+			ui_state.hover_cell = { x - width / 2, y - width / 2, width, width };
+		}*/
+
 		alternateTurn(game_state.whose_turn);
 	} else {
 		if (ui_state.selected_cell == NULL_CELL) {

@@ -102,7 +102,7 @@ void drawSymbol3x3(const Window& window, const GameState& game_state);
 void drawSymbol12x12(const Window& window, const GameState& game_state);
 
 void drawSelectingCell(const Window& window, const GameState& game_state, const MainGameUIState& ui_state);
-void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state);
+void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, const GameState& game_state);
 void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data);
 void drawWinnerLine12x12(const Window& window, const WinnerData& winner_data);
 

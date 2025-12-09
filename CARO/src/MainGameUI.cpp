@@ -280,13 +280,13 @@ void drawSelectingCell(const Window& window, const GameState& game_state, const 
 	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
-void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
+void drawGameOverScreen(const Window& window,  MainGameUIState& ui_state, const GameState& game_state) {
 	const auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 	SDL_Texture* restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART);
 	SDL_Texture* new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME);
 	SDL_Texture* exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT);
-
+	checkMouseHoverButton(ui_state);
 	if (game_state.mode == PVP)
 	{
 		if (ui_state.winner_data.mark == X) {

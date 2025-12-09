@@ -68,6 +68,7 @@ int main(int argc, char* argv[]) {
 
 	while (menu_state.menu_is_run) {
 		//std::cout << menu_state.turn_music << " " << menu_state.turn_sfx << std::endl;
+		//std::cout << main_game_ui_state.index_button_hovered << std::endl;
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				menu_state.menu_is_run = false;
