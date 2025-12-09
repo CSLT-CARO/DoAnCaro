@@ -321,7 +321,7 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, const
 	drawText(window, ui_state.save_inform[idx].board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
 }
 
-void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font)
+void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font, int type, std::string title, int hover)
 {
 	constexpr int IMG_WIDTH = 603;
 	constexpr int IMG_HEIGHT = 243;
@@ -344,11 +344,12 @@ void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* fon
 		IMG_HEIGHT / 4,
 		IMG_HEIGHT / 4,
 	};
-
 	drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NOTICE_BOARD), notice_board);
 
 	if (checkButton(Close, mouseX, mouseY))
+	{
 		drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), Close);
+	}
 	else drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON), Close);
 
 
@@ -361,6 +362,51 @@ void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* fon
 	const int drawY = pos_y + (IMG_HEIGHT - textH) / 2;
 
 	drawText(window, msg, font, drawX, drawY, COLOR_BLACK);
+
+	if (type)
+	{
+		SDL_Rect title_rect =
+		{
+			pos_x + IMG_WIDTH * 3 / 8 ,
+			pos_y - IMG_HEIGHT / 8,
+			IMG_WIDTH /4,
+			IMG_HEIGHT / 4
+		};
+		SDL_Rect yes_rect = {
+			pos_x + IMG_WIDTH / 2 - IMG_WIDTH / 4 - IMG_WIDTH / 20,
+			pos_y + IMG_HEIGHT - IMG_HEIGHT / 5,
+			IMG_WIDTH / 4,
+			IMG_HEIGHT * 3 / 10
+		};
+
+		SDL_Rect no_rect = {
+			pos_x + IMG_WIDTH/ 2 + IMG_WIDTH / 20,
+			pos_y + IMG_HEIGHT - IMG_HEIGHT / 5,
+			IMG_WIDTH / 4,
+			IMG_HEIGHT * 3 / 10
+		};
+		// draw
+		drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NOTICE_BOARD), title_rect);
+
+		if (checkButton(yes_rect, mouseX, mouseY) || hover == TEXTURE_YES_BUTTON_HOVERED)
+		{
+			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_YES_BUTTON_HOVERED), yes_rect);
+		}
+		else drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_YES_BUTTON), yes_rect);
+
+		if (checkButton(no_rect, mouseX, mouseY) || hover == TEXTURE_NO_BUTTON_HOVERED)
+		{
+			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NO_BUTTON_HOVERED), no_rect);
+		}
+		else drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NO_BUTTON), no_rect);
+
+		TTF_SizeText(font, title.c_str(), &textW, &textH);
+		int textX = title_rect.x + (title_rect.w - textW) / 2;
+		int textY = title_rect.y + (title_rect.h - textH) / 2;
+		drawText(window, title, font, textX, textY, COLOR_RED);
+
+	}
+
 }
 
 void drawErrorLoadFile(const Window& window, const int idx)
@@ -368,7 +414,7 @@ void drawErrorLoadFile(const Window& window, const int idx)
 	const std::string msg = "Can not load file \"Save " + std::to_string(idx) + '\"' +" !!!";
 	TTF_Font* font = window.font_large;
 
-	drawNoticeBoard(window, msg, font);
+	drawNoticeBoard(window, msg, font, 0, "", 0);
 }
 
 void drawLoadFileSave(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)

@@ -6,15 +6,13 @@ void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_s
 	game_state.whose_turn = pickRandomPlayer();
 	game_state.bot_marker = pickRandomPlayer();
 	game_state.is_init = true;
-	game_state.is_board_12x12_empty = true;
-	game_state.marked_cells.clear();
 
 	ui_state.is_set_up_game_over_screen = false;
 	ui_state.winner_data = { Empty, NULL_CELL, NULL_CELL };
-
+	ui_state.screen = IN_GAME;
 	int x, y, w;
 
-	if(game_state.mode == PVP)
+	if (game_state.mode == PVP)
 		activateTimer(ui_state.pvp_turn_timer);
 	else
 		activateTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
