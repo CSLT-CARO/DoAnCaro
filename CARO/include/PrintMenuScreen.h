@@ -17,6 +17,7 @@
 #include "Save.h"
 #include "Audio.h"
 #include "MenuController.h"
+#include "GameState.h"
 #include "MainGameUI.h"
 
 extern std::unordered_map<MenuTexturesEnum, SDL_Rect> MenuButtonPosition[10];
@@ -131,10 +132,10 @@ void drawTurnBackButton(const Window& window, const MenuState& menu_state);
 void drawChooseTypePlayer(const Window& window, const MenuState& menu_state);
 void drawChooseTypeGame(const Window& window, const MenuState& menu_state);
 void drawChangeSettings(const Window& window, const MenuState& menu_state);
-void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font, int type, std::string title, int hover);
+void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font, int type, std::string title, int& hover);
 void drawErrorLoadFile(const Window& window, int idx);
 void drawChooseFileLoad(const Window& window, const MenuState& menu_state);
-
+void playTransaction(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
 //void drawMenuGame(Window& window, MenuButton& menu_button, MenuState& menu_state);
 //void drawTurnBackButton(Window& window, TurnBackButton& turn_back_button, MenuState& menu_state);
 //void drawChooseTypePlayer(Window& window, ChooseTypePlayer_Change& choose_type_player_change, MenuState& menu_state);

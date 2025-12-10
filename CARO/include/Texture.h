@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
+
 #include "Video.h"
 #include "Timer.h"
 
@@ -138,20 +139,25 @@ enum MainGameTexturesEnum {
 	TEXTURE_YES_BUTTON_HOVERED,
 	TEXTURE_NO_BUTTON_HOVERED,
 };
-
+enum AnimationEnum {
+	GIF_TRANSACTION,
+};
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;
 using MainGameTextures = std::unordered_map<MainGameTexturesEnum, SDL_Texture*>;
 using TimerTextures = std::vector<SDL_Texture*>;
-
+using Animation = std::unordered_map<AnimationEnum, std::vector<GIF>>;
 inline MenuTextures MENU_TEXTURES;
 inline TimerTextures TIMER_TEXTURES;
 inline MainGameTextures MAIN_GAME_TEXTURES;
+inline Animation ANIMATIONS;
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path);
+std::vector<GIF> loadGIF(SDL_Renderer* renderer, const std::string& file_path);
 
 void loadMenuTextures(SDL_Renderer* renderer);
 void loadMainGameTextures(SDL_Renderer* renderer);
 void loadTimerTextures(SDL_Renderer* renderer);
+void loadAnimations(SDL_Renderer* renderer);
 
 void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_Rect& destination);
 void drawTimer(SDL_Renderer* renderer, Second current_time, const SDL_Rect& destination);

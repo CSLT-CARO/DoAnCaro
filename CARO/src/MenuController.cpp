@@ -259,12 +259,16 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		{
 			game_state.board_type = Classic;
 			game_state.game_is_run = true;
+			menu_state.transaction = true;
+			//playTransaction(window, menu_state, game_state);
 		}
 		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON
 			&& checkButton(MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON], mouseX, mouseY))
 		{
 			game_state.board_type = Ultimate;
 			game_state.game_is_run = true;
+			menu_state.transaction = true;
+			//playTransaction(window, menu_state, game_state);
 		}
 		return;
 	}
@@ -295,23 +299,11 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
-	if (menu_state.trans_display == _ChooseTypeGame)
-	{
-		int MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypeGame, menu_state);
-		
-		if (MousePositionState == TEXTURE_CLASSIC_BOARD_BUTTON)
-		{
-			game_state.game_is_run = true;
-			game_state.board_type = Classic;
-		}
-			
-		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON)
-		{
-			game_state.game_is_run = true;
-			game_state.board_type = Ultimate;
-		}
-	}
+	
 }
+
+
+
 
 void checkInRange(int &idx, const int left, const int right)
 {
@@ -351,7 +343,7 @@ int mouseInLoadOrSave(const std::string &type)
 	}
 }
 
-void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
+void chooseByKeyBoard(const Window& window, MenuState& menu_state, GameState &game_state)
 {
 	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	if (menu_state.trans_display == _MainMenu)
@@ -434,12 +426,16 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 		{
 			game_state.game_is_run = true;
 			game_state.board_type = Classic;
+			menu_state.transaction = true;
+			//playTransaction(window, menu_state, game_state);
 			return;
 		}
 		if (menu_state.transform_idx == TEXTURE_ULTIMATE_BOARD_BUTTON)
 		{
 			game_state.game_is_run = true;
 			game_state.board_type = Ultimate;
+			menu_state.transaction = true;
+			//playTransaction(window, menu_state, game_state);
 			return;
 		}
 	}
@@ -464,7 +460,7 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 	}
 }
 
-void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameState &game_state)
+void handleKeyboardInput(const Window& window, const SDL_Event &event, MenuState &menu_state, GameState &game_state)
 {
 	if (event.key.keysym.sym == SDLK_ESCAPE)
 	{
@@ -542,7 +538,7 @@ void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameStat
 	}
 	if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER)
 	{
-		chooseByKeyBoard(menu_state, game_state);
+		chooseByKeyBoard(window ,menu_state, game_state);
 	}
 }
 
@@ -552,7 +548,7 @@ void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_sta
 	{
 		case SDL_KEYDOWN:
 		{
-			handleKeyboardInput(event, menu_state, game_state);
+			handleKeyboardInput(window, event, menu_state, game_state);
 			break;
 		}
 		case SDL_MOUSEMOTION:

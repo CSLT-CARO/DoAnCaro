@@ -36,7 +36,7 @@ struct MenuState
 	int transform_idx = 1;
 	int trans_display = _MainMenu;
 	int notice = 0;
-
+	bool transaction = 0;
 
 	const std::string SAVE_PATH = "./saves";
 	const std::string GAME_SETTINGS_FILE_PATH = "./settings.txt";

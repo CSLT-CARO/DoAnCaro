@@ -1,6 +1,6 @@
 #include "MainGameLogic.h"
 
-void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state) {
+void initGame(const Window& window, GameState& game_state, MenuState& menu_state, MainGameUIState& ui_state) {
 	if (game_state.is_init) return;
 
 	game_state.whose_turn = pickRandomPlayer();
@@ -11,7 +11,6 @@ void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_s
 	ui_state.winner_data = { Empty, NULL_CELL, NULL_CELL };
 	ui_state.screen = IN_GAME;
 	int x, y, w;
-
 	if (game_state.mode == PVP)
 		activateTimer(ui_state.pvp_turn_timer);
 	else

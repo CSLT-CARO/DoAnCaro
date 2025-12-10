@@ -81,9 +81,10 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		return;
 	}
 	
-	initGame(window, game_state, ui_state);
+	initGame(window, game_state, menu_state, ui_state);
 	drawMainGame(window, ui_state, game_state, menu_state);
 
+	playTransaction(window, menu_state, game_state, ui_state);
 	Second time_remaining = -1;
 
 	if (game_state.board_type == Ultimate) {

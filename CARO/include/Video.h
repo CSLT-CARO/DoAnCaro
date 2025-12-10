@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 
 const SDL_Color COLOR_BLACK = { 0, 0, 0, 255 };
 const SDL_Color COLOR_RED = { 255, 0, 0, 255 };
@@ -22,6 +23,11 @@ struct Window {
 	TTF_Font* font_big = nullptr;
 	TTF_Font* font_large = nullptr;
 	std::string font_path = "";
+};
+struct GIF
+{
+	SDL_Texture* textures;
+	int delay;
 };
 
 void initVideo(Window& window);

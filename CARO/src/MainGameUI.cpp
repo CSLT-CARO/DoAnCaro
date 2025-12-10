@@ -3,6 +3,7 @@
 #include "Audio.h"
 #include "Save.h"
 
+
 std::unordered_map< int, Button> Saving_Slot;
 
 // drawing functions
@@ -515,7 +516,8 @@ void drawScreen(const Window& window, MainGameUIState& ui_state, GameState& game
 			drawDimmingLayer(window);
 			const std::string msg = "Are you sure?";
 			TTF_Font* font = window.font_large;
-			drawNoticeBoard(window, msg, font, 1, "DELETE", 0);
+			int hover = 0;
+			drawNoticeBoard(window, msg, font, 1, "DELETE", hover);
 		}
 	}
 	if (ui_state.screen == PAUSE)
@@ -1302,7 +1304,7 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 		switch (ui_state.index_button_hovered)
 		{
 		case TEXTURE_RESUME_ICON_HOVERED:
-			Back(ui_state, game_state, menu_state);
+			ui_state.screen = IN_GAME;
 			break;
 		case TEXTURE_RESTART_ICON_HOVERED:
 			restartActivated(ui_state, game_state);

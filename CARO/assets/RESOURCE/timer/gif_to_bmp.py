@@ -57,7 +57,7 @@ def extract_gif_frames_to_bmp(gif_path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        GIF_FILE = "timer_animation.gif" 
+        GIF_FILE = "Transaction_animation.gif" 
         print(f"⚠️ Không có tên file được cung cấp. Sử dụng tên mặc định: {GIF_FILE}")
         extract_gif_frames_to_bmp(GIF_FILE)
     else:

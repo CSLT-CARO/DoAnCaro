@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 
 struct Button {
 	SDL_Rect rect{};

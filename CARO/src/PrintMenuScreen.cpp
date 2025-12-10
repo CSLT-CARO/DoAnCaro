@@ -321,7 +321,7 @@ void drawLoadInform(const Window& window, const MainGameUIState& ui_state, const
 	drawText(window, ui_state.save_inform[idx].board_type, window.font_big, rightX, bottomY, COLOR_BLACK);
 }
 
-void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font, int type, std::string title, int hover)
+void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* font, int type, std::string title, int& hover)
 {
 	constexpr int IMG_WIDTH = 603;
 	constexpr int IMG_HEIGHT = 243;
@@ -390,12 +390,14 @@ void drawNoticeBoard(const Window& window, const std::string& msg, TTF_Font* fon
 
 		if (checkButton(yes_rect, mouseX, mouseY) || hover == TEXTURE_YES_BUTTON_HOVERED)
 		{
+			hover = TEXTURE_YES_BUTTON_HOVERED;
 			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_YES_BUTTON_HOVERED), yes_rect);
 		}
 		else drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_YES_BUTTON), yes_rect);
 
 		if (checkButton(no_rect, mouseX, mouseY) || hover == TEXTURE_NO_BUTTON_HOVERED)
 		{
+			hover = TEXTURE_NO_BUTTON_HOVERED;
 			drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NO_BUTTON_HOVERED), no_rect);
 		}
 		else drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXTURE_NO_BUTTON), no_rect);
@@ -413,8 +415,8 @@ void drawErrorLoadFile(const Window& window, const int idx)
 {
 	const std::string msg = "Can not load file \"Save " + std::to_string(idx) + '\"' +" !!!";
 	TTF_Font* font = window.font_large;
-
-	drawNoticeBoard(window, msg, font, 0, "", 0);
+	int hover = 0;
+	drawNoticeBoard(window, msg, font, 0, "", hover);
 }
 
 void drawLoadFileSave(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)
@@ -494,6 +496,33 @@ void initMenuResources(Window &window)
 	InitLoadFile(window, load_file);
 	InitChooseDifficulty(window, diff);
 }
+
+void playTransaction(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
+{
+	if (!menu_state.transaction) return;
+	menu_state.transaction = false;
+
+	std::vector<GIF> textures = ANIMATIONS.at(GIF_TRANSACTION);
+
+	int size = (int)textures.size();
+	for (int i = 0; i < size; i++)
+	{
+		SDL_Event event;
+		while(SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_QUIT) return;
+		}
+
+		drawMainGame(window, ui_state, game_state, menu_state);
+
+		SDL_RenderCopy(window.renderer_ptr, textures[i].textures, NULL, NULL);
+		SDL_RenderPresent(window.renderer_ptr);
+
+		SDL_Delay(textures[i].delay);
+	}
+	drawMainGame(window, ui_state, game_state, menu_state);
+}
+
 
 void buildMenuImages(MenuState& menu_state, const Window& window, const MainGameUIState& ui_state)
 {

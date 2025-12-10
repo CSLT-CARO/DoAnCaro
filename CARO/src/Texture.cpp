@@ -130,6 +130,10 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 	{"NO_BUTTON_HOVERED", TEXTURE_NO_BUTTON_HOVERED},
 };
 
+const std::vector<std::pair<std::string, AnimationEnum>> ANIMATION_GIF{
+	{ "Transaction_animation", GIF_TRANSACTION},
+};
+
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {
 	SDL_Surface* image_surface = SDL_LoadBMP(image_path.c_str());
 
@@ -151,6 +155,23 @@ SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) 
 	return image_texture;
 }
 
+std::vector<GIF> loadGIF(SDL_Renderer* renderer, const std::string& file_path)
+{
+	IMG_Animation* rawAnim = IMG_LoadAnimation(file_path.c_str());
+	if (!rawAnim) {
+		std::cout << "Failed to load GIF: " << IMG_GetError() << "\n";
+		exit(1);
+	}
+	std::vector<GIF> textures;
+	int count = rawAnim->count;
+	for (int i = 0; i < count; i++) {
+		SDL_Texture* frameTexture = SDL_CreateTextureFromSurface(renderer, rawAnim->frames[i]);
+		textures.push_back({ frameTexture, rawAnim->delays[i] });
+	}
+	IMG_FreeAnimation(rawAnim);
+	return textures;
+}
+
 void loadMenuTextures(SDL_Renderer* renderer) {
 	for (const auto& [file_name, texture_enum] : MENU_IMAGE_LOAD_ENTRIES) {
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/Images/" + file_name + ".bmp");
@@ -164,6 +185,14 @@ void loadMainGameTextures(SDL_Renderer* renderer) {
 		MAIN_GAME_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
 }
+
+void loadAnimations(SDL_Renderer* renderer) {
+	for (const auto& [file_name, animation_enum] : ANIMATION_GIF) {
+		std::vector<GIF> loaded_textures = loadGIF(renderer, "./assets/Images/" + file_name + ".gif");
+		ANIMATIONS.insert({ animation_enum, loaded_textures });
+	}
+}
+
 
 void loadTimerTextures(SDL_Renderer* renderer) {
 	TIMER_TEXTURES.resize(61);

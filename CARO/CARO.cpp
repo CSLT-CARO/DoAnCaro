@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
 	loadMainGameTextures(window.renderer_ptr);
+	loadAnimations(window.renderer_ptr);
 
 	const auto [ENABLE_SFX,
 				ENABLE_MUSIC] = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
@@ -68,6 +69,7 @@ int main(int argc, char* argv[]) {
 	menu_state.menu_is_run = true;
 
 	while (menu_state.menu_is_run) {
+		//std::cout << main_game_ui_state.index_button_hovered << std::endl;
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				menu_state.menu_is_run = false;
