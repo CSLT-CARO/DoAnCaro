@@ -78,10 +78,9 @@ int main(int argc, char* argv[]) {
 			else
 				handleMenuInput(event, window, menu_state, game_state, main_game_ui_state);
 		}
-		if (game_state.game_is_run == true)
+		if (game_state.game_is_run == true) {
 			processMainGame(window, main_game_ui_state, game_state);
-		else
-		{
+		}else{
 			processMenuScreen(window, menu_state, main_game_ui_state);
 		}
 		SDL_RenderPresent(window.renderer_ptr);

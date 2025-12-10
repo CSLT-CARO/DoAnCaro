@@ -7,7 +7,7 @@
 
 #include "CaroEnum.h"
 #include "utitlity.h"
-
+#include <stack>
 struct Cell;
 struct CellHash;
 
@@ -52,10 +52,25 @@ struct NodeData12x12 {
     Cell LAST_CHOSEN_CELL {};
 };
 
+struct Move {
+    Cell cell;
+    PlayerMark mark;
+};
+
+struct BoardSnapshot {
+    Board3x3 board3x3;
+    Board12x12 board12x12;
+    PlayerMark whose_turn;
+};
+
 struct GameState {
     bool game_is_run = false;
     bool is_init = false;
     bool is_board_12x12_empty = true;
+
+    std::stack<Move> move_history;
+    std::stack<BoardSnapshot> board_history;
+    int max_undo_count = 10;
 
     PlayerMark whose_turn{};
     PlayerMark bot_marker{};
@@ -67,6 +82,9 @@ struct GameState {
     Board12x12 board12x12{};
     CellSet marked_cells {};
 };
+
+
+
 
 constexpr Cell NULL_CELL { -100, -100 };
 
@@ -118,6 +136,17 @@ bool isCellOutOfBound3x3(const Cell& cell);
 bool isCellOutOfBound12x12(const Cell& cell);
 bool isMovesLeft(const Board3x3& board);
 bool isMovesLeft(const Board12x12& board);
+void recordMove(GameState& game_state, const Cell& cell, const PlayerMark mark);
+bool undoLastMove(GameState& game_state);
+bool undoMoves(GameState& game_state, int count);
+bool canUndo(const GameState& game_state);
+int getUndoCount(const GameState& game_state);
+void clearUndoHistory(GameState& game_state);
+
+
+void saveSnapshot(GameState& game_state);
+bool restoreSnapshot(GameState& game_state);
+
 
 PlayerMark getMark(const Board3x3&, const Cell& cell);
 PlayerMark getMark(const Board12x12&, const Cell& cell);

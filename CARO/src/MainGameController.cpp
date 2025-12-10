@@ -78,6 +78,12 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn3x3(window, ui_state, game_state);
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
+					if (event.key.keysym.scancode == SDL_SCANCODE_U) {
+						if (game_state.mode == PVP) {
+							restoreSnapshot(game_state);
+						} 
+					}
+
 				}
 				else
 				{
@@ -85,6 +91,12 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 					if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
 						ui_state.selected_cell = handleKeyboardMakeTurn12x12(window, ui_state, game_state);
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
+
+					if (event.key.keysym.scancode == SDL_SCANCODE_U) {
+						if (game_state.mode == PVP) {
+							restoreSnapshot(game_state);
+						} 
+					}
 				}
 			}
 			else
@@ -179,15 +191,18 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		if (ui_state.selected_cell == NULL_CELL) {
 			return;
 		}
-
+		bool move_success{};
 		if (game_state.board_type == Classic) {
-			tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
+			move_success = tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
 		} else {
-			tryPlaceMark(game_state.board12x12, ui_state.selected_cell, game_state.whose_turn);
+			move_success = tryPlaceMark(game_state.board3x3, ui_state.selected_cell, game_state.whose_turn);
 			ui_state.should_reset_turn_timer = true;
 			game_state.marked_cells.insert(ui_state.selected_cell);
 		}
 
+		if (move_success) {
+			saveSnapshot(game_state);
+		}
 		alternateTurn(game_state.whose_turn);
 	}
 

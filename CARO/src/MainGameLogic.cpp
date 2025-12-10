@@ -3,6 +3,8 @@
 void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state) {
 	if (game_state.is_init) return;
 
+	clearUndoHistory(game_state);
+
 	game_state.whose_turn = pickRandomPlayer();
 	game_state.bot_marker = pickRandomPlayer();
 	game_state.is_init = true;

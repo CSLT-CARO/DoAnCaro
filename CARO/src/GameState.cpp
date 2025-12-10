@@ -733,3 +733,40 @@ PlayerMark getMark(const Board12x12& board, const Cell& cell) {
         exit(1);
     }
 }
+
+
+void clearUndoHistory(GameState& game_state) {
+    while (!game_state.board_history.empty()) {
+        game_state.board_history.pop();
+    }
+}
+
+void saveSnapshot(GameState& game_state) {
+    BoardSnapshot snapshot;
+    snapshot.board3x3 = game_state.board3x3;
+    snapshot.board12x12 = game_state.board12x12;
+    snapshot.whose_turn = game_state.whose_turn;
+    game_state.board_history.push(snapshot);
+}
+
+// Restore previous board state
+bool restoreSnapshot(GameState& game_state) {
+    if (game_state.board_history.empty()) {
+        return false;
+    }
+    
+    BoardSnapshot snapshot = game_state.board_history.top();
+    game_state.board_history.pop();
+    
+    game_state.board3x3 = snapshot.board3x3;
+    game_state.board12x12 = snapshot.board12x12;
+    game_state.whose_turn = snapshot.whose_turn;
+    
+    return true;
+}
+
+
+//Check handleMainGameInput and processMainGame in MainGameController.cpp
+//to check if I immplemented undo feature corretly.
+//if there's any bug (Hi vong deo co), tell me or fix it if convenient.
+// Quy chu phu
