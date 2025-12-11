@@ -260,7 +260,8 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 			game_state.board_type = Classic;
 			game_state.game_is_run = true;
 			menu_state.transaction = true;
-			//playTransaction(window, menu_state, game_state);
+			//
+			// (window, menu_state, game_state);
 		}
 		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON
 			&& checkButton(MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON], mouseX, mouseY))
@@ -268,7 +269,7 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 			game_state.board_type = Ultimate;
 			game_state.game_is_run = true;
 			menu_state.transaction = true;
-			//playTransaction(window, menu_state, game_state);
+			//playIntroTransaction(window, menu_state, game_state);
 		}
 		return;
 	}
@@ -427,7 +428,7 @@ void chooseByKeyBoard(const Window& window, MenuState& menu_state, GameState &ga
 			game_state.game_is_run = true;
 			game_state.board_type = Classic;
 			menu_state.transaction = true;
-			//playTransaction(window, menu_state, game_state);
+			//playIntroTransaction(window, menu_state, game_state);
 			return;
 		}
 		if (menu_state.transform_idx == TEXTURE_ULTIMATE_BOARD_BUTTON)
@@ -435,7 +436,7 @@ void chooseByKeyBoard(const Window& window, MenuState& menu_state, GameState &ga
 			game_state.game_is_run = true;
 			game_state.board_type = Ultimate;
 			menu_state.transaction = true;
-			//playTransaction(window, menu_state, game_state);
+			//playIntroTransaction(window, menu_state, game_state);
 			return;
 		}
 	}
@@ -566,4 +567,5 @@ void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_sta
 void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)
 {
 	buildMenuImages(menu_state, window, ui_state);
+	playOutroTransaction(window, menu_state, ui_state);
 }

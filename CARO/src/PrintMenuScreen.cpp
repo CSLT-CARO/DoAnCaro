@@ -497,7 +497,7 @@ void initMenuResources(Window &window)
 	InitChooseDifficulty(window, diff);
 }
 
-void playTransaction(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
+void playIntroTransaction(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state)
 {
 	if (!menu_state.transaction) return;
 	menu_state.transaction = false;
@@ -523,6 +523,31 @@ void playTransaction(const Window& window, MenuState& menu_state, GameState& gam
 	drawMainGame(window, ui_state, game_state, menu_state);
 }
 
+void playOutroTransaction(const Window& window, MenuState& menu_state, const MainGameUIState& ui_state)
+{
+	if (!menu_state.transaction) return;
+	menu_state.transaction = false;
+
+	std::vector<GIF> textures = ANIMATIONS.at(GIF_TRANSACTION);
+
+	int size = (int)textures.size();
+	for (int i = 0; i < size; i++)
+	{
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_QUIT) return;
+		}
+
+		buildMenuImages(menu_state, window, ui_state);
+
+		SDL_RenderCopy(window.renderer_ptr, textures[i].textures, NULL, NULL);
+		SDL_RenderPresent(window.renderer_ptr);
+
+		SDL_Delay(textures[i].delay);
+	}
+	buildMenuImages(menu_state, window, ui_state);
+}
 
 void buildMenuImages(MenuState& menu_state, const Window& window, const MainGameUIState& ui_state)
 {
@@ -568,4 +593,5 @@ void buildMenuImages(MenuState& menu_state, const Window& window, const MainGame
 		Apply_Music_State(!menu_state.turn_music);  // turn_music=true nghĩa là bật, nên muted=false
 		Apply_SFX_State(!menu_state.turn_sfx);
 	}
+
 }

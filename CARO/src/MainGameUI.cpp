@@ -1048,6 +1048,7 @@ void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuStat
 	game_state.is_init = false;
 	menu_state.transform_idx = TEXTURE_PVP_BUTTON;
 	menu_state.trans_display = _ChooseTypePlayer;
+	menu_state.transaction = true;
 	Play_BGM_Menu();
 }
 void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
@@ -1058,6 +1059,7 @@ void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& 
 	game_state.is_init = false;
 	menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 	menu_state.trans_display = _MainMenu;
+	menu_state.transaction = true;
 	Play_BGM_Menu();
 }
 
