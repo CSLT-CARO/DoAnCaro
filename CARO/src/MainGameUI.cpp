@@ -55,7 +55,7 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
-	
+
 	if (game_state.board_type == Classic)
 	{
 		drawTable3x3(window, ui_state);
