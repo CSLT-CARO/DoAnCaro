@@ -68,9 +68,7 @@ struct GameState {
     bool is_init = false;
     bool is_board_12x12_empty = true;
 
-    std::stack<Move> move_history;
     std::stack<BoardSnapshot> board_history;
-    int max_undo_count = 10;
 
     PlayerMark whose_turn{};
     PlayerMark bot_marker{};
@@ -139,8 +137,6 @@ bool isMovesLeft(const Board12x12& board);
 void recordMove(GameState& game_state, const Cell& cell, const PlayerMark mark);
 bool undoLastMove(GameState& game_state);
 bool undoMoves(GameState& game_state, int count);
-bool canUndo(const GameState& game_state);
-int getUndoCount(const GameState& game_state);
 void clearUndoHistory(GameState& game_state);
 
 

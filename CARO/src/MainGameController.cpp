@@ -56,6 +56,8 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 		}
 		checkMouseHoverButton(ui_state);
 	}
+	bool canUndo = true;
+
 	if (event.type == SDL_KEYDOWN )
 	{
 		if (not ui_state.is_game_over)
@@ -80,7 +82,10 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) Back(ui_state, game_state, menu_state);
 					if (event.key.keysym.scancode == SDL_SCANCODE_U) {
 						if (game_state.mode == PVP) {
-							restoreSnapshot(game_state);
+							if (canUndo) {
+								restoreSnapshot(game_state);
+								canUndo = !canUndo;
+							}							
 						} 
 					}
 
@@ -94,14 +99,18 @@ void handleMainGameInput(const SDL_Event& event, MainGameUIState& ui_state, cons
 
 					if (event.key.keysym.scancode == SDL_SCANCODE_U) {
 						if (game_state.mode == PVP) {
-							restoreSnapshot(game_state);
-						} 
+							if(canUndo) {
+								restoreSnapshot(game_state);
+								canUndo = !canUndo;
+							}
+						}
 					}
 				}
-			}
-			else
+			} else {
 				Stop_All_SFX();
 				Play_SFX_Click();
+			} 
+				
 		}
 			handelKeyBoardButton(window, menu_state, game_state, ui_state, event.key.keysym.scancode);
 

@@ -757,16 +757,10 @@ bool restoreSnapshot(GameState& game_state) {
     
     BoardSnapshot snapshot = game_state.board_history.top();
     game_state.board_history.pop();
-    
+
     game_state.board3x3 = snapshot.board3x3;
     game_state.board12x12 = snapshot.board12x12;
     game_state.whose_turn = snapshot.whose_turn;
     
     return true;
 }
-
-
-//Check handleMainGameInput and processMainGame in MainGameController.cpp
-//to check if I immplemented undo feature corretly.
-//if there's any bug (Hi vong deo co), tell me or fix it if convenient.
-// Quy chu phu
