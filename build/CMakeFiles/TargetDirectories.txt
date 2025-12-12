@@ -1,3 +1,0 @@
-/home/halobeat/DoAnCaro/build/CMakeFiles/CARO.dir
-/home/halobeat/DoAnCaro/build/CMakeFiles/edit_cache.dir
-/home/halobeat/DoAnCaro/build/CMakeFiles/rebuild_cache.dir
