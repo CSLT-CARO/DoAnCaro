@@ -8,6 +8,8 @@ static constexpr auto PATH_SFX_MOVE = "assets/Audio/Move.wav";
 static constexpr auto PATH_SFX_WIN = "assets/Audio/Game_win.wav";
 static constexpr auto PATH_SFX_LOSE = "assets/Audio/Game_lose.wav";
 static constexpr auto PATH_SFX_DRAW = "assets/Audio/Game_draw.wav";
+static constexpr auto PATH_SFX_TRANSACTION = "assets/Audio/Transaction.wav";
+
 
 // --- Volume Configuration ---
 static constexpr int MUSIC_VOLUME = 64;
@@ -22,6 +24,8 @@ static Mix_Chunk* sfx_move = nullptr;
 static Mix_Chunk* sfx_win = nullptr;
 static Mix_Chunk* sfx_lose = nullptr;
 static Mix_Chunk* sfx_draw = nullptr;
+static Mix_Chunk* sfx_transaction = nullptr;
+
 
 // Tách riêng trạng thái music và SFX
 static std::atomic<bool> is_music_muted(false);
@@ -137,6 +141,14 @@ bool Audio_Init() {
     else {
         Mix_VolumeChunk(sfx_draw, SFX_VOLUME);
     }
+	sfx_transaction = Mix_LoadWAV(PATH_SFX_TRANSACTION);
+    if (!sfx_transaction) {
+        SDL_Log("Warning: cannot load SFX_DRAW '%s': %s", PATH_SFX_TRANSACTION, Mix_GetError());
+    }
+    else {
+        Mix_VolumeChunk(sfx_transaction, SFX_VOLUME);
+    }
+
 
     saved_music_volume = MUSIC_VOLUME;
     Mix_VolumeMusic(saved_music_volume);
@@ -159,6 +171,7 @@ void Audio_Quit() {
     if (sfx_win) { Mix_FreeChunk(sfx_win);   sfx_win = nullptr; }
     if (sfx_lose) { Mix_FreeChunk(sfx_lose);  sfx_lose = nullptr; }
     if (sfx_draw) { Mix_FreeChunk(sfx_draw);  sfx_draw = nullptr; }
+	if (sfx_transaction) { Mix_FreeChunk(sfx_transaction);  sfx_transaction = nullptr; }
 
     Mix_CloseAudio();
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -214,6 +227,11 @@ void Play_SFX_Lose() {
 void Play_SFX_Draw() {
     if (!audio_initialized.load()) return;
     play_chunk_with_duck(sfx_draw);
+}
+
+void Play_SFX_Transition() {
+    if (!audio_initialized.load()) return;
+    play_chunk_with_duck(sfx_transaction);
 }
 
 void Stop_All_SFX() {

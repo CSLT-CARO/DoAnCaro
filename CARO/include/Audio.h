@@ -38,6 +38,7 @@ void Play_SFX_Move();
 void Play_SFX_Win();
 void Play_SFX_Lose();
 void Play_SFX_Draw();
+void Play_SFX_Transition();
 
 
 void Stop_All_SFX();

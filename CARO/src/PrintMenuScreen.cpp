@@ -502,6 +502,8 @@ void playIntroTransaction(const Window& window, MenuState& menu_state, GameState
 	if (!menu_state.transaction) return;
 	menu_state.transaction = false;
 
+	Play_SFX_Transition();
+
 	std::vector<GIF> textures = ANIMATIONS.at(GIF_TRANSACTION);
 
 	int size = (int)textures.size();
@@ -527,6 +529,9 @@ void playOutroTransaction(const Window& window, MenuState& menu_state, const Mai
 {
 	if (!menu_state.transaction) return;
 	menu_state.transaction = false;
+
+	Play_SFX_Transition();
+
 
 	std::vector<GIF> textures = ANIMATIONS.at(GIF_TRANSACTION);
 
