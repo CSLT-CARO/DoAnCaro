@@ -554,6 +554,8 @@ void playOutroTransaction(const Window& window, MenuState& menu_state, const Mai
 	buildMenuImages(menu_state, window, ui_state);
 }
 
+
+
 void buildMenuImages(MenuState& menu_state, const Window& window, const MainGameUIState& ui_state)
 {
 	drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_BACKGROUND), { 0, 0, window.width, window.height });

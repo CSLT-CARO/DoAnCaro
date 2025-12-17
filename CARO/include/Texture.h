@@ -138,9 +138,15 @@ enum MainGameTexturesEnum {
 	TEXTURE_NO_BUTTON,
 	TEXTURE_YES_BUTTON_HOVERED,
 	TEXTURE_NO_BUTTON_HOVERED,
+
+
 };
 enum AnimationEnum {
 	GIF_TRANSACTION,
+	GIF_PLAYER_X_ON,
+	GIF_PLAYER_O_ON,
+	GIF_PLAYER_X_OFF,
+	GIF_PLAYER_O_OFF,
 };
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;
 using MainGameTextures = std::unordered_map<MainGameTexturesEnum, SDL_Texture*>;

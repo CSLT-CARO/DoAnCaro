@@ -132,6 +132,10 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 const std::vector<std::pair<std::string, AnimationEnum>> ANIMATION_GIF{
 	{ "Transaction_animation", GIF_TRANSACTION},
+	{ "Player_O_Animation_Off", GIF_PLAYER_O_OFF},
+	{ "Player_O_Animation_On", GIF_PLAYER_O_ON},
+	{ "Player_X_Animation_Off", GIF_PLAYER_X_OFF},
+	{ "Player_X_Animation_On", GIF_PLAYER_X_ON},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

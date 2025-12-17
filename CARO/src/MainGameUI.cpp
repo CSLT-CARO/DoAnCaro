@@ -77,19 +77,9 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, GameState& ga
 			drawWinnerLine12x12(window, ui_state.winner_data);
 		}
 	}
-	if (game_state.mode == PVP)
-	{
-		if (game_state.whose_turn == X)
-		{
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_ON), ui_state.player_x.rect);
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_OFF), ui_state.player_o.rect);
-		}
-		else
-		{
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_OFF), ui_state.player_x.rect);
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_ON), ui_state.player_o.rect);
-		}
-	}
+	
+	playTurnAnimation(window, game_state, ui_state);
+
 	drawSelectingCell(window, game_state, ui_state);
 
 	checkMouseHoverButton(ui_state);
@@ -116,25 +106,39 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state)
 
 	ui_state.turn_back_button[1] = { 558, 54, 80, 80 };
 
+	//ui_state.player_x.rect = {
+	//	cell_width / 2  ,
+	//	cell_height * 5 / 2,
+	//	IMG_WIDTH,
+	//	IMG_HEIGHT
+	//};
+
+	//ui_state.player_o.rect = {
+	//	cell_width / 2 ,
+	//	cell_height * 9 / 2,
+	//	IMG_WIDTH,
+	//	IMG_HEIGHT
+	//};
+
 	ui_state.player_x.rect = {
-		cell_width / 2  ,
-		cell_height * 5 / 2,
-		IMG_WIDTH,
-		IMG_HEIGHT
+	cell_width  ,
+	cell_height * 5 / 2,
+	cell_width * 3,
+	cell_width * 3
 	};
 
 	ui_state.player_o.rect = {
-		cell_width / 2 ,
-		cell_height * 9 / 2,
-		IMG_WIDTH,
-		IMG_HEIGHT
+		cell_width * 12  ,
+		cell_height * 5 / 2,
+		cell_width * 3,
+		cell_width * 3
 	};
 
 	ui_state.timer_button.rect = {
 		cell_width * 12,
 		cell_height ,
-		cell_height * 3,
-		cell_height * 3 / 2,
+		cell_height * 2,
+		cell_height ,
 	};
 
 	int x = window.width / 2;
@@ -166,6 +170,43 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state)
 	{
 		getSaveInform(ui_state, i);
 	}
+
+}
+
+void playTurnAnimation(const Window& window, const GameState& game_state,  MainGameUIState& ui_state)
+{
+	if (game_state.mode != PVP) return;
+	std::vector<GIF> player_x = ANIMATIONS.at(GIF_PLAYER_X_OFF);
+	std::vector<GIF> player_o = ANIMATIONS.at(GIF_PLAYER_O_OFF);
+	if (game_state.whose_turn == X)
+	{
+		player_x = ANIMATIONS.at(GIF_PLAYER_X_ON);
+	}
+	else
+	{
+		player_o = ANIMATIONS.at(GIF_PLAYER_O_ON);
+	}
+
+	if (player_x.empty() || player_o.empty()) return;
+
+	int size = (int)player_x.size();
+	Uint32 cur_time = SDL_GetTicks();
+	int delay = 100;
+
+	if (cur_time - ui_state.gif_last_update > player_x[ui_state.gif_frame].delay)
+	{
+		ui_state.gif_frame++;
+		if (ui_state.gif_frame >= size) ui_state.gif_frame = 0;
+		ui_state.gif_last_update = cur_time;
+	}
+	
+	SDL_Texture* cur_texture_x = player_x[ui_state.gif_frame].textures;
+	SDL_Texture* cur_texture_o = player_o[ui_state.gif_frame].textures;
+
+	drawTexture(window.renderer_ptr, cur_texture_x, ui_state.player_x.rect);
+	drawTexture(window.renderer_ptr, cur_texture_o, ui_state.player_o.rect);
+
+	
 
 }
 

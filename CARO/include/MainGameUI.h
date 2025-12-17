@@ -92,6 +92,10 @@ struct MainGameUIState {
 
 	std::string save_path = "./saves";
 	ScreenState screen = IN_GAME;
+
+	int gif_frame = 0;
+	Uint32 gif_last_update = 0;
+
 	bool is_set_up_game_over_screen = false;
 	bool is_game_over = false;
 	bool should_reset_turn_timer = false;
@@ -104,6 +108,8 @@ void destroyTTF(Window& window);
 void drawMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
 void initMainGameUIState(const Window& window, MainGameUIState& ui_state);
 void drawDimmingLayer(const Window& window);
+
+void playTurnAnimation(const Window& window, const GameState& game_state, MainGameUIState& ui_state);
 
 void drawTable3x3(const Window& window, MainGameUIState& ui_state);
 void drawTable12x12(const Window& window, MainGameUIState& ui_state);
