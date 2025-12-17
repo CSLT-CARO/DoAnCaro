@@ -11,7 +11,7 @@ void* operator new(size_t size) {
 	printf("Allocation count %d\n", allocation_count);
 	printf("Allocated: %lu bytes\n", size);
 	printf("Address: %p\n\n", memory);
-	allocation_count++;
+	allocation_count++; 
 	return memory;
 }
 
