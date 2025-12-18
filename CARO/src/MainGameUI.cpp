@@ -1212,6 +1212,12 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 	}
 	case IN_GAME:
 		ui_state.screen = PAUSE;
+		if (game_state.mode == PVP) {
+			pauseTimer(ui_state.pvp_turn_timer);
+		} else if (game_state.mode == PVE) {
+			pauseTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+		}
+
 		break;
 	case GAME_OVER:
 		exitActivated(ui_state, game_state, menu_state);
@@ -1348,6 +1354,12 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 		{
 		case TEXTURE_RESUME_ICON_HOVERED:
 			ui_state.screen = IN_GAME;
+			if (game_state.mode == PVP) {
+				resumeTimer(ui_state.pvp_turn_timer);
+			} else if (game_state.mode == PVE) {
+				resumeTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+			}
+
 			break;
 		case TEXTURE_RESTART_ICON_HOVERED:
 			restartActivated(ui_state, game_state);

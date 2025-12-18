@@ -84,7 +84,6 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 	initGame(window, game_state, menu_state, ui_state);
 	drawMainGame(window, ui_state, game_state, menu_state);
 
-	
 	playIntroTransaction(window, menu_state, game_state, ui_state);
 	Second time_remaining = -1;
 
@@ -100,9 +99,17 @@ void processMainGame(const Window& window, MainGameUIState& ui_state, GameState&
 		}
 
 		if (game_state.mode == PVP) {
-			time_remaining = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+			if (ui_state.screen != IN_GAME) {
+				time_remaining = toSecond(ui_state.pvp_turn_timer.timeout);
+			} else {
+				time_remaining = toSecond(getTimeRemaining(ui_state.pvp_turn_timer));
+			}
 		} else if (game_state.mode == PVE and game_state.whose_turn != game_state.bot_marker) {
-			time_remaining = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
+			if (ui_state.screen != IN_GAME) {
+				time_remaining = toSecond(ui_state.pve_turn_timer.at(game_state.difficulty).timeout);
+			} else {
+				time_remaining = toSecond(getTimeRemaining(ui_state.pve_turn_timer.at(game_state.difficulty)));
+			}
 		}
 	}
 
