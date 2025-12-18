@@ -1,5 +1,7 @@
 #include "GameState.h"
 
+#include <algorithm>
+
 bool Cell::operator==(const Cell& cell) const {
     return row == cell.row && column == cell.column;
 }
@@ -204,6 +206,15 @@ Cell botTurn12x12(GameState &game_state) {
         }
     }
 
+    if (shouldPlayRandomly(game_state.difficulty)) {
+        const auto&& EMPTY_CELLS = getEmptyCellsNeighboringMarkedCells(game_state.board12x12, game_state.marked_cells);
+        Cell chosen_cell {};
+        std::mt19937 gen(std::random_device{}());
+        std::sample(EMPTY_CELLS.begin(), EMPTY_CELLS.end(), &chosen_cell, 1, gen);
+        tryPlaceMark(game_state.board12x12, chosen_cell, game_state.bot_marker);
+        return chosen_cell;
+    }
+
     Cell best_move{};
     int best_value = NEG_INFINITY;
 
@@ -218,10 +229,8 @@ Cell botTurn12x12(GameState &game_state) {
 
     if (game_state.difficulty == Easy) {
         root.DEPTH_THRESHOLD = 1;
-    } else if (game_state.difficulty == Normal) {
+    } else {
         root.DEPTH_THRESHOLD = 2;
-    } else if (game_state.difficulty == Hard) {
-        root.DEPTH_THRESHOLD = 3;
     }
 
     NodeData12x12 child = root;
