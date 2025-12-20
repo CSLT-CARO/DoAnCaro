@@ -175,19 +175,39 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state)
 
 void playTurnAnimation(const Window& window, const GameState& game_state,  MainGameUIState& ui_state)
 {
-	if (game_state.mode != PVP) return;
-	std::vector<GIF> player_x = ANIMATIONS.at(GIF_PLAYER_X_OFF);
-	std::vector<GIF> player_o = ANIMATIONS.at(GIF_PLAYER_O_OFF);
-	if (game_state.whose_turn == X)
+	std::vector<GIF> player_x;
+	std::vector<GIF> player_o;
+	if (game_state.mode == PVP) 
 	{
-		player_x = ANIMATIONS.at(GIF_PLAYER_X_ON);
-	}
-	else
-	{
-		player_o = ANIMATIONS.at(GIF_PLAYER_O_ON);
+		player_x = ANIMATIONS.at(GIF_PLAYER_X_OFF);
+		player_o = ANIMATIONS.at(GIF_PLAYER_O_OFF);
+		if (game_state.whose_turn == X)
+		{
+			player_x = ANIMATIONS.at(GIF_PLAYER_X_ON);
+		}
+		else
+		{
+			player_o = ANIMATIONS.at(GIF_PLAYER_O_ON);
+		}
+
+		if (player_x.empty() || player_o.empty()) return;
 	}
 
-	if (player_x.empty() || player_o.empty()) return;
+	else {
+		player_x = ANIMATIONS.at(GIF_PLAYER_PVE_ON);
+		if (game_state.difficulty == Easy)
+		{
+			player_o = ANIMATIONS.at(GIF_EASY_BOT_ON);
+		}
+		else if (game_state.difficulty == Normal)
+		{
+			player_o = ANIMATIONS.at(GIF_NORMAL_BOT_ON);
+		}
+		else if (game_state.difficulty == Hard)
+		{
+			player_o = ANIMATIONS.at(GIF_HARD_BOT_ON);
+		}
+	}
 
 	int size = (int)player_x.size();
 	Uint32 cur_time = SDL_GetTicks();

@@ -136,6 +136,10 @@ const std::vector<std::pair<std::string, AnimationEnum>> ANIMATION_GIF{
 	{ "Player_O_Animation_On", GIF_PLAYER_O_ON},
 	{ "Player_X_Animation_Off", GIF_PLAYER_X_OFF},
 	{ "Player_X_Animation_On", GIF_PLAYER_X_ON},
+	{ "Player_Animation_On", GIF_PLAYER_PVE_ON},
+	{ "Easy_Bot_Animation_On", GIF_EASY_BOT_ON},
+	{ "Normal_Bot_Animation_On", GIF_NORMAL_BOT_ON},
+	{ "Hard_Bot_Animation_On", GIF_HARD_BOT_ON},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {

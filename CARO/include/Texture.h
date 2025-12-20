@@ -147,6 +147,10 @@ enum AnimationEnum {
 	GIF_PLAYER_O_ON,
 	GIF_PLAYER_X_OFF,
 	GIF_PLAYER_O_OFF,
+	GIF_PLAYER_PVE_ON,
+	GIF_EASY_BOT_ON,
+	GIF_NORMAL_BOT_ON,
+	GIF_HARD_BOT_ON,
 };
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;
 using MainGameTextures = std::unordered_map<MainGameTexturesEnum, SDL_Texture*>;
