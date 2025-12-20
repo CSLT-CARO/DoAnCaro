@@ -42,7 +42,7 @@ int checkMousePosition(const int mouseX, const int mouseY, const int state, cons
 
 void turnBack(MenuState& menu_state, const GameState &game_state)
 {
-	if (menu_state.notice)
+	if (checkSlot(menu_state.notice, 1, 5) || menu_state.notice == -1)
 	{
 		menu_state.notice = 0;
 		return;
@@ -109,6 +109,12 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseDifficulty, menu_state);
 	if(menu_state.trans_display == _ChooseLoadFile)
 		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseLoadFile, menu_state);
+	if (menu_state.notice == -1)
+	{
+		if (checkMouseInButton(menu_state.msg.close_button, mouseX, mouseY)) MousePositionState = TEXTURE_ERASE_BUTTON_HOVERED;
+		else if (checkMouseInButton(menu_state.msg.yes_button, mouseX, mouseY)) MousePositionState = TEXTURE_YES_BUTTON_HOVERED;
+		else if (checkMouseInButton(menu_state.msg.no_button, mouseX, mouseY)) MousePositionState = TEXTURE_NO_BUTTON_HOVERED;
+	}
 	menu_state.transform_idx = MousePositionState;
 }
 
@@ -153,7 +159,7 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
-	if (menu_state.notice)
+	if (checkSlot(menu_state.notice,1,5))
 	{
 		constexpr int IMG_WIDTH = 603;
 		constexpr int IMG_HEIGHT = 243;
@@ -168,17 +174,43 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
+
+
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
+
+		if (menu_state.notice == -1)
+		{
+			if (menu_state.transform_idx == TEXTURE_YES_BUTTON_HOVERED) // Yes
+			{
+				menu_state.notice = 0;
+				Saving_Slot[ui_state.erase_file.index].state = false;
+				Loading_Slot[ui_state.erase_file.index].state = false;
+				eraseData(ui_state.erase_file.path);
+				getSaveInform(ui_state, ui_state.erase_file.index);
+
+			}
+			if (menu_state.transform_idx == TEXTURE_NO_BUTTON_HOVERED || menu_state.transform_idx == TEXTURE_ERASE_BUTTON_HOVERED) // No
+			{
+				menu_state.notice = 0;
+				ui_state.erase_file.path = "";
+				ui_state.erase_file.index = -1;
+
+			}
+			return;
+		}
+
 		int load_idx = mouseInLoadOrSave("load"); // get the index of the load slot
 		if (load_idx != -1)
 		{
 			if (menu_state.transform_idx == TEXTURE_ERASE_BUTTON)
 			{
+				menu_state.notice = -1;
 				std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
-				Loading_Slot[load_idx].state = false;
-				eraseData(filename);
-				getSaveInform(ui_state, load_idx);
+				ui_state.notice_msg.active = true;
+				ui_state.erase_file.path = filename;
+				ui_state.erase_file.index = load_idx;
+				return;
 			}
 
 			std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
@@ -320,6 +352,12 @@ void checkInRange(int &idx, const int left, const int right)
 {
 	if (idx < left) idx = left;
 	if (idx > right) idx = right;
+}
+bool checkSlot(int& idxm, const int left, const int right)
+{
+	if (idxm < left || idxm > right)
+		return 0;
+	return 1;
 }
 
 int mouseInLoadOrSave(const std::string &type)

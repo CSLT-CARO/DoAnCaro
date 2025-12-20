@@ -583,8 +583,16 @@ void buildMenuImages(MenuState& menu_state, const Window& window, const MainGame
 	{
 		drawChooseFileLoad(window, menu_state);
 		drawLoadFileSave(window, menu_state, ui_state);
-		if (menu_state.notice)
+		if (checkSlot(menu_state.notice, 1, 5))
 			drawErrorLoadFile(window, menu_state.notice);
+		if (menu_state.notice == -1)
+		{
+			drawDimmingLayer(window);
+			const std::string msg = "Are you sure?";
+			TTF_Font* font = window.font_large;
+			int hover = -1;
+			drawNoticeBoard(window, msg, font, 1, "DELETE", hover);
+		}
 		
 		//drawTableTest(window);
 		//std::cout << window.width << " " << window.height << std::endl;

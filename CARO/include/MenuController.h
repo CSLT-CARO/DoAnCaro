@@ -22,5 +22,5 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 void handleKeyboardInput(const Window& window, const SDL_Event &event, MenuState &menu_state, GameState &game_state);
 void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state);
 void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState& ui_state);
-
+bool checkSlot(int& idxm, const int left, const int right);
 #endif // !MENU_CONTROLLER_H
