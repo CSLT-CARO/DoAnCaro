@@ -136,6 +136,10 @@ void checkMouseHoverButton(MainGameUIState& ui_state);
 void convertRowColToXY_3x3(const Window& window, int row, int col, int& x, int& y);
 void convertRowColToXY_12x12(const Window& window, int row, int col, int& x, int& y);
 
+void restartActivated(MainGameUIState& ui_state, GameState& game_state);
+void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
+void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state);
+
 Cell handleMouseClick3x3(const Window& window, const GameState& game_state, int mouseX, int mouseY);
 Cell handleMouseClick12x12(const Window& window, const GameState& game_state, int mouseX, int mouseY);
 

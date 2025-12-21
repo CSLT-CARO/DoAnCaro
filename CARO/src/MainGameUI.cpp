@@ -1100,16 +1100,22 @@ void restartActivated(MainGameUIState& ui_state, GameState& game_state)
 {
 	game_state.game_is_run = true;
 	ui_state.is_game_over = false;
+	ui_state.is_set_up_game_over_screen = false;
+	ui_state.screen = IN_GAME;
 	game_state.is_init = false;
+	ui_state.winner_data.mark = Empty;
 }
 void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
 {
 	game_state.game_is_run = false;
 	ui_state.is_game_over = false;
+	ui_state.is_set_up_game_over_screen = false;
+	ui_state.screen = IN_GAME;
 	game_state.is_init = false;
 	menu_state.transform_idx = TEXTURE_PVP_BUTTON;
 	menu_state.trans_display = _ChooseTypePlayer;
 	menu_state.transaction = true;
+	ui_state.winner_data.mark = Empty;
 	Play_BGM_Menu();
 }
 void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
@@ -1117,10 +1123,13 @@ void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& 
 
 	game_state.game_is_run = false;
 	ui_state.is_game_over = false;
+	ui_state.is_set_up_game_over_screen = false;
+	ui_state.screen = IN_GAME;
 	game_state.is_init = false;
 	menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
 	menu_state.trans_display = _MainMenu;
 	menu_state.transaction = true;
+	ui_state.winner_data.mark = Empty;
 	Play_BGM_Menu();
 }
 
