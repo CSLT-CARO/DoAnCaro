@@ -10,6 +10,10 @@ void initGame(const Window& window, GameState& game_state, MenuState& menu_state
 	ui_state.is_set_up_game_over_screen = false;
 	ui_state.winner_data = { Empty, NULL_CELL, NULL_CELL };
 	ui_state.screen = IN_GAME;
+
+	game_state.marked_cells.clear();
+	game_state.is_board_12x12_empty = true;
+
 	int x, y, w;
 	if (game_state.mode == PVP)
 		activateTimer(ui_state.pvp_turn_timer);

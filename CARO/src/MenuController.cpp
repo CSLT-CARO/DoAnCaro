@@ -232,7 +232,9 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 				Loading_Slot[load_idx].state = false;
 
 				if (game_state.board_type == Ultimate) {
+					game_state.marked_cells.clear();
 					game_state.marked_cells = getMarkedCells(game_state.board12x12);
+					game_state.is_board_12x12_empty = game_state.marked_cells.empty();
 					if (game_state.mode == PVP) {
 						activateTimer(ui_state.pvp_turn_timer);
 					} else {
