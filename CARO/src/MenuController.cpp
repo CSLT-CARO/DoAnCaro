@@ -42,7 +42,7 @@ int checkMousePosition(const int mouseX, const int mouseY, const int state, cons
 
 void turnBack(MenuState& menu_state, const GameState &game_state)
 {
-	if (menu_state.notice)
+	if (checkSlot(menu_state.notice, 1, 5) || menu_state.notice == -1)
 	{
 		menu_state.notice = 0;
 		return;
@@ -109,6 +109,12 @@ void checkMouseMotion(Window& window, MenuState& menu_state)
 		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseDifficulty, menu_state);
 	if(menu_state.trans_display == _ChooseLoadFile)
 		MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseLoadFile, menu_state);
+	if (menu_state.notice == -1)
+	{
+		if (checkMouseInButton(menu_state.msg.close_button, mouseX, mouseY)) MousePositionState = TEXTURE_ERASE_BUTTON_HOVERED;
+		else if (checkMouseInButton(menu_state.msg.yes_button, mouseX, mouseY)) MousePositionState = TEXTURE_YES_BUTTON_HOVERED;
+		else if (checkMouseInButton(menu_state.msg.no_button, mouseX, mouseY)) MousePositionState = TEXTURE_NO_BUTTON_HOVERED;
+	}
 	menu_state.transform_idx = MousePositionState;
 }
 
@@ -153,7 +159,7 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
-	if (menu_state.notice)
+	if (checkSlot(menu_state.notice,1,5))
 	{
 		constexpr int IMG_WIDTH = 603;
 		constexpr int IMG_HEIGHT = 243;
@@ -168,17 +174,43 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
+
+
 	if (menu_state.trans_display == _ChooseLoadFile)
 	{
+
+		if (menu_state.notice == -1)
+		{
+			if (menu_state.transform_idx == TEXTURE_YES_BUTTON_HOVERED) // Yes
+			{
+				menu_state.notice = 0;
+				Saving_Slot[ui_state.erase_file.index].state = false;
+				Loading_Slot[ui_state.erase_file.index].state = false;
+				eraseData(ui_state.erase_file.path);
+				getSaveInform(ui_state, ui_state.erase_file.index);
+
+			}
+			if (menu_state.transform_idx == TEXTURE_NO_BUTTON_HOVERED || menu_state.transform_idx == TEXTURE_ERASE_BUTTON_HOVERED) // No
+			{
+				menu_state.notice = 0;
+				ui_state.erase_file.path = "";
+				ui_state.erase_file.index = -1;
+
+			}
+			return;
+		}
+
 		int load_idx = mouseInLoadOrSave("load"); // get the index of the load slot
 		if (load_idx != -1)
 		{
 			if (menu_state.transform_idx == TEXTURE_ERASE_BUTTON)
 			{
+				menu_state.notice = -1;
 				std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
-				Loading_Slot[load_idx].state = false;
-				eraseData(filename);
-				getSaveInform(ui_state, load_idx);
+				ui_state.notice_msg.active = true;
+				ui_state.erase_file.path = filename;
+				ui_state.erase_file.index = load_idx;
+				return;
 			}
 
 			std::string filename = getSaveFileName(menu_state.SAVE_PATH, load_idx);
@@ -198,6 +230,16 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 				game_state.game_is_run = true;
 				game_state.is_init = true;
 				Loading_Slot[load_idx].state = false;
+
+				if (game_state.board_type == Ultimate) {
+					game_state.marked_cells = getMarkedCells(game_state.board12x12);
+					if (game_state.mode == PVP) {
+						activateTimer(ui_state.pvp_turn_timer);
+					} else {
+						activateTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+					}
+				}
+
 			}
 			else
 			{
@@ -259,12 +301,17 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		{
 			game_state.board_type = Classic;
 			game_state.game_is_run = true;
+			menu_state.transaction = true;
+			//
+			// (window, menu_state, game_state);
 		}
 		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON
 			&& checkButton(MenuButtonPosition[_ChooseTypeGame][TEXTURE_ULTIMATE_BOARD_BUTTON], mouseX, mouseY))
 		{
 			game_state.board_type = Ultimate;
 			game_state.game_is_run = true;
+			menu_state.transaction = true;
+			//playIntroTransaction(window, menu_state, game_state);
 		}
 		return;
 	}
@@ -295,28 +342,22 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 		return;
 	}
 
-	if (menu_state.trans_display == _ChooseTypeGame)
-	{
-		int MousePositionState = checkMousePosition(mouseX, mouseY, _ChooseTypeGame, menu_state);
-		
-		if (MousePositionState == TEXTURE_CLASSIC_BOARD_BUTTON)
-		{
-			game_state.game_is_run = true;
-			game_state.board_type = Classic;
-		}
-			
-		if (MousePositionState == TEXTURE_ULTIMATE_BOARD_BUTTON)
-		{
-			game_state.game_is_run = true;
-			game_state.board_type = Ultimate;
-		}
-	}
+	
 }
+
+
+
 
 void checkInRange(int &idx, const int left, const int right)
 {
 	if (idx < left) idx = left;
 	if (idx > right) idx = right;
+}
+bool checkSlot(int& idxm, const int left, const int right)
+{
+	if (idxm < left || idxm > right)
+		return 0;
+	return 1;
 }
 
 int mouseInLoadOrSave(const std::string &type)
@@ -351,7 +392,7 @@ int mouseInLoadOrSave(const std::string &type)
 	}
 }
 
-void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
+void chooseByKeyBoard(const Window& window, MenuState& menu_state, GameState &game_state)
 {
 	if (menu_state.turn_sfx == true) Play_SFX_Click();
 	if (menu_state.trans_display == _MainMenu)
@@ -434,12 +475,16 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 		{
 			game_state.game_is_run = true;
 			game_state.board_type = Classic;
+			menu_state.transaction = true;
+			//playIntroTransaction(window, menu_state, game_state);
 			return;
 		}
 		if (menu_state.transform_idx == TEXTURE_ULTIMATE_BOARD_BUTTON)
 		{
 			game_state.game_is_run = true;
 			game_state.board_type = Ultimate;
+			menu_state.transaction = true;
+			//playIntroTransaction(window, menu_state, game_state);
 			return;
 		}
 	}
@@ -464,7 +509,7 @@ void chooseByKeyBoard(MenuState& menu_state, GameState &game_state)
 	}
 }
 
-void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameState &game_state)
+void handleKeyboardInput(const Window& window, const SDL_Event &event, MenuState &menu_state, GameState &game_state)
 {
 	if (event.key.keysym.sym == SDLK_ESCAPE)
 	{
@@ -542,7 +587,7 @@ void handleKeyboardInput(const SDL_Event &event, MenuState &menu_state, GameStat
 	}
 	if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER)
 	{
-		chooseByKeyBoard(menu_state, game_state);
+		chooseByKeyBoard(window ,menu_state, game_state);
 	}
 }
 
@@ -552,7 +597,7 @@ void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_sta
 	{
 		case SDL_KEYDOWN:
 		{
-			handleKeyboardInput(event, menu_state, game_state);
+			handleKeyboardInput(window, event, menu_state, game_state);
 			break;
 		}
 		case SDL_MOUSEMOTION:
@@ -570,4 +615,5 @@ void handleMenuInput(const SDL_Event& event, Window& window, MenuState& menu_sta
 void processMenuScreen(const Window& window, MenuState& menu_state, const MainGameUIState &ui_state)
 {
 	buildMenuImages(menu_state, window, ui_state);
+	playOutroTransaction(window, menu_state, ui_state);
 }

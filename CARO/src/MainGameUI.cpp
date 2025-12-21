@@ -3,7 +3,10 @@
 #include "Audio.h"
 #include "Save.h"
 
+
 std::unordered_map< int, Button> Saving_Slot;
+
+// drawing functions
 
 void initTTF(Window& window)
 {
@@ -51,7 +54,7 @@ void destroyTTF(Window& window)
 	TTF_Quit();
 }
 
-void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
+void drawMainGame(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state) {
 	auto renderer = window.renderer_ptr;
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
@@ -74,26 +77,19 @@ void drawMainGame(const Window& window, MainGameUIState& ui_state, const GameSta
 			drawWinnerLine12x12(window, ui_state.winner_data);
 		}
 	}
-	if (game_state.mode == PVP)
-	{
-		if (game_state.whose_turn == X)
-		{
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_ON), ui_state.player_x.rect);
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_OFF), ui_state.player_o.rect);
-		}
-		else
-		{
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_OFF), ui_state.player_x.rect);
-			drawTexture(renderer, MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_ON), ui_state.player_o.rect);
-		}
-	}
-	drawSelectingCell(window, game_state, ui_state);
-	drawButton(window, ui_state);
 	
-	drawScreen(window, ui_state);
+	playTurnAnimation(window, game_state, ui_state);
+
+	drawSelectingCell(window, game_state, ui_state);
+
+	checkMouseHoverButton(ui_state);
+
+	drawButton(window, ui_state);
+
+	drawScreen(window, ui_state, game_state, menu_state);
 }
 
-void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
+void initMainGameUIState(const Window& window, MainGameUIState& ui_state)
 {
 	const int cell_width = window.width / 16;
 	const int cell_height = cell_width;
@@ -110,33 +106,41 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 
 	ui_state.turn_back_button[1] = { 558, 54, 80, 80 };
 
+	//ui_state.player_x.rect = {
+	//	cell_width / 2  ,
+	//	cell_height * 5 / 2,
+	//	IMG_WIDTH,
+	//	IMG_HEIGHT
+	//};
+
+	//ui_state.player_o.rect = {
+	//	cell_width / 2 ,
+	//	cell_height * 9 / 2,
+	//	IMG_WIDTH,
+	//	IMG_HEIGHT
+	//};
+
 	ui_state.player_x.rect = {
-		cell_width / 2  ,
-		cell_height * 5 / 2,
-		IMG_WIDTH,
-		IMG_HEIGHT
+	cell_width  ,
+	cell_height * 5 / 2,
+	cell_width * 3,
+	cell_width * 3
 	};
 
 	ui_state.player_o.rect = {
-		cell_width / 2 ,
-		cell_height * 9 / 2,
-		IMG_WIDTH,
-		IMG_HEIGHT
+		cell_width * 12  ,
+		cell_height * 5 / 2,
+		cell_width * 3,
+		cell_width * 3
 	};
 
 	ui_state.timer_button.rect = {
 		cell_width * 12,
 		cell_height ,
-		cell_height * 3,
-		cell_height * 3 / 2,
+		cell_height * 2,
+		cell_height ,
 	};
 
-	ui_state.save_button.rect = {
-		cell_width * 12,
-		cell_height * 4,
-		cell_height * 3,
-		cell_height * 3 * 32 / 160,
-	};
 	int x = window.width / 2;
 	int y = window.height / 2;
 	IMG_WIDTH = 804;
@@ -152,7 +156,7 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 	x = 668, y = 224;
 	IMG_WIDTH = 603, IMG_HEIGHT = 102;
 
-	for (int i = 1; i<= 5; i++)
+	for (int i = 1; i <= 5; i++)
 	{
 		Saving_Slot[i].rect = {
 			x,
@@ -169,14 +173,75 @@ void initMainGameUIState(const Window& window, MainGameUIState& ui_state )
 
 }
 
-void drawTurnBackButton(const Window& window, const MainGameUIState& ui_state, const int idx)
+void playTurnAnimation(const Window& window, const GameState& game_state,  MainGameUIState& ui_state)
 {
-	SDL_Texture* turn_back_button = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON);
+	std::vector<GIF> player_x;
+	std::vector<GIF> player_o;
+	if (game_state.mode == PVP) 
+	{
+		player_x = ANIMATIONS.at(GIF_PLAYER_X_OFF);
+		player_o = ANIMATIONS.at(GIF_PLAYER_O_OFF);
+		if (game_state.whose_turn == X)
+		{
+			player_x = ANIMATIONS.at(GIF_PLAYER_X_ON);
+		}
+		else
+		{
+			player_o = ANIMATIONS.at(GIF_PLAYER_O_ON);
+		}
+
+		if (player_x.empty() || player_o.empty()) return;
+	}
+
+	else {
+		player_x = ANIMATIONS.at(GIF_PLAYER_PVE_ON);
+		if (game_state.difficulty == Easy)
+		{
+			player_o = ANIMATIONS.at(GIF_EASY_BOT_ON);
+		}
+		else if (game_state.difficulty == Normal)
+		{
+			player_o = ANIMATIONS.at(GIF_NORMAL_BOT_ON);
+		}
+		else if (game_state.difficulty == Hard)
+		{
+			player_o = ANIMATIONS.at(GIF_HARD_BOT_ON);
+		}
+	}
+
+	int size = (int)player_x.size();
+	Uint32 cur_time = SDL_GetTicks();
+	int delay = 100;
+
+	if (cur_time - ui_state.gif_last_update > player_x[ui_state.gif_frame].delay)
+	{
+		ui_state.gif_frame++;
+		if (ui_state.gif_frame >= size) ui_state.gif_frame = 0;
+		ui_state.gif_last_update = cur_time;
+	}
+	
+	SDL_Texture* cur_texture_x = player_x[ui_state.gif_frame].textures;
+	SDL_Texture* cur_texture_o = player_o[ui_state.gif_frame].textures;
+
+	drawTexture(window.renderer_ptr, cur_texture_x, ui_state.player_x.rect);
+	drawTexture(window.renderer_ptr, cur_texture_o, ui_state.player_o.rect);
+
+	
+
+}
+
+void drawTurnBackButton(const Window& window, MainGameUIState& ui_state, const int idx)
+{
+	SDL_Texture* pause_button = MAIN_GAME_TEXTURES.at(TEXTURE_PAUSE_ICON);
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	if (checkMouseInButton(ui_state.turn_back_button[idx], mouseX, mouseY) && ui_state.screen == 0)
-		turn_back_button = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED);
-	drawTexture(window.renderer_ptr, turn_back_button, ui_state.turn_back_button[idx]);
+	if (not ui_state.notice_msg.active)
+	{
+		if (checkMouseInButton(ui_state.turn_back_button[idx], mouseX, mouseY) && ui_state.screen == IN_GAME)
+			pause_button = MAIN_GAME_TEXTURES.at(TEXTURE_PAUSE_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_TURN_BACK_BUTTON_HOVERED;
+		else ui_state.index_button_hovered = -1;
+	}
+	drawTexture(window.renderer_ptr, pause_button, ui_state.turn_back_button[idx]);
 
 }
 
@@ -220,11 +285,6 @@ void drawButton(const Window& window, MainGameUIState& ui_state)
 {
 	drawTurnBackButton(window, ui_state, 0);
 
-	SDL_Texture* button = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_BUTTON);
-	checkMouseHoverButton(ui_state);
-	if (ui_state.save_button.state)
-		button = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_BUTTON_HOVERED);
-	drawTexture(window.renderer_ptr, button, ui_state.save_button.rect);
 }
 
 void drawSymbol3x3(const Window& window, const GameState& game_state) {
@@ -288,13 +348,13 @@ void drawSelectingCell(const Window& window, const GameState& game_state, const 
 	drawTexture(window.renderer_ptr, mark_texture, ui_state.hover_cell);
 }
 
-void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, const GameState& game_state) {
+void drawGameOverScreen(const Window& window, MainGameUIState& ui_state, const GameState& game_state) {
 	const auto renderer = window.renderer_ptr;
 	SDL_Texture* winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_GAME_DRAW);
 	SDL_Texture* restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART);
 	SDL_Texture* new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME);
 	SDL_Texture* exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT);
-
+	checkMouseHoverButton(ui_state);
 	if (game_state.mode == PVP)
 	{
 		if (ui_state.winner_data.mark == X) {
@@ -317,15 +377,15 @@ void drawGameOverScreen(const Window& window, const MainGameUIState& ui_state, c
 			else if (ui_state.winner_data.mark == X) winner_background_texture = MAIN_GAME_TEXTURES.at(TEXTURE_YOU_WIN);
 		}
 	}
-	if (ui_state.end_game_button.index == TEXTURE_RESTART_ON) {
+	if (ui_state.index_button_hovered == TEXTURE_RESTART_ON || ui_state.keyboard_index == TEXTURE_RESTART_ON) {
 		restart_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART_ON);
 	}
 
-	if (ui_state.end_game_button.index == TEXTURE_NEW_GAME_ON) {
+	if (ui_state.index_button_hovered == TEXTURE_NEW_GAME_ON || ui_state.keyboard_index == TEXTURE_NEW_GAME_ON) {
 		new_game_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_NEW_GAME_ON);
 	}
 
-	if (ui_state.end_game_button.index == TEXTURE_EXIT_ON) {
+	if (ui_state.index_button_hovered == TEXTURE_EXIT_ON || ui_state.keyboard_index == TEXTURE_EXIT_ON) {
 		exit_button_texture = MAIN_GAME_TEXTURES.at(TEXTURE_EXIT_ON);
 	}
 	drawDimmingLayer(window);
@@ -349,14 +409,14 @@ void drawWinnerLine3x3(const Window& window, const WinnerData& winner_data)
 	convertRowColToXY_3x3(window, start_row, start_column, x, y);
 	x -= cell_width;
 	y -= cell_height;
-	if(start_row == end_row)
+	if (start_row == end_row)
 	{
 		tmp_rect = { x, y, 6 * cell_width, 2 * cell_height };
-		if(winner_data.mark == X)
+		if (winner_data.mark == X)
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_X);
 		else
 			mark_texture = MAIN_GAME_TEXTURES.at(TEXTURE_ROW_LINE_O);
-		
+
 	}
 	else if (start_column == end_column)
 	{
@@ -461,14 +521,14 @@ void drawText(const Window& window, const std::string& text, TTF_Font* font, con
 	}
 
 
-	drawTexture(window.renderer_ptr, text_texture, {x,y, text_surface -> w, text_surface -> h});
+	drawTexture(window.renderer_ptr, text_texture, { x,y, text_surface->w, text_surface->h });
 	SDL_FreeSurface(text_surface);
 	SDL_DestroyTexture(text_texture);
 }
 
-void drawScreen(const Window& window, const MainGameUIState& ui_state)
+void drawScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
 {
-	if (ui_state.screen == TEXTURE_SAVE_SCREEN)
+	if (ui_state.screen == SAVE_SCREEN)
 	{
 		int x, y, IMG_WIDTH, IMG_HEIGHT;
 		drawDimmingLayer(window);
@@ -482,12 +542,12 @@ void drawScreen(const Window& window, const MainGameUIState& ui_state)
 		drawTexture(window.renderer_ptr, tmp, ui_state.turn_back_button[1]);
 
 		int index = mouseInLoadOrSave("save");
-		if (index != -1)
+		if (index != -1 && not ui_state.notice_msg.active)
 		{
 			x = Saving_Slot[index].rect.x;
 			y = Saving_Slot[index].rect.y;
 			IMG_WIDTH = IMG_HEIGHT = 102;
-			if(!Saving_Slot[index].state)
+			if (!Saving_Slot[index].state)
 				drawTexture(window.renderer_ptr, MAIN_GAME_TEXTURES.at(TEXURE_IMPORT_BUTTON), { x, y, IMG_WIDTH, IMG_HEIGHT });
 		}
 
@@ -501,7 +561,7 @@ void drawScreen(const Window& window, const MainGameUIState& ui_state)
 			std::string fileName = getSaveFileName(ui_state.save_path, i);
 			if (!isFileEmpty(fileName))
 			{
-				if (checkButton({ x, y, IMG_WIDTH, IMG_HEIGHT }, mouseX, mouseY))
+				if (checkButton({ x, y, IMG_WIDTH, IMG_HEIGHT }, mouseX, mouseY) && not ui_state.notice_msg.active)
 				{
 					drawTexture(window.renderer_ptr, MENU_TEXTURES.at(TEXTURE_ERASE_BUTTON_HOVERED), { x, y, IMG_WIDTH, IMG_HEIGHT });
 				}
@@ -512,10 +572,214 @@ void drawScreen(const Window& window, const MainGameUIState& ui_state)
 			}
 			//std::cout << isFileExist(fileName) << ' ';
 		}
+		if (ui_state.notice_msg.active)
+		{
+			drawDimmingLayer(window);
+			const std::string msg = "Are you sure?";
+			TTF_Font* font = window.font_large;
+			int hover = 0;
+			drawNoticeBoard(window, msg, font, 1, "DELETE", hover);
+		}
 	}
+	if (ui_state.screen == PAUSE)
+	{
+		drawDimmingLayer(window);
+		int IMG_WIDTH = (320) * window.height / (400) - window.width / 32;
+		int IMG_HEIGHT = window.height * 9 / 10;
+		const SDL_Rect pause_rect = {
+			(window.width - IMG_WIDTH) / 2,
+			(window.height - IMG_HEIGHT) / 2,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+
+
+		IMG_WIDTH = IMG_WIDTH / 2;
+		IMG_HEIGHT = IMG_WIDTH * 90 / 310;
+
+		int x_pos = (window.width - IMG_WIDTH) / 2;
+		int y_pos = (window.height - IMG_HEIGHT) / 2;
+
+		const SDL_Rect resume_rect = {
+			x_pos,
+			y_pos,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+
+		IMG_WIDTH = IMG_WIDTH / 3;
+		IMG_HEIGHT = IMG_WIDTH;
+
+		const SDL_Rect restart_rect = {
+			x_pos + resume_rect.w / 4 - IMG_WIDTH / 2,
+			resume_rect.y + resume_rect.w * 6 / 16,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+		const SDL_Rect save_rect = {
+			(window.width / 2 + resume_rect.w / 4 - IMG_HEIGHT / 2),
+			resume_rect.y + resume_rect.w * 6 / 16,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+		const SDL_Rect settings_rect = {
+			x_pos + resume_rect.w / 4 - IMG_WIDTH / 2,
+			restart_rect.y + resume_rect.w * 6 / 16,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+		const SDL_Rect home_rect = {
+			(window.width / 2 + resume_rect.w / 4 - IMG_HEIGHT / 2),
+			restart_rect.y + resume_rect.w * 6 / 16,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+		SDL_Texture* resume_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESUME_ICON);
+		SDL_Texture* home_texture = MAIN_GAME_TEXTURES.at(TEXTURE_HOME_ICON);
+		SDL_Texture* settings_texture = MAIN_GAME_TEXTURES.at(TEXTURE_SETTINGS_ICON);
+		SDL_Texture* restart_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART_ICON);
+		SDL_Texture* save_texture = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_ICON);
+		SDL_Texture* pause_texture = MAIN_GAME_TEXTURES.at(TEXTURE_PAUSE_SCREEN);
+
+
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		if (not ui_state.notice_msg.active){
+			if (checkButton(resume_rect, mouseX, mouseY))
+				resume_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESUME_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_RESUME_ICON_HOVERED;
+			else if (checkButton(home_rect, mouseX, mouseY))
+				home_texture = MAIN_GAME_TEXTURES.at(TEXTURE_HOME_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_HOME_ICON_HOVERED;
+			else if (checkButton(settings_rect, mouseX, mouseY))
+				settings_texture = MAIN_GAME_TEXTURES.at(TEXTURE_SETTINGS_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_SETTINGS_ICON_HOVERED;
+			else if (checkButton(restart_rect, mouseX, mouseY))
+				restart_texture = MAIN_GAME_TEXTURES.at(TEXTURE_RESTART_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_RESTART_ICON_HOVERED;
+			else if (checkButton(save_rect, mouseX, mouseY))
+				save_texture = MAIN_GAME_TEXTURES.at(TEXTURE_SAVE_ICON_HOVERED), ui_state.index_button_hovered = TEXTURE_SAVE_ICON_HOVERED;
+			else ui_state.index_button_hovered = -1;
+		}
+
+		drawTexture(window.renderer_ptr, pause_texture, pause_rect);
+		drawTexture(window.renderer_ptr, resume_texture, resume_rect);
+		drawTexture(window.renderer_ptr, home_texture, home_rect);
+		drawTexture(window.renderer_ptr, settings_texture, settings_rect);
+		drawTexture(window.renderer_ptr, restart_texture, restart_rect);
+		drawTexture(window.renderer_ptr, save_texture, save_rect);
+		if (ui_state.notice_msg.active)
+		{
+			drawDimmingLayer(window);
+			const std::string msg = "Do you want to save?";
+			TTF_Font* font = window.font_large;
+			drawNoticeBoard(window, msg, font, 1, "EXIT", ui_state.keyboard_index);
+		}
+	}
+	if (ui_state.screen == SETTINGS)
+	{
+		drawDimmingLayer(window);
+		int IMG_WIDTH = (320) * window.height / (400) - window.width / 32;
+		int IMG_HEIGHT = window.height * 9 / 10;
+		const SDL_Rect settings_rect = {
+			(window.width - IMG_WIDTH) / 2,
+			(window.height - IMG_HEIGHT) / 2,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		};
+
+
+		const SDL_Rect back_button_rect = {
+			settings_rect.x + 20,
+			settings_rect.y + 20,
+			80,
+			80
+		};
+
+		const SDL_Rect music_button_rect = {
+			window.width / 2 - 230,
+			window.height / 10 * 4,
+			300,
+			80
+		};
+		const SDL_Rect sfx_button_rect = {
+			window.width / 2 - 230,
+			static_cast<int>(window.height / 10 * 5.25),
+			300,
+			80
+		};
+
+		const SDL_Rect music_state_rect = {
+			window.width / 2 + 100,
+			window.height / 10 * 4,
+			120,
+			80
+		};
+		const SDL_Rect sfx_state_rect = {
+			window.width / 2 + 100,
+			static_cast<int>(window.height / 10 * 5.25),
+			120,
+			80
+		};
+
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		SDL_Texture* back_button_texture = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON);
+		SDL_Texture* music_button_texture = MENU_TEXTURES.at(TEXTURE_MUSIC_BUTTON);
+		SDL_Texture* sfx_button_texture = MENU_TEXTURES.at(TEXTURE_SFX_BUTTON);
+		SDL_Texture* setting_screen_texture = MAIN_GAME_TEXTURES.at(TEXTURE_SETTINGS_SCREEN);
+		SDL_Texture* music_state_texture;
+		SDL_Texture* sfx_state_texture;
+		if (menu_state.turn_music)
+			music_state_texture = MENU_TEXTURES.at(TEXTURE_MUSIC_ON_BUTTON);
+		else
+			music_state_texture = MENU_TEXTURES.at(TEXTURE_MUSIC_OFF_BUTTON);
+		if (menu_state.turn_sfx)
+			sfx_state_texture = MENU_TEXTURES.at(TEXTURE_SFX_ON_BUTTON);
+		else
+			sfx_state_texture = MENU_TEXTURES.at(TEXTURE_SFX_OFF_BUTTON);
+
+
+
+		if (checkButton(music_state_rect, mouseX, mouseY))
+		{
+			if (menu_state.turn_music)
+			{
+				music_state_texture = MENU_TEXTURES.at(TEXTURE_MUSIC_ON_BUTTON_HOVERED);
+				ui_state.index_button_hovered = TEXTURE_MUSIC_ON_BUTTON_HOVERED;
+			}
+			else
+			{
+				music_state_texture = MENU_TEXTURES.at(TEXTURE_MUSIC_OFF_BUTTON_HOVERED);
+				ui_state.index_button_hovered = TEXTURE_MUSIC_OFF_BUTTON_HOVERED;
+			}
+		}
+
+		else if (checkButton(sfx_state_rect, mouseX, mouseY))
+		{
+			if (menu_state.turn_sfx)
+			{
+				sfx_state_texture = MENU_TEXTURES.at(TEXTURE_SFX_ON_BUTTON_HOVERED);
+				ui_state.index_button_hovered = TEXTURE_SFX_ON_BUTTON_HOVERED;
+			}
+			else
+			{
+				sfx_state_texture = MENU_TEXTURES.at(TEXTURE_SFX_OFF_BUTTON_HOVERED);
+				ui_state.index_button_hovered = TEXTURE_SFX_OFF_BUTTON_HOVERED;
+			}
+		}
+		else if (checkButton(back_button_rect, mouseX, mouseY))
+			back_button_texture = MENU_TEXTURES.at(TEXTURE_TURN_BACK_BUTTON_HOVERED), ui_state.index_button_hovered = TEXTURE_TURN_BACK_BUTTON_HOVERED;
+		else ui_state.index_button_hovered = -1;
+
+		drawTexture(window.renderer_ptr, setting_screen_texture, settings_rect);
+		drawTexture(window.renderer_ptr, back_button_texture, back_button_rect);
+		drawTexture(window.renderer_ptr, music_button_texture, music_button_rect);
+		drawTexture(window.renderer_ptr, sfx_button_texture, sfx_button_rect);
+		drawTexture(window.renderer_ptr, music_state_texture, music_state_rect);
+		drawTexture(window.renderer_ptr, sfx_state_texture, sfx_state_rect);
+	}
+
+
 }
 
-void getSaveInform(MainGameUIState& ui_state,int idx)
+void getSaveInform(MainGameUIState& ui_state, int idx)
 {
 	if (idx < 1 || idx > 5) return;
 	std::string fileName = getSaveFileName(ui_state.save_path, idx);
@@ -540,7 +804,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 	std::string board_type = (load.board_type == Classic ? "3x3" : "12x12");
 	std::string mode = (load.mode == PVP ? "PVP" : "PVE");
 	ui_state.save_inform[idx].board_type = "BOARD TYPE: " + board_type;
-	ui_state.save_inform[idx].mode = "MODE: " +mode;
+	ui_state.save_inform[idx].mode = "MODE: " + mode;
 
 	if (load.mode == PVE)
 	{
@@ -565,7 +829,7 @@ void getSaveInform(MainGameUIState& ui_state,int idx)
 }
 
 void drawSaveInform(const Window& window, const MainGameUIState& ui_state, const int idx)
-{	
+{
 	if (idx < 1 || idx > 5) return;
 	const SDL_Rect SlotRect = Saving_Slot[idx].rect;
 	const int leftX = SlotRect.x + 20 + 102;
@@ -589,12 +853,14 @@ void drawSaveInform(const Window& window, const MainGameUIState& ui_state, const
 	drawText(window, ui_state.save_inform[idx].mode, window.font_small, rightX, topY + 5, COLOR_BLACK);
 
 	drawText(window, ui_state.save_inform[idx].board_type, window.font_small, rightX, bottomY, COLOR_BLACK);
+
+
 }
 
 void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	if (ui_state.is_set_up_game_over_screen) return;
-
-	ui_state.end_game_button.index = TEXTURE_RESTART_ON;
+	ui_state.keyboard_index = TEXTURE_RESTART_ON;
+	ui_state.screen = GAME_OVER;
 	const int x = window.width / 2; // x pos
 	const int y = window.height / 2; // y pos
 
@@ -602,7 +868,8 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 
 	if (ui_state.winner_data.mark == O) {
 		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_O_WIN);
-	} else if (ui_state.winner_data.mark == X) {
+	}
+	else if (ui_state.winner_data.mark == X) {
 		texture = MAIN_GAME_TEXTURES.at(TEXTURE_PLAYER_X_WIN);
 	}
 
@@ -654,6 +921,16 @@ void setupGameOverScreen(const Window& window, MainGameUIState& ui_state) {
 	ui_state.is_set_up_game_over_screen = true;
 }
 
+//void drawPauseGameScreen(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
+//{
+//	
+//}
+
+
+
+// handle input
+
+
 bool checkMouseInButton(const SDL_Rect& button, const int x, const int y) {
 	return (x >= button.x && x <= (button.x + button.w) &&
 		y >= button.y && y <= (button.y + button.h));
@@ -661,14 +938,24 @@ bool checkMouseInButton(const SDL_Rect& button, const int x, const int y) {
 
 void checkMouseHoverButton(MainGameUIState& ui_state)
 {
+
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_RESTART_ON;
-	if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_NEW_GAME_ON;
-	if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.end_game_button.index = TEXTURE_EXIT_ON;
+	if (ui_state.is_game_over)
+	{
+		if (checkMouseInButton(ui_state.end_game_button.Restart.rect, mouseX, mouseY)) ui_state.index_button_hovered = ui_state.keyboard_index = TEXTURE_RESTART_ON;
+		else if (checkMouseInButton(ui_state.end_game_button.New_game.rect, mouseX, mouseY)) ui_state.index_button_hovered = ui_state.keyboard_index = TEXTURE_NEW_GAME_ON;
+		else if (checkMouseInButton(ui_state.end_game_button.Exit.rect, mouseX, mouseY)) ui_state.index_button_hovered = ui_state.keyboard_index = TEXTURE_EXIT_ON;
+		else ui_state.index_button_hovered = -2;
+		return;
+	}
+	
+	
+	if (checkMouseInButton(ui_state.notice_msg.close_button, mouseX, mouseY)) ui_state.index_button_hovered = TEXTURE_ERASE_BUTTON_HOVERED;
+	else if (checkMouseInButton(ui_state.notice_msg.yes_button, mouseX, mouseY)) ui_state.index_button_hovered = TEXTURE_YES_BUTTON_HOVERED;
+	else if (checkMouseInButton(ui_state.notice_msg.no_button, mouseX, mouseY)) ui_state.index_button_hovered = TEXTURE_NO_BUTTON_HOVERED;
+	else ui_state.index_button_hovered = -1;
 
-	if (checkButton(ui_state.save_button.rect, mouseX, mouseY)) ui_state.save_button.state = true;
-	else ui_state.save_button.state = false;
 
 }
 
@@ -688,7 +975,7 @@ void convertRowColToXY_12x12(const Window& window, const int row, const int col,
 	y = (row + 3) * cell_width + cell_width / 2;
 }
 
-Cell handleMouseClick3x3(const Window &window, const GameState &game_state, const int mouseX, const int mouseY) {
+Cell handleMouseClick3x3(const Window& window, const GameState& game_state, const int mouseX, const int mouseY) {
 	const int cellW = window.width / 16;
 	const int cellH = cellW;
 	const int col = (mouseX / cellW) / 2 + (mouseX / cellW) % 2 - 3;
@@ -700,7 +987,7 @@ Cell handleMouseClick3x3(const Window &window, const GameState &game_state, cons
 	return cell;
 }
 
-Cell handleMouseClick12x12(const Window &window, const GameState &game_state, const int mouseX, const int mouseY)
+Cell handleMouseClick12x12(const Window& window, const GameState& game_state, const int mouseX, const int mouseY)
 {
 	const int cell_width = window.width / 32;
 	const int cell_height = cell_width;
@@ -809,10 +1096,43 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, const MainGameUIState& ui
 	return cell;
 }
 
-void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState & game_state, MainGameUIState& ui_state, const SDL_Scancode input)
+void restartActivated(MainGameUIState& ui_state, GameState& game_state)
+{
+	game_state.game_is_run = true;
+	ui_state.is_game_over = false;
+	game_state.is_init = false;
+}
+void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
+{
+	game_state.game_is_run = false;
+	ui_state.is_game_over = false;
+	game_state.is_init = false;
+	menu_state.transform_idx = TEXTURE_PVP_BUTTON;
+	menu_state.trans_display = _ChooseTypePlayer;
+	menu_state.transaction = true;
+	Play_BGM_Menu();
+}
+void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
+{
+
+	game_state.game_is_run = false;
+	ui_state.is_game_over = false;
+	game_state.is_init = false;
+	menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
+	menu_state.trans_display = _MainMenu;
+	menu_state.transaction = true;
+	Play_BGM_Menu();
+}
+
+void handelKeyBoardButton(const Window& window, MenuState& menu_state, GameState& game_state, MainGameUIState& ui_state, const SDL_Scancode input)
 {
 	if (input == SDL_SCANCODE_ESCAPE)
 	{
+		if (ui_state.notice_msg.active)
+		{
+			ui_state.notice_msg.active = false;
+			return;
+		}
 		Back(ui_state, game_state, menu_state);
 		return;
 	}
@@ -821,44 +1141,68 @@ void handelKeyBoardButton(const Window& window, MenuState &menu_state, GameState
 	{
 		if (input == SDL_SCANCODE_RETURN)
 		{
-			switch (ui_state.end_game_button.index)
+			switch (ui_state.keyboard_index)
 			{
-				case TEXTURE_RESTART_ON:
-					game_state.game_is_run = true;
-					ui_state.is_game_over = false;
-					game_state.is_init = false;
-					break;
-				case TEXTURE_NEW_GAME_ON:
-					game_state.game_is_run = false;
-					ui_state.is_game_over = false;
-					game_state.is_init = false;
-					menu_state.transform_idx = TEXTURE_PVP_BUTTON;
-					menu_state.trans_display = _ChooseTypePlayer;
-					Play_BGM_Menu();
-					break;
-				case TEXTURE_EXIT_ON:
-					game_state.game_is_run = false;
-					ui_state.is_game_over = false;
-					game_state.is_init = false;
-					menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
-					menu_state.trans_display = _MainMenu;
-					Play_BGM_Menu();
-					break;
+			case TEXTURE_RESTART_ON:
+				restartActivated(ui_state, game_state);
+				break;
+			case TEXTURE_NEW_GAME_ON:
+				newGameActivated(ui_state, game_state, menu_state);
+				break;
+			case TEXTURE_EXIT_ON:
+				exitActivated(ui_state, game_state, menu_state);
+				break;
 			}
-			ui_state.end_game_button.index = TEXTURE_RESTART_ON;
+			//ui_state.index_button_hovered = TEXTURE_RESTART_ON;
 		}
 
 		if (input == SDL_SCANCODE_W || input == SDL_SCANCODE_UP)
 		{
-			ui_state.end_game_button.index -= 1;
-			checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			ui_state.keyboard_index -= 1;
+			checkInRange(ui_state.keyboard_index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			ui_state.index_button_hovered = ui_state.keyboard_index;
 			return;
 		}
 		if (input == SDL_SCANCODE_S || input == SDL_SCANCODE_DOWN)
 		{
-			ui_state.end_game_button.index += 1;
-			checkInRange(ui_state.end_game_button.index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			ui_state.keyboard_index += 1;
+			checkInRange(ui_state.keyboard_index, TEXTURE_RESTART_ON, TEXTURE_EXIT_ON);
+			ui_state.index_button_hovered = ui_state.keyboard_index;
 			return;
+		}
+	}
+	if (ui_state.screen == PAUSE)
+	{
+		if (ui_state.notice_msg.active)
+		{
+			if (input == SDL_SCANCODE_RETURN)
+			{
+				if (ui_state.keyboard_index == TEXTURE_YES_BUTTON_HOVERED)
+				{
+					ui_state.notice_msg.active = false;
+					ui_state.notice_msg.yes_activated = true;
+					ui_state.screen = SAVE_SCREEN;
+					return;
+				}
+				if (ui_state.keyboard_index == TEXTURE_NO_BUTTON_HOVERED)
+				{
+					ui_state.notice_msg.active = false;
+					exitActivated(ui_state, game_state, menu_state);
+					return;
+				}
+			}
+			if ((input == SDL_SCANCODE_A || input == SDL_SCANCODE_LEFT) &&
+				ui_state.keyboard_index == TEXTURE_NO_BUTTON_HOVERED)
+			{
+				ui_state.keyboard_index = TEXTURE_YES_BUTTON_HOVERED;
+				return;
+			}
+			if ((input == SDL_SCANCODE_D || input == SDL_SCANCODE_RIGHT) &&
+				ui_state.keyboard_index == TEXTURE_YES_BUTTON_HOVERED)
+			{
+				ui_state.keyboard_index = TEXTURE_NO_BUTTON_HOVERED;
+				return;
+			}
 		}
 	}
 }
@@ -867,52 +1211,119 @@ void Back(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_stat
 {
 	switch (ui_state.screen)
 	{
-		case TEXTURE_SAVE_SCREEN:
-			ui_state.screen = 0;
+	case SAVE_SCREEN:
+	{
+		if (ui_state.notice_msg.yes_activated)
+		{
+			ui_state.notice_msg.yes_activated = false;
+			exitActivated(ui_state, game_state, menu_state);
 			break;
-		case 0:
-			game_state.game_is_run = false;
-			ui_state.is_game_over = false;
-			game_state.is_init = false;
-			menu_state.transform_idx = TEXTURE_PLAY_BUTTON;
-			menu_state.trans_display = _MainMenu;
-			ui_state.game_music_started = false;
+		}
+		else ui_state.screen = PAUSE;
+		break;
 
-			// TẮT tất cả âm thanh game và SFX
-			Stop_BGM();
-			Stop_All_SFX();
+	}
+	case PAUSE:
+	{
+		ui_state.notice_msg.active = true;
+		ui_state.keyboard_index = TEXTURE_YES_BUTTON_HOVERED;
 
-			// Trở về menu - phát nhạc menu
-			Play_BGM_Menu();
-			break;
-		default:
-			break;
+		break;
+	}
+	case IN_GAME:
+		ui_state.screen = PAUSE;
+		if (game_state.mode == PVP) {
+			pauseTimer(ui_state.pvp_turn_timer);
+		} else if (game_state.mode == PVE) {
+			pauseTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+		}
+
+		break;
+	case GAME_OVER:
+		exitActivated(ui_state, game_state, menu_state);
+		break;
+	case SETTINGS:
+		ui_state.screen = PAUSE;
+		break;
+	default:
+		break;
 	}
 }
 
 void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state, const int mouseX, const int mouseY)
 {
-	if (ui_state.save_button.state) 
-	{ 
-		ui_state.screen = TEXTURE_SAVE_SCREEN;
+
+	if (ui_state.index_button_hovered == TEXTURE_TURN_BACK_BUTTON_HOVERED)
+	{
+		Back(ui_state, game_state, menu_state);
 		return;
 	}
 
+	
+
+	if (ui_state.is_game_over and not isTimerRunning(ui_state.before_game_end_timer)) {
+		ui_state.selected_cell = NULL_CELL;
+
+		Stop_All_SFX();
+		Play_SFX_Click();
+
+		if (ui_state.index_button_hovered == TEXTURE_RESTART_ON) // Restart
+		{
+			restartActivated(ui_state, game_state);
+		}
+		if (ui_state.index_button_hovered == TEXTURE_NEW_GAME_ON) // New Game
+		{
+			newGameActivated(ui_state, game_state, menu_state);
+		}
+		if (ui_state.index_button_hovered == TEXTURE_EXIT_ON) // Exit
+		{
+			exitActivated(ui_state, game_state, menu_state);
+		}
+	}
+
+
+
 	switch (ui_state.screen)
 	{
-	case 0:
-		if (checkMouseInButton(ui_state.turn_back_button[0], mouseX, mouseY))
-		{
-			Back(ui_state, game_state, menu_state);
-			return;
-		}
+	case IN_GAME:
+
 		if (game_state.board_type == Classic)
 			ui_state.selected_cell = handleMouseClick3x3(window, game_state, mouseX, mouseY);
 		else ui_state.selected_cell = handleMouseClick12x12(window, game_state, mouseX, mouseY);
 		break;
-	case TEXTURE_SAVE_SCREEN:
+	case SAVE_SCREEN:
+	{
+
+		if (ui_state.notice_msg.active)
+		{
+			if (ui_state.index_button_hovered == TEXTURE_YES_BUTTON_HOVERED) // Yes
+			{
+					ui_state.notice_msg.active = false;
+					ui_state.notice_msg.yes_activated = false;
+					Saving_Slot[ui_state.erase_file.index].state = false;
+					Loading_Slot[ui_state.erase_file.index].state = false;
+					eraseData(ui_state.erase_file.path);
+					getSaveInform(ui_state, ui_state.erase_file.index);
+				
+			}
+			if (ui_state.index_button_hovered == TEXTURE_NO_BUTTON_HOVERED || ui_state.index_button_hovered == TEXTURE_ERASE_BUTTON_HOVERED) // No
+			{
+				ui_state.notice_msg.active = false;
+				ui_state.erase_file.path = "";
+				ui_state.erase_file.index = -1;
+
+			}
+			break;
+		}
+
 		if (checkMouseInButton(ui_state.turn_back_button[1], mouseX, mouseY))
 		{
+			if (ui_state.notice_msg.yes_activated)
+			{
+				ui_state.notice_msg.yes_activated = false;
+				exitActivated(ui_state, game_state, menu_state);
+				return;
+			}
 			Back(ui_state, game_state, menu_state);
 			return;
 		}
@@ -924,10 +1335,9 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 			std::string file_name = getSaveFileName(ui_state.save_path, index);
 			if (!isFileEmpty(file_name))
 			{
-				Saving_Slot[index].state = false;
-				Loading_Slot[index].state = false;
-				eraseData(file_name);
-				getSaveInform(ui_state, index);
+				ui_state.notice_msg.active = true;
+				ui_state.erase_file.path = file_name;
+				ui_state.erase_file.index = index;
 			}
 			return;
 		}
@@ -936,6 +1346,81 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 		const std::string file_name = getSaveFileName(ui_state.save_path, index);
 		Save(game_state, file_name);
 		getSaveInform(ui_state, index);
+		break;
+	}
+	case PAUSE:
+	{
+		if (ui_state.notice_msg.active)
+		{
+			if (ui_state.index_button_hovered == TEXTURE_YES_BUTTON_HOVERED) // Yes
+			{
+				ui_state.notice_msg.active = false;
+				ui_state.notice_msg.yes_activated = true;
+				ui_state.screen = SAVE_SCREEN;
+			}
+			if (ui_state.index_button_hovered == TEXTURE_NO_BUTTON_HOVERED) // No
+			{
+				ui_state.notice_msg.active = false;
+				exitActivated(ui_state, game_state, menu_state);
+			}
+			if (ui_state.index_button_hovered == TEXTURE_ERASE_BUTTON_HOVERED) // Close
+			{
+				ui_state.notice_msg.active = false;
+			}
+			break;
+		}
+
+		switch (ui_state.index_button_hovered)
+		{
+		case TEXTURE_RESUME_ICON_HOVERED:
+			ui_state.screen = IN_GAME;
+			if (game_state.mode == PVP) {
+				resumeTimer(ui_state.pvp_turn_timer);
+			} else if (game_state.mode == PVE) {
+				resumeTimer(ui_state.pve_turn_timer.at(game_state.difficulty));
+			}
+
+			break;
+		case TEXTURE_RESTART_ICON_HOVERED:
+			restartActivated(ui_state, game_state);
+			break;
+
+		case TEXTURE_HOME_ICON_HOVERED:
+			exitActivated(ui_state, game_state, menu_state);
+			break;
+		case TEXTURE_SAVE_ICON_HOVERED:
+			ui_state.screen = SAVE_SCREEN;
+			break;
+		case TEXTURE_SETTINGS_ICON_HOVERED:
+			ui_state.screen = SETTINGS;
+			break;
+		}
+		break;
+	}
+
+	case SETTINGS:
+		switch (ui_state.index_button_hovered)
+		{
+		case TEXTURE_MUSIC_ON_BUTTON_HOVERED:
+			menu_state.turn_music = false;
+			Toggle_Music();
+			break;
+		case TEXTURE_MUSIC_OFF_BUTTON_HOVERED:
+			menu_state.turn_music = true;
+			Toggle_Music();
+			break;
+		case TEXTURE_SFX_ON_BUTTON_HOVERED:
+			menu_state.turn_sfx = false;
+			Toggle_SFX();
+			Stop_All_SFX();
+			break;
+		case TEXTURE_SFX_OFF_BUTTON_HOVERED:
+			menu_state.turn_sfx = true;
+			Toggle_SFX();
+			break;
+
+		}
+
 		break;
 	}
 }

@@ -11,7 +11,7 @@ void* operator new(size_t size) {
 	printf("Allocation count %d\n", allocation_count);
 	printf("Allocated: %lu bytes\n", size);
 	printf("Address: %p\n\n", memory);
-	allocation_count++;
+	allocation_count++; 
 	return memory;
 }
 
@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
 	loadMenuTextures(window.renderer_ptr);
 	loadTimerTextures(window.renderer_ptr);
 	loadMainGameTextures(window.renderer_ptr);
+	loadAnimations(window.renderer_ptr);
 
 	const auto [ENABLE_SFX,
 				ENABLE_MUSIC] = loadSettings(menu_state.GAME_SETTINGS_FILE_PATH);
@@ -68,6 +69,7 @@ int main(int argc, char* argv[]) {
 	menu_state.menu_is_run = true;
 
 	while (menu_state.menu_is_run) {
+		//std::cout << main_game_ui_state.index_button_hovered << std::endl;
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				menu_state.menu_is_run = false;
@@ -79,7 +81,7 @@ int main(int argc, char* argv[]) {
 				handleMenuInput(event, window, menu_state, game_state, main_game_ui_state);
 		}
 		if (game_state.game_is_run == true)
-			processMainGame(window, main_game_ui_state, game_state);
+			processMainGame(window, main_game_ui_state, game_state, menu_state);
 		else
 		{
 			processMenuScreen(window, menu_state, main_game_ui_state);

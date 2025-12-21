@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
+
 #include "Video.h"
 #include "Timer.h"
 
@@ -17,14 +18,14 @@ enum MenuTexturesEnum {
 	TEXTURE_SETTINGS_BUTTON,
 	TEXTURE_EXIT_BUTTON,
 
-	TEXTURE_PLAY_BUTTON_HOVERED,	
+	TEXTURE_PLAY_BUTTON_HOVERED,
 	TEXTURE_LOAD_BUTTON_HOVERED,
 	TEXTURE_SETTINGS_BUTTON_HOVERED,
 	TEXTURE_EXIT_BUTTON_HOVERED,
 
 	TEXTURE_PVP_BUTTON,
 	TEXTURE_PVE_BUTTON,
-	
+
 	TEXTURE_PVP_BUTTON_HOVERED,
 	TEXTURE_PVE_BUTTON_HOVERED,
 
@@ -44,7 +45,7 @@ enum MenuTexturesEnum {
 	TEXTURE_MUSIC_OFF_BUTTON,
 	TEXTURE_SFX_ON_BUTTON,
 	TEXTURE_SFX_OFF_BUTTON,
-	
+
 	TEXTURE_MUSIC_ON_BUTTON_HOVERED,
 	TEXTURE_MUSIC_OFF_BUTTON_HOVERED,
 	TEXTURE_SFX_ON_BUTTON_HOVERED,
@@ -113,23 +114,60 @@ enum MainGameTexturesEnum {
 
 	TEXTURE_SAVE_SCREEN,
 	TEXURE_IMPORT_BUTTON,
-	
-	TEXTURE_NOTICE_BOARD,
-};
 
+	TEXTURE_NOTICE_BOARD,
+
+	TEXTURE_PAUSE_ICON,
+	TEXTURE_PAUSE_ICON_HOVERED,
+	TEXTURE_RESUME_ICON,
+	TEXTURE_RESUME_ICON_HOVERED,
+	TEXTURE_SETTINGS_ICON,
+	TEXTURE_SETTINGS_ICON_HOVERED,
+	TEXTURE_RESTART_ICON,
+	TEXTURE_RESTART_ICON_HOVERED,
+	TEXTURE_HOME_ICON,
+	TEXTURE_HOME_ICON_HOVERED,
+
+	TEXTURE_SAVE_ICON,
+	TEXTURE_SAVE_ICON_HOVERED,
+
+	TEXTURE_SETTINGS_SCREEN,
+	TEXTURE_PAUSE_SCREEN,
+
+	TEXTURE_YES_BUTTON,
+	TEXTURE_NO_BUTTON,
+	TEXTURE_YES_BUTTON_HOVERED,
+	TEXTURE_NO_BUTTON_HOVERED,
+
+
+};
+enum AnimationEnum {
+	GIF_TRANSACTION,
+	GIF_PLAYER_X_ON,
+	GIF_PLAYER_O_ON,
+	GIF_PLAYER_X_OFF,
+	GIF_PLAYER_O_OFF,
+	GIF_PLAYER_PVE_ON,
+	GIF_EASY_BOT_ON,
+	GIF_NORMAL_BOT_ON,
+	GIF_HARD_BOT_ON,
+};
 using MenuTextures = std::unordered_map<MenuTexturesEnum, SDL_Texture*>;
 using MainGameTextures = std::unordered_map<MainGameTexturesEnum, SDL_Texture*>;
 using TimerTextures = std::vector<SDL_Texture*>;
-
+using Animation = std::unordered_map<AnimationEnum, std::vector<GIF>>;
 inline MenuTextures MENU_TEXTURES;
 inline TimerTextures TIMER_TEXTURES;
 inline MainGameTextures MAIN_GAME_TEXTURES;
+inline Animation ANIMATIONS;
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path);
+std::vector<GIF> loadGIF(SDL_Renderer* renderer, const std::string& file_path);
 
 void loadMenuTextures(SDL_Renderer* renderer);
 void loadMainGameTextures(SDL_Renderer* renderer);
 void loadTimerTextures(SDL_Renderer* renderer);
+void loadAnimations(SDL_Renderer* renderer);
 
 void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_Rect& destination);
 void drawTimer(SDL_Renderer* renderer, Second current_time, const SDL_Rect& destination);

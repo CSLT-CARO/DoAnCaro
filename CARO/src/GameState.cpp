@@ -448,6 +448,21 @@ CellSet getEmptyCellsNeighboringMarkedCells(const Board12x12 &board, const CellS
     return empty_cells;
 }
 
+CellSet getMarkedCells(const Board12x12 &board) {
+    CellSet marked_cells {};
+    marked_cells.reserve(144);
+
+    for (int i = 0; i < 12; i++) {
+        for (int j = 0; j < 12; j++) {
+            const Cell cell { i, j };
+            if (getMark(board, cell) == Empty) continue;
+            marked_cells.insert(cell);
+        }
+    }
+
+    return marked_cells;
+}
+
 bool tryPlaceMark(Board3x3& board, const Cell& cell, const PlayerMark mark) {
     if (isCellOutOfBound3x3(cell)) return false;
     if (not isCellEmpty(board, cell)) return false;

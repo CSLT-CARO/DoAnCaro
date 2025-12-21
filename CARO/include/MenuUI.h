@@ -23,7 +23,12 @@ enum gameLayer
 	_ChooseDifficulty,
 };
 
-
+struct NoticeMSG
+{
+	const SDL_Rect close_button{ 1200,421,60,60 };
+	const SDL_Rect yes_button{ 780, 614, 150, 72 };
+	const SDL_Rect no_button{ 990, 614, 150, 72 };
+};
 
 struct MenuState
 {
@@ -36,8 +41,8 @@ struct MenuState
 	int transform_idx = 1;
 	int trans_display = _MainMenu;
 	int notice = 0;
-
-
+	bool transaction = 0;
+	NoticeMSG msg;
 	const std::string SAVE_PATH = "./saves";
 	const std::string GAME_SETTINGS_FILE_PATH = "./settings.txt";
 };

@@ -10,6 +10,7 @@ using Second = Uint64;
 struct Timer {
 	Millisecond start {};
 	Millisecond timeout {};
+	Millisecond actual_timeout {};
 	bool is_running = false;
 };
 

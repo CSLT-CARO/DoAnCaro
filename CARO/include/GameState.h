@@ -99,6 +99,7 @@ int scoreDifferenceOfAIAndPlayer(const Board12x12& board, PlayerMark maximizer, 
 int evaluateSubRegionForMaximizer(int maximizer_count, int minimizer_count, int empty_count);
 int evaluateSubRegionForMinimizer(int maximizer_count, int minimizer_count, int empty_count);
 CellSet getEmptyCellsNeighboringMarkedCells(const Board12x12 &board, const CellSet& marked_cells);
+CellSet getMarkedCells(const Board12x12 &board);
 
 bool tryPlaceMark(Board3x3& board, const Cell& cell, PlayerMark mark);
 bool tryPlaceMark(Board12x12& board, const Cell& cell, PlayerMark mark);

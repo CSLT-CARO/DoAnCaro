@@ -4,7 +4,9 @@
 #include "GameState.h"
 #include "MainGameUI.h"
 #include "Video.h"
+#include "PrintMenuScreen.h"
 
-void initGame(const Window& window, GameState& game_state, MainGameUIState& ui_state);
+
+void initGame(const Window& window, GameState& game_state, MenuState& menu_state, MainGameUIState& ui_state);
 
 #endif

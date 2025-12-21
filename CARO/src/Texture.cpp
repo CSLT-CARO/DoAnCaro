@@ -92,7 +92,7 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 
 	{ "row_line_X", TEXTURE_ROW_LINE_X},
 	{ "row_line_O", TEXTURE_ROW_LINE_O},
-	
+
 	{ "column_line_X", TEXTURE_COLUMN_LINE_X},
 	{ "column_line_O", TEXTURE_COLUMN_LINE_O},
 
@@ -107,6 +107,39 @@ const std::vector<std::pair<std::string, MainGameTexturesEnum>> MAIN_GAME_IMAGE_
 	{ "SAVE_SCREEN", TEXTURE_SAVE_SCREEN},
 	{ "IMPORT", TEXURE_IMPORT_BUTTON},
 	{ "notice_board", TEXTURE_NOTICE_BOARD},
+
+	{ "PAUSE_ICON", TEXTURE_PAUSE_ICON},
+	{ "PAUSE_ICON_HOVERED", TEXTURE_PAUSE_ICON_HOVERED},
+	{ "RESUME_ICON", TEXTURE_RESUME_ICON},
+	{ "RESUME_ICON_HOVERED", TEXTURE_RESUME_ICON_HOVERED},
+	{ "SETTINGS_ICON", TEXTURE_SETTINGS_ICON},
+	{ "SETTINGS_ICON_HOVERED", TEXTURE_SETTINGS_ICON_HOVERED},
+	{ "RESTART_ICON", TEXTURE_RESTART_ICON},
+	{ "RESTART_ICON_HOVERED", TEXTURE_RESTART_ICON_HOVERED},
+	{ "HOME_ICON", TEXTURE_HOME_ICON},
+	{ "HOME_ICON_HOVERED", TEXTURE_HOME_ICON_HOVERED},
+	{ "SAVE_ICON", TEXTURE_SAVE_ICON},
+	{ "SAVE_ICON_HOVERED", TEXTURE_SAVE_ICON_HOVERED},
+
+	{"SETTINGS_SCREEN", TEXTURE_SETTINGS_SCREEN},
+	{ "PAUSE_SCREEN", TEXTURE_PAUSE_SCREEN},
+
+	{"YES_BUTTON", TEXTURE_YES_BUTTON},
+	{"NO_BUTTON", TEXTURE_NO_BUTTON},
+	{"YES_BUTTON_HOVERED", TEXTURE_YES_BUTTON_HOVERED},
+	{"NO_BUTTON_HOVERED", TEXTURE_NO_BUTTON_HOVERED},
+};
+
+const std::vector<std::pair<std::string, AnimationEnum>> ANIMATION_GIF{
+	{ "Transaction_animation", GIF_TRANSACTION},
+	{ "Player_O_Animation_Off", GIF_PLAYER_O_OFF},
+	{ "Player_O_Animation_On", GIF_PLAYER_O_ON},
+	{ "Player_X_Animation_Off", GIF_PLAYER_X_OFF},
+	{ "Player_X_Animation_On", GIF_PLAYER_X_ON},
+	{ "Player_Animation_On", GIF_PLAYER_PVE_ON},
+	{ "Easy_Bot_Animation_On", GIF_EASY_BOT_ON},
+	{ "Normal_Bot_Animation_On", GIF_NORMAL_BOT_ON},
+	{ "Hard_Bot_Animation_On", GIF_HARD_BOT_ON},
 };
 
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) {
@@ -130,19 +163,44 @@ SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& image_path) 
 	return image_texture;
 }
 
+std::vector<GIF> loadGIF(SDL_Renderer* renderer, const std::string& file_path)
+{
+	IMG_Animation* rawAnim = IMG_LoadAnimation(file_path.c_str());
+	if (!rawAnim) {
+		std::cout << "Failed to load GIF: " << IMG_GetError() << "\n";
+		exit(1);
+	}
+	std::vector<GIF> textures;
+	int count = rawAnim->count;
+	for (int i = 0; i < count; i++) {
+		SDL_Texture* frameTexture = SDL_CreateTextureFromSurface(renderer, rawAnim->frames[i]);
+		textures.push_back({ frameTexture, rawAnim->delays[i] });
+	}
+	IMG_FreeAnimation(rawAnim);
+	return textures;
+}
+
 void loadMenuTextures(SDL_Renderer* renderer) {
-	for (const auto&[file_name, texture_enum] : MENU_IMAGE_LOAD_ENTRIES) {
+	for (const auto& [file_name, texture_enum] : MENU_IMAGE_LOAD_ENTRIES) {
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/Images/" + file_name + ".bmp");
 		MENU_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
 }
 
 void loadMainGameTextures(SDL_Renderer* renderer) {
-	for (const auto&[file_name, texture_enum] : MAIN_GAME_IMAGE_LOAD_ENTRIES) {
+	for (const auto& [file_name, texture_enum] : MAIN_GAME_IMAGE_LOAD_ENTRIES) {
 		SDL_Texture* loaded_texture = loadTexture(renderer, "./assets/RESOURCE/" + file_name + ".bmp");
 		MAIN_GAME_TEXTURES.insert({ texture_enum, loaded_texture });
 	}
 }
+
+void loadAnimations(SDL_Renderer* renderer) {
+	for (const auto& [file_name, animation_enum] : ANIMATION_GIF) {
+		std::vector<GIF> loaded_textures = loadGIF(renderer, "./assets/Images/" + file_name + ".gif");
+		ANIMATIONS.insert({ animation_enum, loaded_textures });
+	}
+}
+
 
 void loadTimerTextures(SDL_Renderer* renderer) {
 	TIMER_TEXTURES.resize(61);

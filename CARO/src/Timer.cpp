@@ -1,20 +1,25 @@
 #include "Timer.h"
 
 void setTimeout(Timer& timer, const Millisecond timeout) {
-	timer.timeout = timeout;
+	timer.actual_timeout = timeout;
 }
 
 void activateTimer(Timer& timer) {
 	timer.start = SDL_GetTicks64();
 	timer.is_running = true;
+	timer.timeout = timer.actual_timeout;
 }
 
 void pauseTimer(Timer& timer) {
+	if (not timer.is_running) return;
 	timer.is_running = false;
+	timer.timeout = getTimeRemaining(timer);
 }
 
 void resumeTimer(Timer& timer) {
+	if (timer.is_running) return;
 	timer.is_running = true;
+	timer.start = SDL_GetTicks64();
 }
 
 bool hasReachedTimeout(Timer& timer) {
