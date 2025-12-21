@@ -229,6 +229,7 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 				game_state.bot_marker = loaded_content.bot_marker;
 				game_state.game_is_run = true;
 				game_state.is_init = true;
+				menu_state.transaction = true;
 				Loading_Slot[load_idx].state = false;
 
 				if (game_state.board_type == Ultimate) {
