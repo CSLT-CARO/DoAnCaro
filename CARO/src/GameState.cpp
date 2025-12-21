@@ -202,7 +202,6 @@ Cell botTurn12x12(GameState &game_state) {
             const Cell random_move { randomInt(3, 8), randomInt(3, 8) };
             tryPlaceMark(game_state.board12x12, random_move , game_state.bot_marker);
             game_state.is_board_12x12_empty = false;
-            std::cout << "START RANDOM MOVE PLAYED" << std::endl;
             return random_move;
         }
     }
@@ -213,7 +212,6 @@ Cell botTurn12x12(GameState &game_state) {
         std::mt19937 gen(std::random_device{}());
         std::sample(EMPTY_CELLS.begin(), EMPTY_CELLS.end(), &chosen_cell, 1, gen);
         tryPlaceMark(game_state.board12x12, chosen_cell, game_state.bot_marker);
-        std::cout << "RANDOM MOVE PLAYED" << std::endl;
         return chosen_cell;
     }
 
@@ -260,7 +258,6 @@ Cell botTurn12x12(GameState &game_state) {
     }
 
     tryPlaceMark(game_state.board12x12, best_move, game_state.bot_marker);
-    std::cout << "MOVE PLAYED" << std::endl;
 
     return best_move;
 }
