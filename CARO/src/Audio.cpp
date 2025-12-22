@@ -312,3 +312,4 @@ void Apply_SFX_State(const bool is_muted) {
         Mix_Volume(-1, SFX_VOLUME);
     }
 }
+
