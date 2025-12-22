@@ -336,6 +336,7 @@ void checkMouseButtonDown(const Window& window, MenuState& menu_state, GameState
 			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_MUSIC_OFF_BUTTON], mouseX, mouseY)) {
 			menu_state.turn_music = true;
 			Toggle_Music();
+			Play_BGM_Menu();
 		}
 		if (MousePositionState == TEXTURE_SFX_OFF_BUTTON
 			&& checkButton(MenuButtonPosition[_ChangeSettings][TEXTURE_SFX_OFF_BUTTON], mouseX, mouseY)) {

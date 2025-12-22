@@ -1420,6 +1420,7 @@ void handleMouseButton(const Window& window, MainGameUIState& ui_state, GameStat
 		case TEXTURE_MUSIC_OFF_BUTTON_HOVERED:
 			menu_state.turn_music = true;
 			Toggle_Music();
+			Play_BGM_Game();
 			break;
 		case TEXTURE_SFX_ON_BUTTON_HOVERED:
 			menu_state.turn_sfx = false;
