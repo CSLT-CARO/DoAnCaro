@@ -1098,15 +1098,18 @@ Cell handleKeyboardMakeTurn12x12(const Window& window, const MainGameUIState& ui
 
 void restartActivated(MainGameUIState& ui_state, GameState& game_state)
 {
+	Stop_All_SFX();
 	game_state.game_is_run = true;
 	ui_state.is_game_over = false;
 	ui_state.is_set_up_game_over_screen = false;
 	ui_state.screen = IN_GAME;
 	game_state.is_init = false;
 	ui_state.winner_data.mark = Empty;
+	ui_state.game_music_started = false;
 }
 void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
 {
+	Stop_All_SFX();
 	game_state.game_is_run = false;
 	ui_state.is_game_over = false;
 	ui_state.is_set_up_game_over_screen = false;
@@ -1120,7 +1123,7 @@ void newGameActivated(MainGameUIState& ui_state, GameState& game_state, MenuStat
 }
 void exitActivated(MainGameUIState& ui_state, GameState& game_state, MenuState& menu_state)
 {
-
+	Stop_All_SFX();
 	game_state.game_is_run = false;
 	ui_state.is_game_over = false;
 	ui_state.is_set_up_game_over_screen = false;
